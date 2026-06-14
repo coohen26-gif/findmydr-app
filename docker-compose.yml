@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  app:
+    image: node:20-alpine
+    container_name: findmydr-app
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - '3001:3000'
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - DOMAIN_DR=findmydr.ae
+      - DOMAIN_DENTIST=findmydentist.ae
+      - PGHOST=db
+      - PGUSER=findmydr
+      - PGPASSWORD=${DBPASS}
+      - PGDATABASE=findmydr
+      - PGPORT=5432
+    command: sh -c 'npm start'
+    restart: unless-stopped
+    networks:
+      - findmydr-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: findmydr-db
+    environment:
+      POSTGRES_DB: findmydr
+      POSTGRES_USER: findmydr
+      POSTGRES_PASSWORD: ${DBPASS}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - findmydr-network
+    restart: unless-stopped
+
+networks:
+  findmydr-network:
+    driver: bridge
+
+volumes:
+  db-data:

@@ -1,0 +1,21 @@
+import pool from "../../lib/db";
+
+export default async function handler(req, res) {
+  const { q = "", id } = req.query;
+  try {
+    if (id) {
+      const r = await pool.query(
+        "SELECT id, name, specialty, facility_name, COALESCE(search_rank, 0) as search_rank FROM dentists WHERE id = $1 LIMIT 1",
+        [id]
+      );
+      return res.status(200).json({ dentists: r.rows });
+    }
+    const r = await pool.query(
+      "SELECT id, name, specialty, facility_name, COALESCE(search_rank, 0) as search_rank FROM dentists WHERE name ILIKE $1 OR specialty ILIKE $1 OR facility_name ILIKE $1 ORDER BY search_rank DESC, name ASC LIMIT 50",
+      ["%" + q + "%"]
+    );
+    return res.status(200).json({ dentists: r.rows });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+}
