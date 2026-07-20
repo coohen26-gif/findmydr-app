@@ -53,6 +53,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        arabic: ['Cairo', 'Inter', 'sans-serif'],
       },
       borderRadius: {
         lg: '12px',
