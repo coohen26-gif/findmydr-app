@@ -2,6 +2,8 @@ import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Eye, MessageCircle, TrendingUp, Settings, Calendar, Award, ChevronRight, Sparkles, ArrowRight, Activity, AlertCircle, Phone, Percent } from 'lucide-react';
 import { SiteHeader } from '../../components/Header';
 import { Button } from '../../components/Button';
@@ -52,6 +54,7 @@ function TrendBadge({ values }) {
 
 export default function Dashboard() {
   const router = useRouter();
+  const { t } = useTranslation('common');
   const [user, setUser] = React.useState(null);
   const [stats, setStats] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
@@ -114,7 +117,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-muted/30">
       <Head>
-        <title>Tableau de bord — FindMyDoctor.ae</title>
+        <title>{t('nav.dashboard')} — FindMyDoctor.ae</title>
       </Head>
 
       <SiteHeader user={user} />
@@ -281,4 +284,12 @@ export default function Dashboard() {
       </div>
     </div>
   );
+}
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }

@@ -2,6 +2,8 @@ import * as React from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Check, X, Shield, Award, Building2, ChevronLeft, Loader2, ExternalLink, Download, CreditCard, ArrowRight } from "lucide-react";
 import { SiteHeader } from "../../components/Header";
 import { Button } from "../../components/Button";
@@ -13,6 +15,7 @@ const PLAN_SEARCH_RANK = { free: 0, premium: 10, pro: 20 };
 
 export default function BillingPage() {
   const router = useRouter();
+  const { t } = useTranslation("common");
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [portalLoading, setPortalLoading] = React.useState(false);
@@ -65,7 +68,7 @@ export default function BillingPage() {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <Head><title>Facturation — FindMyDoctor.ae</title></Head>
+      <Head><title>{t('dashboard.billing.title')} — FindMyDoctor.ae</title></Head>
       <SiteHeader user={user} />
 
       <div className="container-wide py-12">
@@ -73,12 +76,12 @@ export default function BillingPage() {
           <ChevronLeft className="h-4 w-4" /> Tableau de bord
         </Link>
 
-        <h1 className="text-3xl md:text-4xl font-extrabold mb-8">Facturation</h1>
+        <h1 className="text-3xl md:text-4xl font-extrabold mb-8">{t('dashboard.billing.title')}</h1>
 
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <Card className="p-6">
-              <h2 className="text-xl font-bold mb-4">Plan actuel</h2>
+              <h2 className="text-xl font-bold mb-4">{t('dashboard.billing.current_plan')}</h2>
               <div className="flex items-center justify-between p-4 bg-gradient-to-br from-primary-50 to-cyan-50 rounded-xl border border-primary-100">
                 <div className="flex items-center gap-4">
                   <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center">
@@ -235,4 +238,12 @@ export default function BillingPage() {
       </div>
     </div>
   );
+}
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }

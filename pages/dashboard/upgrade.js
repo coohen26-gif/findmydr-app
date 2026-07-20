@@ -7,6 +7,8 @@ import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Check, X, Sparkles, Award, Building2, ChevronLeft, Shield, Star, Zap, Loader2 } from 'lucide-react';
 import { SiteHeader } from '../../components/Header';
 import { Button } from '../../components/Button';
@@ -89,6 +91,7 @@ const FAQ = [
 
 export default function UpgradePage() {
   const router = useRouter();
+  const { t } = useTranslation('common');
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [billingCycle, setBillingCycle] = React.useState('monthly');
@@ -140,7 +143,7 @@ export default function UpgradePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-primary-50/30 to-white">
-      <Head><title>Tarifs — FindMyDoctor.ae</title></Head>
+      <Head><title>{t('meta.pricing_title')}</title></Head>
       <SiteHeader user={user} />
 
       <div className="container-wide py-12 md:py-16">
@@ -151,10 +154,10 @@ export default function UpgradePage() {
           <div className="text-center max-w-2xl mx-auto">
             <Badge variant="info" className="mb-4">Tarifs transparents</Badge>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">
-              Choisissez votre plan
+              {t('dashboard.upgrade.title')}
             </h1>
             <p className="text-lg text-muted-foreground">
-              Annuaire 100% gratuit pour les patients. Vous payez uniquement si vous voulez booster votre visibilité.
+              {t('pricing.subtitle')}
             </p>
           </div>
         </div>
@@ -276,4 +279,12 @@ export default function UpgradePage() {
       </div>
     </div>
   );
+}
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }

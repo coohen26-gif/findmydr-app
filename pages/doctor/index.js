@@ -2,6 +2,8 @@ import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { MapPin, Calendar, ShieldCheck, Stethoscope, Sparkles, Award, Clock, ChevronRight, Star, ArrowRight, Heart, Activity, Brain, Baby, Eye, Bone, Users, Pill } from 'lucide-react';
 import { SiteHeader, Logo, SearchBar } from '../../components/Header';
 import { Button } from '../../components/Button';
@@ -51,6 +53,8 @@ const FEATURED_FACILITIES = [
 
 export default function Home() {
   const router = useRouter();
+  const { t, i18n } = useTranslation('common');
+  const localePrefix = `/${i18n.language || 'en'}`;
   const initialQ = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('q') || '' : '';
   const [search, setSearch] = React.useState(initialQ);
   const [physicians, setPhysicians] = React.useState([]);
@@ -80,8 +84,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>FindMyDoctor.ae — 15 673 médecins DHA-licensés à Dubai</title>
-        <meta name="description" content="Trouvez rapidement un médecin ou un dentiste à Dubai. Annuaire trilingue vérifié DHA. Réservez en ligne en quelques clics." />
+        <title>{t('meta.doctors_title')}</title>
+        <meta name="description" content={t('meta.doctors_description')} />
+        <link rel="alternate" hrefLang="fr" href={`https://findmydr.ae/fr${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="en" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="ar" href={`https://findmydr.ae/ar${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="x-default" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
       </Head>
 
       <SiteHeader />
@@ -98,20 +106,16 @@ export default function Home() {
                 🇦🇪 Made in UAE · 100% vérifié DHA
               </Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-balance">
-                Votre santé,<br />
-                <span className="bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">
-                  le bon médecin.
-                </span>
+                {t('hero.title')}
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground text-pretty max-w-xl">
-                L'annuaire de référence pour trouver un médecin ou un dentiste à Dubai.
-                Réservez en ligne, en arabe, français ou anglais.
+                {t('hero.subtitle')}
               </p>
-              <SearchBar placeholder="Médecin, spécialité, clinique…" size="lg" onSearch={handleSearch} />
+              <SearchBar placeholder={t('nav.search_placeholder')} size="lg" onSearch={handleSearch} />
               <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                 <span>Populaire :</span>
                 {['Cardiology', 'Pediatrics', 'Obstetrics', 'Dermatology'].map(s => (
-                  <Link key={s} href={`/doctor?q=${encodeURIComponent(s)}`} className="hover:text-primary underline-offset-4 hover:underline">
+                  <Link key={s} href={`${localePrefix}/doctor?q=${encodeURIComponent(s)}`} className="hover:text-primary underline-offset-4 hover:underline">
                     {s}
                   </Link>
                 ))}
@@ -204,15 +208,15 @@ export default function Home() {
         <div className="container-wide">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <h2 className="text-3xl md:text-4xl font-extrabold mb-2">Médecins vedettes</h2>
+              <h2 className="text-3xl md:text-4xl font-extrabold mb-2">{t('home.featured.title')}</h2>
               <p className="text-muted-foreground">
                 {loading ? (
                   <span className="inline-flex items-center gap-2">
                     <span className="inline-block h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                    Chargement...
+                    {t('common.loading')}
                   </span>
                 ) : (
-                  <>{physicians.length} résultats{search ? ` pour "${search}"` : ''}</>
+                  <>{t('search.results_count', { count: physicians.length })}{search ? ` pour "${search}"` : ''}</>
                 )}
               </p>
             </div>
@@ -395,4 +399,12 @@ export default function Home() {
       </footer>
     </div>
   );
+}
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Search, MapPin, Calendar, ShieldCheck, Activity, Sparkles, Award, Clock, ChevronRight, Star, ArrowRight, Heart, Wrench, Smile, Baby, Zap, Hammer, Scissors } from 'lucide-react';
 import { SiteHeader, Logo } from '../../components/Header';
 import { Button } from '../../components/Button';
@@ -37,6 +40,9 @@ const TRUST = [
 ];
 
 export default function DentistHome() {
+  const router = useRouter();
+  const { t, i18n } = useTranslation('common');
+  const localePrefix = `/${i18n.language || 'en'}`;
   const initialQ = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('q') || '' : '';
   const [search, setSearch] = React.useState(initialQ);
   const [dentists, setDentists] = React.useState([]);
@@ -54,8 +60,12 @@ export default function DentistHome() {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>FindMyDentist.ae — 5 049 dentistes DHA-licensés à Dubai</title>
-        <meta name="description" content="Trouvez rapidement un dentiste à Dubai. Annuaire trilingue vérifié DHA. Esthétique, orthodontie, implants." />
+        <title>{t('meta.dentists_title')}</title>
+        <meta name="description" content={t('meta.dentists_description')} />
+        <link rel="alternate" hrefLang="fr" href={`https://findmydentist.ae/fr${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="en" href={`https://findmydentist.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="ar" href={`https://findmydentist.ae/ar${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="x-default" href={`https://findmydentist.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
       </Head>
 
       <SiteHeader />
@@ -73,31 +83,28 @@ export default function DentistHome() {
                 🇦🇪 Made in UAE · 100% vérifié DHA
               </Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-balance">
-                Votre sourire,<br />
-                <span className="bg-gradient-to-r from-cyan-600 to-emerald-500 bg-clip-text text-transparent">
-                  le bon dentiste.
-                </span>
+                {t('hero.title')}
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground text-pretty max-w-xl">
-                Blanchiment, implants, orthodontie, urgences. L'annuaire de référence pour trouver un dentiste à Dubai.
+                {t('hero.subtitle')}
               </p>
               <div className="relative max-w-xl">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
                 <Input
                   type="text"
-                  placeholder="Dentiste, spécialité, clinique…"
+                  placeholder={t('nav.search_placeholder')}
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   className="pl-12 h-14 text-base shadow-lg border-0"
                 />
                 <Button size="lg" className="absolute right-1.5 top-1.5 h-11 bg-cyan-600 hover:bg-cyan-700">
-                  Rechercher
+                  {t('nav.search_button')}
                 </Button>
               </div>
               <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                 <span>Populaire :</span>
                 {['Esthétique', 'Implants', 'Orthodontie', 'Urgence'].map(s => (
-                  <Link key={s} href={`/dentist?q=${encodeURIComponent(s)}`} className="hover:text-cyan-600 underline-offset-4 hover:underline">
+                  <Link key={s} href={`${localePrefix}/dentist?q=${encodeURIComponent(s)}`} className="hover:text-cyan-600 underline-offset-4 hover:underline">
                     {s}
                   </Link>
                 ))}
@@ -153,7 +160,7 @@ export default function DentistHome() {
       {/* SPECIALTIES */}
       <section className="container-wide py-20">
         <div className="text-center mb-12 space-y-3">
-          <h2 className="text-3xl md:text-4xl font-extrabold">Soins dentaires</h2>
+          <h2 className="text-3xl md:text-4xl font-extrabold">{t('home.categories_title')}</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Trouvez le bon spécialiste pour chaque besoin dentaire.
           </p>
@@ -184,7 +191,7 @@ export default function DentistHome() {
         <div className="container-wide">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <h2 className="text-3xl md:text-4xl font-extrabold mb-2">Dentistes vedettes</h2>
+              <h2 className="text-3xl md:text-4xl font-extrabold mb-2">{t('home.featured.title')}</h2>
               <p className="text-muted-foreground">
                 {loading ? '⏳ Chargement...' : `${dentists.length} résultats affichés`}
               </p>
@@ -334,4 +341,12 @@ export default function DentistHome() {
       </footer>
     </div>
   );
+}
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }
