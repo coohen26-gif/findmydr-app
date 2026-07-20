@@ -298,5 +298,9 @@
     "about_description": "Первый мультиязычный каталог специалистов с лицензией DHA в Дубае.",
     "contact_title": "Контакты — FindMyDoctor.ae",
     "contact_description": "Свяжитесь с нашей командой по любым вопросам."
+  },
+  "whatsapp": {
+    "cta": "Связаться в WhatsApp",
+    "default_message": "Здравствуйте, д-р {name}. Я обращаюсь через DMD (findmydr.ae) по вопросу {specialty}. Есть ли у вас свободные места на этой неделе?"
   }
 }

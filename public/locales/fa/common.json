@@ -298,5 +298,9 @@
     "about_description": "اولین فهرست چندزبانه متخصصان دارای مجوز DHA در دبی.",
     "contact_title": "تماس — FindMyDoctor.ae",
     "contact_description": "برای هر سوالی با تیم ما تماس بگیرید."
+  },
+  "whatsapp": {
+    "cta": "تماس از طریق واتساپ",
+    "default_message": "سلام دکتر {name}، از طریق DMD (findmydr.ae) با شما تماس می‌گیرم برای {specialty}. آیا این هفته نوبت خالی دارید؟"
   }
 }

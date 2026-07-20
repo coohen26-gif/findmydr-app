@@ -298,5 +298,9 @@
     "about_description": "أول دليل ثلاثي اللغات للمهنيين الصحيين المرخصين من هيئة الصحة في دبي.",
     "contact_title": "اتصل بنا — FindMyDoctor.ae",
     "contact_description": "اتصل بفريقنا لأي سؤال."
+  },
+  "whatsapp": {
+    "cta": "تواصل عبر واتساب",
+    "default_message": "مرحباً د. {name}، أتواصل معك عبر DMD (findmydr.ae) بخصوص استشارة في {specialty}. هل لديكِ مواعيد متاحة هذا الأسبوع؟"
   }
 }

@@ -298,5 +298,9 @@
     "about_description": "迪拜首个DHA认证医疗专业人员的六语种目录。",
     "contact_title": "联系 — FindMyDoctor.ae",
     "contact_description": "如有疑问，请联系我们的团队。"
+  },
+  "whatsapp": {
+    "cta": "通过 WhatsApp 联系",
+    "default_message": "您好 {name} 医生，我通过 DMD (findmydr.ae) 联系您咨询 {specialty}。本周有可预约时间吗？"
   }
 }

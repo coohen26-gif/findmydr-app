@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -12,6 +13,7 @@ import { Avatar } from '../../components/Avatar';
 import { Badge } from '../../components/Badge';
 import { DhaBadge } from '../../components/DhaBadge';
 import { ReviewsSection } from '../../components/ReviewCard';
+import { WhatsAppButton } from '../../components/WhatsAppButton';
 import pool from '../../lib/db';
 import { pageTitle, pageDescription, physicianJsonLd, breadcrumbJsonLd, pageUrl } from '../../lib/seo';
 
@@ -48,12 +50,12 @@ export async function getServerSideProps({ query, req, locale }) {
 }
 
 export default function DoctorProfile({ pro, baseUrl }) {
-  const [showRdv, setShowRdv] = React.useState(false);
-  const [showMsg, setShowMsg] = React.useState(false);
-  const [showShare, setShowShare] = React.useState(false);
-  const [rdvDate, setRdvDate] = React.useState('');
-  const [rdvReason, setRdvReason] = React.useState('');
-  const [rdvSent, setRdvSent] = React.useState(false);
+  const [showRdv, setShowRdv] = useState(false);
+  const [showMsg, setShowMsg] = useState(false);
+  const [showShare, setShowShare] = useState(false);
+  const [rdvDate, setRdvDate] = useState('');
+  const [rdvReason, setRdvReason] = useState('');
+  const [rdvSent, setRdvSent] = useState(false);
   const { t, i18n } = useTranslation('common');
   const router = useRouter();
   const localePrefix = `/${i18n.language || 'en'}`;
@@ -216,7 +218,7 @@ export default function DoctorProfile({ pro, baseUrl }) {
             </div>
           </div>
 
-          <div className="p-6 md:p-8 flex flex-col md:flex-row gap-3">
+          <div className="p-6 md:p-8 flex flex-col md:flex-row gap-3 flex-wrap">
             <Button size="lg" className="flex-1 md:flex-none" onClick={() => setShowRdv(true)}>
               <Calendar className="h-4 w-4" /> Prendre rendez-vous
             </Button>
@@ -226,6 +228,13 @@ export default function DoctorProfile({ pro, baseUrl }) {
             <Button variant="outline" size="lg" className="flex-1 md:flex-none">
               <Phone className="h-4 w-4" /> Appeler
             </Button>
+            <WhatsAppButton
+              phone={pro.phone || pro.whatsapp || null}
+              proName={fullName}
+              specialty={specialty}
+              locale={i18n.language || 'en'}
+              variant="primary"
+            />
           </div>
         </Card>
       </section>

@@ -298,5 +298,9 @@
     "about_description": "The first trilingual directory of DHA-licensed healthcare professionals in Dubai.",
     "contact_title": "Contact — FindMyDoctor.ae",
     "contact_description": "Contact our team for any question."
+  },
+  "whatsapp": {
+    "cta": "Contact on WhatsApp",
+    "default_message": "Hello Dr {name}, I am reaching out via DMD (findmydr.ae) for a {specialty} consultation. Do you have availability this week?"
   }
 }
