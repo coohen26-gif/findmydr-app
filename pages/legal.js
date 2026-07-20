@@ -5,16 +5,18 @@
  */
 import * as React from 'react';
 import Head from 'next/head';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { ChevronDown, Shield, FileText, Cookie, Building2 } from 'lucide-react';
 import { SiteHeader } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/Card';
 import { cn } from '../lib/utils';
 
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps({ req, locale }) {
   const host = req.headers.host || '';
   const isDentist = host.includes('findmydentist');
-  return { props: { isDentist } };
+  return { props: { isDentist, ...(await serverSideTranslations(locale, ['common'])) } };
 }
 
 const SECTIONS = [
@@ -235,20 +237,21 @@ const SECTIONS = [
 ];
 
 export default function Legal({ isDentist }) {
+  const { t } = useTranslation('common');
   const [open, setOpen] = React.useState('legal-notice');
 
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>Mentions légales & confidentialité — FindMyDoctor.ae</title>
-        <meta name="description" content="Mentions légales, CGU, politique de confidentialité et cookies conformes DIFC + RGPD + UAE Federal Decree-Law No. 45/2021." />
+        <title>{t('footer.terms')} — FindMyDoctor.ae</title>
+        <meta name="description" content={t('meta.about_description')} />
       </Head>
       <SiteHeader />
 
       <section className="gradient-hero text-white py-12">
         <div className="container-narrow text-center">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">Informations légales</h1>
-          <p className="text-white/85">Conformité UAE, DIFC, DHA et RGPD</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">{t('footer.terms')}</h1>
+          <p className="text-white/85">{t('cookie_banner.message')}</p>
         </div>
       </section>
 

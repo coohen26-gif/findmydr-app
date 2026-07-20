@@ -5,16 +5,19 @@
 import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Stethoscope, Shield, Globe, Heart, Users, TrendingUp, Award, MapPin, Mail, Sparkles, Target } from 'lucide-react';
 import { SiteHeader } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { Button } from '../components/Button';
 import { Card, CardContent } from '../components/Card';
 
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps({ req, locale }) {
   const host = req.headers.host || '';
   const isDentist = host.includes('findmydentist');
-  return { props: { isDentist, baseUrl: isDentist ? 'https://findmydentist.ae' : 'https://findmydr.ae' } };
+  return { props: { isDentist, baseUrl: isDentist ? 'https://findmydentist.ae' : 'https://findmydr.ae', ...(await serverSideTranslations(locale, ['common'])) } };
 }
 
 const VALUES = [
@@ -38,16 +41,21 @@ const TEAM = [
 ];
 
 export default function About({ isDentist, baseUrl }) {
-  const title = isDentist ? 'À propos — FindMyDentist.ae' : 'À propos — FindMyDoctor.ae';
-  const headline = isDentist
-    ? 'L\'annuaire qui rend les dentistes de Dubai visibles en ligne'
-    : 'L\'annuaire qui rend les médecins de Dubai visibles en ligne';
+  const { t, i18n } = useTranslation('common');
+  const router = useRouter();
+  const localePrefix = `/${i18n.language || 'en'}`;
+  const title = t('meta.about_title');
+  const headline = t('hero.title');
 
   return (
     <div className="min-h-screen bg-white">
       <Head>
         <title>{title}</title>
-        <meta name="description" content="Notre mission : connecter chaque patient Dubai avec le bon praticien DHA-licensé, gratuitement." />
+        <meta name="description" content={t('meta.about_description')} />
+        <link rel="alternate" hrefLang="fr" href={`https://findmydr.ae/fr${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="en" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="ar" href={`https://findmydr.ae/ar${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="x-default" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
       </Head>
       <SiteHeader />
 

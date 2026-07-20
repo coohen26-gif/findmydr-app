@@ -5,6 +5,9 @@
 import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Check, X, Award, Building2, Shield, Sparkles, ChevronRight } from 'lucide-react';
 import { SiteHeader } from '../components/Header';
 import { Footer } from '../components/Footer';
@@ -12,10 +15,10 @@ import { Button } from '../components/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/Card';
 import { Badge } from '../components/Badge';
 
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps({ req, locale }) {
   const host = req.headers.host || '';
   const isDentist = host.includes('findmydentist');
-  return { props: { isDentist } };
+  return { props: { isDentist, ...(await serverSideTranslations(locale, ['common'])) } };
 }
 
 const PLANS = [
@@ -77,21 +80,28 @@ const PLANS = [
 ];
 
 export default function Pricing({ isDentist }) {
+  const { t, i18n } = useTranslation('common');
+  const router = useRouter();
+  const localePrefix = `/${i18n.language || 'en'}`;
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-primary-50/20 to-white">
       <Head>
-        <title>Tarifs — FindMyDoctor.ae</title>
-        <meta name="description" content="Plans Free, Premium (200 AED/mois) et Pro (500 AED/mois) pour les médecins de Dubai. Annuaire gratuit pour les patients." />
+        <title>{t('meta.pricing_title')}</title>
+        <meta name="description" content={t('meta.pricing_description')} />
+        <link rel="alternate" hrefLang="fr" href={`https://findmydr.ae/fr${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="en" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="ar" href={`https://findmydr.ae/ar${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="x-default" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
       </Head>
       <SiteHeader />
 
       <section className="container-narrow py-16 md:py-20 text-center">
-        <Badge variant="info" className="mb-4">Tarifs</Badge>
+        <Badge variant="info" className="mb-4">{t('pricing.title')}</Badge>
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">
-          Simple, transparent, sans engagement
+          {t('pricing.title')}
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Annuaire <strong>100% gratuit pour les patients</strong>. Vous payez uniquement pour booster votre visibilité et débloquer les RDV en ligne.
+          {t('pricing.subtitle')}
         </p>
       </section>
 
@@ -128,9 +138,9 @@ export default function Pricing({ isDentist }) {
                       </li>
                     ))}
                   </ul>
-                  <Link href={p.id === 'free' ? '/dashboard/login' : `/dashboard/upgrade?plan=${p.id}`}>
+                  <Link href={p.id === 'free' ? `${localePrefix}/dashboard/login` : `${localePrefix}/dashboard/upgrade?plan=${p.id}`}>
                     <Button variant={p.highlight ? 'default' : 'outline'} className="w-full" size="lg">
-                      {p.id === 'free' ? 'Commencer gratuitement' : 'Choisir ce plan'} <ChevronRight className="h-4 w-4" />
+                      {p.id === 'free' ? t('pricing.free.cta') : t('pricing.cta')} <ChevronRight className="h-4 w-4" />
                     </Button>
                   </Link>
                 </CardContent>
@@ -142,11 +152,11 @@ export default function Pricing({ isDentist }) {
 
       <section className="container-narrow pb-16 text-center">
         <Card className="p-8 bg-gradient-to-br from-primary to-cyan-500 border-0 text-white">
-          <h2 className="text-2xl font-extrabold mb-2">Une question sur les tarifs ?</h2>
-          <p className="text-white/85 mb-4">Notre équipe répond sous 24h.</p>
-          <Link href="/contact">
+          <h2 className="text-2xl font-extrabold mb-2">{t('pricing.faq_title')}</h2>
+          <p className="text-white/85 mb-4">{t('pricing.money_back')}</p>
+          <Link href={`${localePrefix}/contact`}>
             <Button variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-              Nous contacter
+              {t('nav.contact')}
             </Button>
           </Link>
         </Card>

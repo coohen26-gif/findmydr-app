@@ -4,6 +4,9 @@
  */
 import * as React from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Mail, MessageCircle, MapPin, Phone, Send, Loader2, Check } from 'lucide-react';
 import { SiteHeader } from '../components/Header';
 import { Footer } from '../components/Footer';
@@ -11,10 +14,10 @@ import { Button } from '../components/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/Card';
 import { Input } from '../components/Input';
 
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps({ req, locale }) {
   const host = req.headers.host || '';
   const isDentist = host.includes('findmydentist');
-  return { props: { isDentist } };
+  return { props: { isDentist, ...(await serverSideTranslations(locale, ['common'])) } };
 }
 
 const CONTACTS = [
@@ -25,6 +28,8 @@ const CONTACTS = [
 ];
 
 export default function Contact({ isDentist }) {
+  const { t, i18n } = useTranslation('common');
+  const router = useRouter();
   const [form, setForm] = React.useState({ name: '', email: '', subject: 'general', message: '' });
   const [sending, setSending] = React.useState(false);
   const [sent, setSent] = React.useState(false);
@@ -49,14 +54,18 @@ export default function Contact({ isDentist }) {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>Contact — FindMyDoctor.ae</title>
-        <meta name="description" content="Contactez l'équipe FindMyDoctor.ae : support, partenariats, presse." />
+        <title>{t('meta.contact_title')}</title>
+        <meta name="description" content={t('meta.contact_description')} />
+        <link rel="alternate" hrefLang="fr" href={`https://findmydr.ae/fr${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="en" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="ar" href={`https://findmydr.ae/ar${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="x-default" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
       </Head>
       <SiteHeader />
 
       <section className="gradient-hero text-white py-16 md:py-20">
         <div className="container-narrow text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">Contactez-nous</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">{t('nav.contact')}</h1>
           <p className="text-lg text-white/85 max-w-2xl mx-auto">
             Réponse sous 24h ouvrées. Pour les partenariats cliniques, utilisez le sujet "Partenariat".
           </p>

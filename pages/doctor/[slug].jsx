@@ -1,6 +1,9 @@
 import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { MapPin, Phone, Calendar, Star, Clock, MessageCircle, ChevronLeft, ShieldCheck, Building2, Stethoscope, Share2, Bookmark, X, Check, Globe, Award, Lock, Image as ImageIcon } from 'lucide-react';
 import { SiteHeader } from '../../components/Header';
 import { Button } from '../../components/Button';
@@ -19,11 +22,11 @@ const RELATED = [
   { id: 'r4', name: 'Dr. Omar Tazi', specialty: 'Généraliste' },
 ];
 
-export async function getServerSideProps({ query, req }) {
+export async function getServerSideProps({ query, req, locale }) {
   const { slug, id: idParam } = query;
   const id = idParam || (slug ? String(slug).split('-').pop() : null);
   if (!id || !/^\d+$/.test(id)) {
-    return { props: { pro: null, baseUrl: pageUrl(req.headers.host, '/') } };
+    return { props: { pro: null, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
   }
   try {
     const r = await pool.query(
@@ -37,10 +40,10 @@ export async function getServerSideProps({ query, req }) {
         WHERE p.id = $1 LIMIT 1`,
       [parseInt(id, 10)]
     );
-    return { props: { pro: r.rows[0] || null, baseUrl: pageUrl(req.headers.host, '/') } };
+    return { props: { pro: r.rows[0] || null, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
   } catch (e) {
     console.error('doctor [slug] getServerSideProps error:', e.message);
-    return { props: { pro: null, baseUrl: pageUrl(req.headers.host, '/') } };
+    return { props: { pro: null, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
   }
 }
 
@@ -51,6 +54,9 @@ export default function DoctorProfile({ pro, baseUrl }) {
   const [rdvDate, setRdvDate] = React.useState('');
   const [rdvReason, setRdvReason] = React.useState('');
   const [rdvSent, setRdvSent] = React.useState(false);
+  const { t, i18n } = useTranslation('common');
+  const router = useRouter();
+  const localePrefix = `/${i18n.language || 'en'}`;
 
   if (!pro) {
     return (
@@ -58,10 +64,10 @@ export default function DoctorProfile({ pro, baseUrl }) {
         <SiteHeader />
         <div className="container-wide py-32 text-center">
           <div className="text-6xl mb-4">😕</div>
-          <h1 className="text-3xl font-extrabold mb-4">Médecin introuvable</h1>
+          <h1 className="text-3xl font-extrabold mb-4">{t('doctor.not_found')}</h1>
           <p className="text-muted-foreground mb-6">Ce profil n'existe pas dans notre annuaire.</p>
-          <Link href="/">
-            <Button size="lg"><ChevronLeft className="h-4 w-4" /> Retour à l'annuaire</Button>
+          <Link href={`${localePrefix}/`}>
+            <Button size="lg"><ChevronLeft className="h-4 w-4" /> {t('doctor.back_to_list')}</Button>
           </Link>
         </div>
       </div>

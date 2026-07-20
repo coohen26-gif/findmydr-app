@@ -1,381 +1,295 @@
 import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Search, MapPin, Calendar, ShieldCheck, Stethoscope, Sparkles, Award, Clock, ChevronRight, Star, ArrowRight, Heart, Activity, Brain, Baby, Eye, Bone, Users, Pill, Globe } from 'lucide-react';
-import { SiteHeader, Logo } from '../components/Header';
-import { Footer } from '../components/Footer';
-import { Button } from '../components/Button';
-import { Card, CardContent } from '../components/Card';
-import { Avatar } from '../components/Avatar';
-import { Badge } from '../components/Badge';
-import { Input } from '../components/Input';
-import { slugify } from '../lib/utils';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { Eye, MessageCircle, TrendingUp, Settings, Calendar, Award, ChevronRight, Sparkles, ArrowRight, Activity, AlertCircle, Phone, Percent } from 'lucide-react';
+import { SiteHeader } from '../../components/Header';
+import { Button } from '../../components/Button';
+import { Card } from '../../components/Card';
+import { Avatar } from '../../components/Avatar';
+import { Badge } from '../../components/Badge';
 
-const STATS = [
-  { value: '15 673', label: 'Médecins DHA-licensés', icon: Stethoscope, color: 'text-primary' },
-  { value: '5 049', label: 'Dentistes', icon: Activity, color: 'text-cyan-600' },
-  { value: '5 241', label: 'Établissements', icon: MapPin, color: 'text-emerald-600' },
-  { value: '24/7', label: 'Réservation en ligne', icon: Calendar, color: 'text-amber-600' },
-];
+function SparklineChart({ data, color = '#0066FF', height = 40 }) {
+  if (!data || data.length < 2) return null;
+  const values = data.map(d => parseInt(d.count || 0, 10));
+  const max = Math.max(...values, 1);
+  const min = Math.min(...values, 0);
+  const range = max - min || 1;
+  const w = 100;
+  const h = height;
+  const points = values.map((v, i) => {
+    const x = (i / (values.length - 1)) * w;
+    const y = h - ((v - min) / range) * (h - 4) - 2;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const areaPoints = `0,${h} ${points} ${w},${h}`;
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-full" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id={`spark-fill-${color.replace('#','')}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.2" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.02" />
+        </linearGradient>
+      </defs>
+      <polygon points={areaPoints} fill={`url(#spark-fill-${color.replace('#','')})`} />
+      <polyline points={points} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={points.split(' ').pop().split(',')[0]} cy={points.split(' ').pop().split(',')[1]} r="2.5" fill={color} />
+    </svg>
+  );
+}
 
-const SPECIALTIES = [
-  { icon: Stethoscope, name: 'Médecin généraliste', count: '4 556', slug: 'general', color: 'from-blue-500 to-cyan-500', bg: 'bg-blue-50' },
-  { icon: Heart, name: 'Cardiologue', count: '483', slug: 'cardio', color: 'from-rose-500 to-pink-500', bg: 'bg-rose-50' },
-  { icon: Brain, name: 'Neurologue', count: '212', slug: 'neuro', color: 'from-purple-500 to-indigo-500', bg: 'bg-purple-50' },
-  { icon: Baby, name: 'Pédiatre', count: '604', slug: 'pediatre', color: 'from-pink-500 to-rose-400', bg: 'bg-pink-50' },
-  { icon: Eye, name: 'Ophtalmologue', count: '389', slug: 'ophtalmo', color: 'from-cyan-500 to-blue-500', bg: 'bg-cyan-50' },
-  { icon: Bone, name: 'Orthopédiste', count: '376', slug: 'ortho', color: 'from-amber-500 to-orange-500', bg: 'bg-amber-50' },
-  { icon: Users, name: 'Gynécologue', count: '742', slug: 'gyneco', color: 'from-fuchsia-500 to-purple-500', bg: 'bg-fuchsia-50' },
-  { icon: Sparkles, name: 'Dermatologue', count: '624', slug: 'dermato', color: 'from-emerald-500 to-teal-500', bg: 'bg-emerald-50' },
-  { icon: Pill, name: 'ORL', count: '298', slug: 'orl', color: 'from-orange-500 to-red-500', bg: 'bg-orange-50' },
-  { icon: Activity, name: 'Endocrinologue', count: '186', slug: 'endocrino', color: 'from-indigo-500 to-blue-500', bg: 'bg-indigo-50' },
-  { icon: Award, name: 'Anesthésiste', count: '479', slug: 'anesthesiste', color: 'from-slate-500 to-gray-500', bg: 'bg-slate-50' },
-  { icon: Stethoscope, name: 'Voir toutes', count: '5 521+', slug: 'all', color: 'from-gray-500 to-slate-500', bg: 'bg-gray-50' },
-];
+function TrendBadge({ values }) {
+  if (!values || values.length < 2) return null;
+  const nums = values.map(d => parseInt(d.count || 0, 10));
+  const first = nums[0];
+  const last = nums[nums.length - 1];
+  if (first === 0) return <Badge variant="secondary" className="text-xs">—</Badge>;
+  const pct = Math.round(((last - first) / first) * 100);
+  if (pct > 0) return <Badge variant="success" className="text-xs">+{pct}%</Badge>;
+  if (pct < 0) return <Badge variant="destructive" className="text-xs">{pct}%</Badge>;
+  return <Badge variant="secondary" className="text-xs">0%</Badge>;
+}
 
-const TRUST = [
-  { icon: ShieldCheck, title: '100% DHA Verified', desc: 'Tous les profils sont issus du registre officiel Dubai Health Authority (Sheryan). Données vérifiées en temps réel.' },
-  { icon: Globe, title: 'Trilingue FR/EN/AR', desc: 'Plateforme accessible aux 200+ nationalités de Dubai. Cherchez et réservez dans votre langue.' },
-  { icon: Star, title: 'No Hidden Fees', desc: '100% gratuit pour les patients. Pas de commission, pas d\'inscription obligatoire. Prix transparents pour les praticiens.' },
-];
-
-const FEATURED_FACILITIES = [
-  { name: 'American Hospital Dubai', pros: 701, location: 'Oud Metha', image: '🏥' },
-  { name: 'Mediclinic City Hospital', pros: 614, location: 'Dubai Healthcare City', image: '🏨' },
-  { name: 'Rashid Hospital', pros: 1713, location: 'Bur Dubai', image: '🏥' },
-  { name: 'Latifa Hospital', pros: 574, location: 'Al Jaddaf', image: '🏥' },
-  { name: 'Kings College Hospital', pros: 544, location: 'Dubai Hills', image: '🏨' },
-  { name: 'Al Jalila Children Hospital', pros: 685, location: 'Al Jaddaf', image: '👶' },
-];
-
-export default function Home() {
-  const [search, setSearch] = React.useState('');
-  const [physicians, setPhysicians] = React.useState([]);
+export default function Dashboard() {
+  const router = useRouter();
+  const { t } = useTranslation('common');
+  const [user, setUser] = React.useState(null);
+  const [stats, setStats] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    fetch('/api/physicians?q=' + search)
-      .then(r => r.json())
-      .then(data => {
-        setPhysicians(data.physicians || []);
+    Promise.all([
+      fetch('/api/dashboard/profile').then(r => r.json()),
+      fetch('/api/dashboard/stats').then(r => r.json()),
+    ])
+      .then(([profileData, statsData]) => {
+        if (profileData.user) {
+          setUser(profileData.user);
+          setStats(statsData);
+        } else {
+          router.push('/dashboard/login');
+        }
         setLoading(false);
-      });
-  }, [search]);
+      })
+      .catch(() => router.push('/dashboard/login'));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-muted/30">
+        <SiteHeader />
+        <div className="container-wide py-8 animate-pulse space-y-8">
+          <div className="h-32 rounded-2xl bg-muted" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="h-48 rounded-2xl bg-muted" />
+            <div className="h-48 rounded-2xl bg-muted" />
+            <div className="h-48 rounded-2xl bg-muted" />
+          </div>
+          <div className="h-6 w-48 bg-muted rounded-lg" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="h-36 rounded-2xl bg-muted" />
+            <div className="h-36 rounded-2xl bg-muted" />
+            <div className="h-36 rounded-2xl bg-muted" />
+          </div>
+          <div className="h-6 w-48 bg-muted rounded-lg" />
+          <div className="h-64 rounded-2xl bg-muted" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
+  const completeness = user.profile_completeness || 0;
+  const isComplete = completeness >= 80;
+  const userName = user.full_name_en || user.email.split('@')[0];
+
+  const viewsTotal = stats?.views?.total || 0;
+  const whatsappClicks = stats?.clicks?.find?.(c => c.click_type === 'whatsapp')?.count || 0;
+  const whatsappClicksNum = parseInt(whatsappClicks, 10) || 0;
+  const totalClicks = stats?.clicks?.reduce?.((s, c) => s + parseInt(c.count || 0, 10), 0) || 0;
+  const conversionRate = viewsTotal > 0 ? ((whatsappClicksNum / viewsTotal) * 100).toFixed(1) : '0.0';
+  const viewsPerDay = stats?.views?.per_day || [];
+  const apptsTotal = stats?.appointments?.total || 0;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-muted/30">
       <Head>
-        <title>FindMyDoctor.ae — 15 673 médecins DHA-licensés à Dubai</title>
-        <meta name="description" content="Trouvez rapidement un médecin ou un dentiste à Dubai. Annuaire trilingue vérifié DHA. Réservez en ligne en quelques clics." />
+        <title>{t('nav.dashboard')} — FindMyDoctor.ae</title>
       </Head>
 
-      <SiteHeader />
+      <SiteHeader user={user} />
 
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-cyan-50">
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <div className="absolute top-20 -left-20 w-96 h-96 bg-primary-500 rounded-full blur-3xl opacity-20" />
-          <div className="absolute -top-20 right-0 w-96 h-96 bg-cyan-400 rounded-full blur-3xl opacity-20" />
-        </div>
-        <div className="container-wide relative py-16 md:py-24 lg:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <Badge variant="info" className="text-sm px-3 py-1">
-                🇦🇪 Made in UAE · 100% vérifié DHA
+      <div className="container-wide py-8">
+        {/* Welcome banner */}
+        <Card className="mb-8 overflow-hidden bg-gradient-to-br from-primary via-primary-600 to-cyan-500 border-0 text-white">
+          <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-6">
+            <Avatar name={userName} size="2xl" className="ring-4 ring-white/30" />
+            <div className="flex-1">
+              <Badge variant="premium" className="mb-2 bg-white/20 text-white border-0">
+                {user.plan === 'premium' ? '⭐ Premium' : 'Free'}
               </Badge>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-balance">
-                Votre santé,<br />
-                <span className="bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">
-                  le bon médecin.
-                </span>
+              <h1 className="text-2xl md:text-3xl font-extrabold mb-1">
+                Bonjour, Dr. {userName}
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground text-pretty max-w-xl">
-                L'annuaire de référence pour trouver un médecin ou un dentiste à Dubai.
-                Réservez en ligne, en arabe, français ou anglais.
-              </p>
-              <div className="relative max-w-xl">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
-                <Input
-                  type="text"
-                  placeholder="Médecin, spécialité, clinique…"
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  className="pl-12 h-14 text-base shadow-lg border-0"
-                />
-                <Button size="lg" className="absolute right-1.5 top-1.5 h-11">
-                  Rechercher
-                </Button>
-              </div>
-              <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                <span>Populaire :</span>
-                {['Cardiologue', 'Pédiatre', 'Gynécologue', 'Dentiste'].map(s => (
-                  <Link key={s} href={`/doctor?q=${encodeURIComponent(s)}`} className="hover:text-primary underline-offset-4 hover:underline">
-                    {s}
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div className="relative hidden lg:block">
-              <div className="relative aspect-square max-w-md mx-auto">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary to-cyan-500 rounded-3xl rotate-6 opacity-10" />
-                <div className="absolute inset-0 bg-white rounded-3xl shadow-2xl overflow-hidden">
-                  <div className="h-full w-full bg-gradient-to-br from-primary-50 to-cyan-50 p-8 flex flex-col items-center justify-center">
-                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-cyan-500 mb-6 flex items-center justify-center text-white text-5xl font-bold shadow-xl">
-                      DR
-                    </div>
-                    <h3 className="text-2xl font-bold mb-1">Dr. Sara Al-Mansouri</h3>
-                    <p className="text-muted-foreground mb-4">Dermatologue · DHA Vérifié</p>
-                    <div className="flex items-center gap-2 mb-6">
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map(i => (
-                          <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-                      <span className="text-sm font-medium">4.9 (127 avis)</span>
-                    </div>
-                    <Button className="w-full">Prendre rendez-vous</Button>
-                  </div>
-                </div>
-                <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl p-4 flex items-center gap-3 animate-fade-in">
-                  <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center">
-                    <Calendar className="h-5 w-5 text-emerald-600" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-muted-foreground">Demain 14h30</div>
-                    <div className="text-sm font-semibold">Disponible</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* STATS BAR */}
-      <section className="container-wide -mt-8 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 bg-white rounded-2xl shadow-xl p-6 md:p-8">
-          {STATS.map(s => {
-            const Icon = s.icon;
-            return (
-              <div key={s.label} className="flex items-center gap-3">
-                <div className={`h-12 w-12 rounded-xl bg-muted flex items-center justify-center ${s.color}`}>
-                  <Icon className="h-6 w-6" />
-                </div>
-                <div>
-                  <div className="text-2xl font-extrabold">{s.value}</div>
-                  <div className="text-xs text-muted-foreground">{s.label}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* SPECIALTIES */}
-      <section className="container-wide py-20">
-        <div className="text-center mb-12 space-y-3">
-          <h2 className="text-3xl md:text-4xl font-extrabold">Explorez par spécialité</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Plus de 15 000 praticiens DHA-licensés dans toutes les spécialités médicales.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {SPECIALTIES.map(s => {
-            const Icon = s.icon;
-            return (
-              <Link
-                key={s.name}
-                href={`/doctor?q=${encodeURIComponent(s.slug)}`}
-                className="group relative bg-white border border-border rounded-xl p-5 hover:shadow-lg hover:border-primary-500/30 transition-all duration-200"
-              >
-                <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white mb-3 group-hover:scale-110 transition-transform`}>
-                  <Icon className="h-6 w-6" />
-                </div>
-                <h3 className="font-semibold text-sm leading-tight mb-1 line-clamp-2">{s.name}</h3>
-                <p className="text-xs text-muted-foreground">{s.count} praticiens</p>
-                <ChevronRight className="absolute top-5 right-5 h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* TRUST COUNTER */}
-      <section className="container-wide py-8">
-        <div className="bg-gradient-to-r from-primary-50 via-white to-cyan-50 border border-primary-100 rounded-2xl p-6 md:p-8 text-center shadow-sm">
-          <div className="inline-flex items-center gap-2 bg-primary-50 text-primary text-xs font-semibold px-3 py-1 rounded-full mb-4">
-            <ShieldCheck className="h-3 w-3" /> DHA Official Registry
-          </div>
-          <div className="text-4xl md:text-5xl font-extrabold text-foreground mb-2">
-            20,000<span className="text-primary">+</span>
-          </div>
-          <p className="text-lg text-muted-foreground">
-            Verified Professionals &bull; Dubai Health Authority
-          </p>
-          <div className="flex items-center justify-center gap-6 mt-4 text-sm text-muted-foreground">
-            <span>&#x1FA7A; 15 673 M\u00e9decins</span>
-            <span>&#x1F9B7; 5 049 Dentistes</span>
-            <span>&#x1F3E5; 5 241 \u00c9tablissements</span>
-          </div>
-        </div>
-      </section>
-
-      {/* FEATURED DOCTORS */}
-      <section className="bg-muted/30 py-20">
-        <div className="container-wide">
-          <div className="flex items-end justify-between mb-10">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-extrabold mb-2">Médecins vedettes</h2>
-              <p className="text-muted-foreground">
-                {loading ? '⏳ Chargement...' : `${physicians.length} résultats affichés`}
+              <p className="text-white/80">
+                {isComplete
+                  ? "Votre profil est complet et visible sur l'annuaire."
+                  : `Complétez votre profil (${completeness}%) pour être visible.`}
               </p>
             </div>
-            <Link href="/doctor" className="hidden sm:flex items-center gap-1 text-primary font-semibold hover:underline">
-              Voir tous <ArrowRight className="h-4 w-4" />
+            <Link href="/dashboard/profile">
+              <Button variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                {isComplete ? 'Voir mon profil' : 'Compléter'}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
             </Link>
           </div>
-          {physicians.length === 0 && !loading ? (
-            <Card className="p-12 text-center">
-              <div className="text-6xl mb-4">🔍</div>
-              <p className="text-muted-foreground">Aucun résultat. Essayez une autre recherche.</p>
+        </Card>
+
+        {!isComplete && (
+          <Card className="mb-8 p-4 bg-amber-50 border-amber-200">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-amber-900 mb-1">Votre profil est incomplet</h3>
+                <p className="text-sm text-amber-800 mb-3">
+                  Les profils avec photo, bio et langues parlées reçoivent <strong>5x plus de vues</strong>.
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-2 bg-amber-200 rounded-full overflow-hidden">
+                    <div className="h-full bg-amber-500 transition-all" style={{ width: `${completeness}%` }} />
+                  </div>
+                  <span className="text-sm font-semibold text-amber-900">{completeness}%</span>
+                </div>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* 🏆 Money-Shot: 3 big stat cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+          <Card className="p-6 overflow-hidden relative">
+            <div className="flex items-start justify-between mb-1">
+              <div className="h-12 w-12 rounded-xl bg-primary-50 flex items-center justify-center">
+                <Eye className="h-6 w-6 text-primary" />
+              </div>
+              <TrendBadge values={viewsPerDay} />
+            </div>
+            <div className="text-3xl font-extrabold mb-1">{viewsTotal.toLocaleString()}</div>
+            <div className="text-sm text-muted-foreground mb-3">Vues Totales</div>
+            <div className="h-10">
+              <SparklineChart data={viewsPerDay} color="#0066FF" />
+            </div>
+          </Card>
+          <Card className="p-6 overflow-hidden relative">
+            <div className="flex items-start justify-between mb-1">
+              <div className="h-12 w-12 rounded-xl bg-emerald-50 flex items-center justify-center">
+                <MessageCircle className="h-6 w-6 text-emerald-600" />
+              </div>
+              <TrendBadge values={stats?.clicks?.filter?.(c => c.click_type === 'whatsapp')?.map?.(c => ({ count: c.count })) || []} />
+            </div>
+            <div className="text-3xl font-extrabold mb-1">{whatsappClicksNum.toLocaleString()}</div>
+            <div className="text-sm text-muted-foreground mb-3">Clics WhatsApp</div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Phone className="h-3 w-3" />
+              <span>Appels directs: {totalClicks.toLocaleString()}</span>
+            </div>
+          </Card>
+          <Card className="p-6 overflow-hidden relative">
+            <div className="flex items-start justify-between mb-1">
+              <div className="h-12 w-12 rounded-xl bg-amber-50 flex items-center justify-center">
+                <Percent className="h-6 w-6 text-amber-600" />
+              </div>
+              <Badge variant={parseFloat(conversionRate) > 5 ? 'success' : parseFloat(conversionRate) > 2 ? 'warning' : 'secondary'} className="text-xs">
+                {viewsTotal > 0 ? 'Actif' : 'En attente'}
+              </Badge>
+            </div>
+            <div className="text-3xl font-extrabold mb-1">{conversionRate}%</div>
+            <div className="text-sm text-muted-foreground mb-3">Taux de Conversion</div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Calendar className="h-3 w-3" />
+              <span>{apptsTotal} RDV ce mois</span>
+            </div>
+          </Card>
+        </div>
+
+        {/* Action cards */}
+        <h2 className="text-xl font-extrabold mb-4">Actions rapides</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          <Link href="/dashboard/profile">
+            <Card className="p-6 hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group">
+              <div className="h-12 w-12 rounded-xl bg-primary-50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Settings className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-bold text-lg mb-1">Mon profil</h3>
+              <p className="text-sm text-muted-foreground mb-3">Photo, bio, spécialités, contact</p>
+              <div className="flex items-center gap-1 text-sm text-primary font-semibold">
+                Compléter <ChevronRight className="h-4 w-4" />
+              </div>
             </Card>
+          </Link>
+          <Link href="/dashboard/calendar">
+            <Card className="p-6 hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group">
+              <div className="h-12 w-12 rounded-xl bg-cyan-50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Calendar className="h-6 w-6 text-cyan-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-1">Mes rendez-vous</h3>
+              <p className="text-sm text-muted-foreground mb-3">Gérer votre agenda et disponibilités</p>
+              <div className="flex items-center gap-1 text-sm text-cyan-600 font-semibold">
+                Voir le calendrier <ChevronRight className="h-4 w-4" />
+              </div>
+            </Card>
+          </Link>
+          <Link href="/dashboard/upgrade">
+            <Card className="p-6 hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Award className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="font-bold text-lg mb-1">Passer Premium</h3>
+              <p className="text-sm text-muted-foreground mb-3">Débloquez toutes les fonctionnalités</p>
+              <div className="flex items-baseline gap-1 mb-2">
+                <span className="text-2xl font-extrabold text-amber-600">200 AED</span>
+                <span className="text-sm text-muted-foreground">/ mois</span>
+              </div>
+              <div className="flex items-center gap-1 text-sm text-amber-600 font-semibold">
+                Upgrade <ChevronRight className="h-4 w-4" />
+              </div>
+            </Card>
+          </Link>
+        </div>
+
+        {/* Recent activity */}
+        <h2 className="text-xl font-extrabold mb-4">Activité récente</h2>
+        <Card className="p-6">
+          {viewsPerDay.length > 0 || totalClicks > 0 ? (
+            <div className="space-y-3">
+              {viewsPerDay.slice(-7).reverse().map((d, i) => (
+                <div key={i} className="flex items-center justify-between text-sm py-1.5 border-b border-border/40 last:border-0">
+                  <span className="text-muted-foreground">{d.day?.slice(5) || '—'}</span>
+                  <span className="font-semibold">{d.count} vue{d.count !== '1' ? 's' : ''}</span>
+                </div>
+              ))}
+            </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {physicians.slice(0, 12).map(p => {
-                const slug = slugify(p.name) + '-' + p.id;
-                return (
-                  <Link
-                    key={p.id}
-                    href={`/doctor/${slug}`}
-                    className="group bg-white rounded-xl border border-border p-5 hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
-                  >
-                    <div className="flex items-start gap-3 mb-4">
-                      <Avatar name={p.name} size="lg" verified />
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-sm leading-tight line-clamp-1">{p.name}</h3>
-                        <p className="text-xs text-muted-foreground line-clamp-1">{p.specialty || '—'}</p>
-                        <Badge variant="verified" className="mt-2 text-[10px] py-0">
-                          <ShieldCheck className="h-3 w-3" /> DHA
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="space-y-1 pt-3 border-t border-border">
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <MapPin className="h-3 w-3 flex-shrink-0" />
-                        <span className="line-clamp-1">{p.facility_name || '—'}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-xs text-primary font-semibold pt-1">
-                        Voir le profil
-                        <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
+            <div className="text-center py-12 text-muted-foreground">
+              <Activity className="h-12 w-12 mx-auto mb-3 opacity-30" />
+              <p className="text-sm">Aucune activité pour le moment.</p>
+              <p className="text-xs mt-1">Vos premières vues et clics apparaîtront ici.</p>
             </div>
           )}
-        </div>
-      </section>
-
-      {/* TOP FACILITIES */}
-      <section className="container-wide py-20">
-        <div className="text-center mb-12 space-y-3">
-          <h2 className="text-3xl md:text-4xl font-extrabold">Établissements de référence</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Les hôpitaux et cliniques les mieux notés de Dubai.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          {FEATURED_FACILITIES.map(f => (
-            <div
-              key={f.name}
-              className="bg-white border border-border rounded-xl p-4 text-center hover:shadow-md hover:border-primary-500/30 transition-all cursor-pointer"
-            >
-              <div className="text-4xl mb-2">{f.image}</div>
-              <h3 className="font-semibold text-xs leading-tight line-clamp-2 mb-1">{f.name}</h3>
-              <p className="text-[10px] text-muted-foreground">{f.location}</p>
-              <p className="text-xs font-bold text-primary mt-1">{f.pros} pros</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* TRUST */}
-      <section className="bg-gradient-to-br from-primary to-cyan-600 py-20 text-white">
-        <div className="container-wide">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12">
-            Pourquoi FindMyDoctor.ae ?
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {TRUST.map(t => {
-              const Icon = t.icon;
-              return (
-                <div key={t.title} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
-                  <div className="h-12 w-12 rounded-xl bg-white/20 flex items-center justify-center mb-4">
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{t.title}</h3>
-                  <p className="text-white/80 text-sm leading-relaxed">{t.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA PRO */}
-      <section className="container-wide py-20">
-        <Card className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-0 text-white overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500 rounded-full blur-3xl opacity-10" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary rounded-full blur-3xl opacity-10" />
-          <div className="relative p-8 md:p-12 grid md:grid-cols-2 gap-8 items-center">
-            <div>
-              <Badge variant="premium" className="mb-4">⭐ Pour les praticiens</Badge>
-              <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
-                Activez votre profil premium
-              </h2>
-              <p className="text-white/80 mb-6 text-pretty">
-                Recevez des patients qui cherchent votre spécialité. Bio trilingue, photos, horaires, prise de RDV intégrée.
-              </p>
-              <ul className="space-y-2 mb-8 text-sm">
-                <li className="flex items-center gap-2">✅ Fiche premium avec photos et vidéos</li>
-                <li className="flex items-center gap-2">✅ Réservation en ligne intégrée</li>
-                <li className="flex items-center gap-2">✅ Messagerie patient sécurisée</li>
-                <li className="flex items-center gap-2">✅ Statistiques de vues et clics</li>
-              </ul>
-              <div className="flex items-baseline gap-2 mb-6">
-                <span className="text-5xl font-extrabold text-amber-400">200 AED</span>
-                <span className="text-white/60">/ mois</span>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <Link href="/dashboard/login">
-                  <Button variant="premium" size="lg">
-                    Activer mon profil
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <a href="mailto:contact@findmydr.ae">
-                  <Button variant="outline" size="lg" className="bg-transparent border-white/30 text-white hover:bg-white/10">
-                    Nous contacter
-                  </Button>
-                </a>
-              </div>
-            </div>
-            <div className="hidden md:flex justify-center">
-              <div className="relative">
-                <div className="w-72 h-72 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-2xl">
-                  <div className="text-center">
-                    <div className="text-7xl mb-2">⭐</div>
-                    <div className="text-2xl font-bold">200 AED</div>
-                    <div className="text-sm opacity-90">/ mois</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </Card>
-      </section>
-      <Footer />
+      </div>
     </div>
   );
+}
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }
