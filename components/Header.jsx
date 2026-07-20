@@ -65,10 +65,33 @@ export function SearchBar({ placeholder = 'Médecin, spécialité, clinique…',
 }
 
 function LangSelector() {
+  const router = useRouter();
   const { lang, switchLang } = useContext(LocaleContext);
   const [open, setOpen] = useState(false);
 
   const current = LOCALE_MAP[lang] || LOCALE_MAP.fr;
+
+  const localeFromPath = (path) => {
+    const m = (path || router.asPath || '/').match(/^\/(fr|en|ar)(\/|$)/);
+    return m ? m[1] : null;
+  };
+
+  const switchTo = (code) => {
+    switchLang(code);
+    const cur = localeFromPath(router.asPath);
+    let nextPath;
+    if (cur) {
+      nextPath = router.asPath.replace(/^\/(fr|en|ar)/, `/${code}`);
+    } else {
+      const base = router.asPath.startsWith('/') ? router.asPath : `/${router.asPath}`;
+      nextPath = `/${code}${base === '/' ? '/' : base}`;
+    }
+    if (nextPath.startsWith(`/${code}/${code}`)) {
+      nextPath = nextPath.replace(`/${code}/${code}`, `/${code}`);
+    }
+    setOpen(false);
+    router.push(nextPath);
+  };
 
   return (
     <div className="relative">
@@ -77,6 +100,7 @@ function LangSelector() {
         className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
         aria-label="Changer de langue"
       >
+        <Globe className="h-4 w-4" />
         <span className="text-base leading-none">{current.flag}</span>
         <span className="text-xs font-semibold">{current.short}</span>
       </button>
@@ -87,7 +111,7 @@ function LangSelector() {
             {Object.entries(LOCALE_MAP).map(([code, locale]) => (
               <button
                 key={code}
-                onClick={() => { switchLang(code); setOpen(false); }}
+                onClick={() => switchTo(code)}
                 className={`w-full flex items-center gap-3 px-4 py-2 text-sm transition-colors ${
                   lang === code ? 'bg-primary-50 text-primary font-semibold' : 'text-foreground hover:bg-muted'
                 }`}
