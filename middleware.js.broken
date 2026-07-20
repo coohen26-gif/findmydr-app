@@ -24,6 +24,13 @@ function detectLocaleFromAcceptLanguage(acceptLang) {
   return DEFAULT_LOCALE;
 }
 
+function isBot(userAgent) {
+  if (!userAgent) return false;
+  return /googlebot|bingbot|duckduckbot|yandexbot|baiduspider|slurp|applebot|facebot|ia_archiver|petalbot|semrushbot|ahrefsbot|mj12bot|dotbot|rogerbot/i.test(
+    userAgent
+  );
+}
+
 export function middleware(request) {
   const host = request.headers.get('host') || '';
   const url = request.nextUrl.clone();
@@ -31,7 +38,7 @@ export function middleware(request) {
   const search = url.search;
   const ua = request.headers.get('user-agent') || '';
 
-  // Skip API, static, dashboard, sitemap, robots, blog
+  // Skip API, static, dashboard, sitemap, robots
   if (
     path.startsWith('/api') ||
     path.startsWith('/_next') ||
@@ -46,7 +53,7 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // 1) Detect locale prefix in URL
+  // 1) Detect locale prefix
   let locale = null;
   let pathWithoutLocale = path;
   const m = path.match(LOCALE_PREFIX_RE);
@@ -55,8 +62,8 @@ export function middleware(request) {
     pathWithoutLocale = path.replace(LOCALE_PREFIX_RE, '/') || '/';
   }
 
-  // 2) If no locale in URL, pick one (cookie > Accept-Language > default)
-  if (!locale) {
+  // 2) If no locale, decide redirect (skip bots to preserve SEO)
+  if (!locale && !isBot(ua)) {
     const acceptLang = request.headers.get('accept-language') || '';
     const cookieLocale = (request.cookies.get('NEXT_LOCALE')?.value || '').toLowerCase();
     let preferred = DEFAULT_LOCALE;
@@ -65,20 +72,28 @@ export function middleware(request) {
     } else if (acceptLang) {
       preferred = detectLocaleFromAcceptLanguage(acceptLang);
     }
-    locale = preferred;
+    const target = `/${preferred}${path === '/' ? '/' : path}`;
+    return NextResponse.redirect(new URL(target, request.url), 302);
   }
 
-  // 3) Cross-domain redirects (preserve user's locale choice)
+  // If bot and no locale, default to English but keep URL clean
+  if (!locale && isBot(ua)) {
+    locale = DEFAULT_LOCALE;
+  }
+
+  // 3) Cross-domain redirects (apply to cleaned path)
   if (host.includes('findmydr.ae') && pathWithoutLocale.startsWith('/dentist')) {
-    const target = new URL(`/${locale}${pathWithoutLocale}${search}`, 'https://findmydentist.ae');
+    const target = new URL(pathWithoutLocale + search, 'https://findmydentist.ae');
+    target.pathname = `/${locale}${target.pathname}`;
     return NextResponse.redirect(target, 308);
   }
   if (host.includes('findmydentist.ae') && pathWithoutLocale.startsWith('/doctor')) {
-    const target = new URL(`/${locale}${pathWithoutLocale}${search}`, 'https://findmydr.ae');
+    const target = new URL(pathWithoutLocale + search, 'https://findmydr.ae');
+    target.pathname = `/${locale}${target.pathname}`;
     return NextResponse.redirect(target, 308);
   }
 
-  // 4) Apply host-based rewrite (findmydr.ae → /doctor/*, findmydentist.ae → /dentist/*)
+  // 4) Apply host-based rewrite on cleaned path
   let rewritePath = null;
   if (host.includes('findmydentist.ae')) {
     if (pathWithoutLocale === '/' || pathWithoutLocale === '') {
@@ -118,24 +133,15 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // 5) IMPORTANT: Pages Router with next-i18next serves canonical paths
-  //    (e.g. /doctor/[slug]) and the locale is resolved from the URL prefix
-  //    OR from the default-locale. We rewrite to the CANONICAL path (no locale)
-  //    so the page exists. The locale is propagated via the x-dmd-locale header
-  //    and a NEXT_LOCALE cookie for next-i18next to pick up.
   url.pathname = rewritePath;
-  // Strip query string for pro detail pages
+  url.search = search && !rewritePath.startsWith('/dentist/') && !rewritePath.startsWith('/doctor/') ? search : '';
   if (rewritePath.startsWith('/dentist/') || rewritePath.startsWith('/doctor/')) {
     url.search = '';
-  } else {
-    url.search = search;
   }
 
   const res = NextResponse.rewrite(url);
-  res.headers.set('x-dmd-locale', locale);
+  res.headers.set('x-dmd-locale', locale || DEFAULT_LOCALE);
   res.headers.set('Vary', 'Accept-Language');
-  // Set/refresh cookie so next-i18next's getServerSideProps({ locale }) picks the right one
-  res.cookies.set('NEXT_LOCALE', locale, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
   return res;
 }
 
