@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Stethoscope, Menu, X, Globe } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Button } from './Button';
