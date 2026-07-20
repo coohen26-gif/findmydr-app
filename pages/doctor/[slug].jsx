@@ -85,6 +85,8 @@ export default function DoctorProfile({ pro, baseUrl }) {
   const dhaVerified = pro.is_dha_verified === true;
   const photoUrl = pro.profile_picture_url || null;
   const isPremium = pro.plan === 'premium';
+  const phone = pro.phone || null;
+  const waPhone = phone ? String(phone).replace(/[^0-9]/g, '') : null;
 
   const title = pageTitle(`${fullName} - ${specialty} Dubai`);
   const bio = pro.bio_fr && pro.bio_fr.length > 0 ? pro.bio_fr.slice(0, 120) + "... " : "";
@@ -346,10 +348,11 @@ export default function DoctorProfile({ pro, baseUrl }) {
         </div>
       </section>
 
-      {/* WhatsApp sticky button (mobile only) */}
+      {/* WhatsApp sticky button (mobile only) - shown only when a real phone exists */}
+      {waPhone && (
       <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 backdrop-blur-md border-t border-border/60 px-4 py-3 flex items-center gap-3 shadow-2xl animate-fade-in">
         <a
-          href={`https://wa.me/971?text=Bonjour%20Dr.%20${encodeURIComponent(fullName)}%2C%20je%20vous%20contacte%20depuis%20FindMyDoctor.ae`}
+          href={`https://wa.me/${waPhone}?text=Bonjour%20Dr.%20${encodeURIComponent(fullName)}%2C%20je%20vous%20contacte%20depuis%20FindMyDoctor.ae`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 flex items-center justify-center gap-2 bg-emerald-500 text-white font-bold rounded-xl py-3.5 text-sm hover:bg-emerald-600 transition-colors animate-pulse-slow"
@@ -357,10 +360,11 @@ export default function DoctorProfile({ pro, baseUrl }) {
           <MessageCircle className="h-5 w-5" />
           Contacter par WhatsApp
         </a>
-        <a href="tel:+971" className="flex items-center justify-center h-11 w-11 rounded-xl bg-muted hover:bg-muted/80 transition-colors">
+        <a href={`tel:+${waPhone}`} className="flex items-center justify-center h-11 w-11 rounded-xl bg-muted hover:bg-muted/80 transition-colors">
           <Phone className="h-5 w-5" />
         </a>
       </div>
+      )}
 
       {showRdv && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setShowRdv(false)}>
