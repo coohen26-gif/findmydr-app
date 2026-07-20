@@ -1,0 +1,302 @@
+{
+  "nav": {
+    "home": "Home",
+    "doctors": "Doctors",
+    "dentists": "Dentists",
+    "pricing": "Pricing",
+    "about": "About",
+    "contact": "Contact",
+    "dashboard": "Doctor portal",
+    "login": "Sign in",
+    "signup": "Activate my profile",
+    "search_placeholder": "Doctor, specialty, clinic…",
+    "search_button": "Search",
+    "my_account": "My account",
+    "my_profile": "My profile",
+    "menu": "Menu",
+    "close_menu": "Close menu",
+    "open_menu": "Open menu",
+    "change_language": "Change language"
+  },
+  "hero": {
+    "title": "Find your DHA-licensed doctor in Dubai",
+    "subtitle": "15,673 doctors and 5,049 verified dentists. Book online in English, French or Arabic.",
+    "cta_search": "Find a doctor",
+    "cta_premium": "Activate my pro profile"
+  },
+  "home": {
+    "stats": {
+      "doctors": "DHA-licensed doctors",
+      "dentists": "Verified dentists",
+      "facilities": "Healthcare facilities",
+      "languages": "Languages spoken"
+    },
+    "categories": {
+      "gp": "General Practitioner",
+      "dentist": "Dentist",
+      "gyneco": "Gynecologist",
+      "pediatre": "Pediatrician",
+      "dermato": "Dermatologist",
+      "orthodontist": "Orthodontist",
+      "cardio": "Cardiologist",
+      "ophtalmo": "Ophthalmologist"
+    },
+    "categories_title": "Find a specialist",
+    "categories_subtitle": "Search by medical specialty",
+    "featured": {
+      "title": "Featured doctors",
+      "subtitle": "Profiles verified by our team"
+    },
+    "premium_cta": {
+      "title": "Are you a doctor?",
+      "subtitle": "Join Dubai's first trilingual medical directory",
+      "benefit_1": "DHA-verified featured profile",
+      "benefit_2": "Online appointment booking",
+      "benefit_3": "Direct messaging with your patients",
+      "cta": "Activate my profile"
+    },
+    "how_it_works_title": "How it works",
+    "how_it_works_subtitle": "3 simple steps to find your doctor",
+    "step_1_title": "Search",
+    "step_1_desc": "By specialty, name or location",
+    "step_2_title": "Compare",
+    "step_2_desc": "Verified profiles, languages, fees",
+    "step_3_title": "Book",
+    "step_3_desc": "Online or via direct message"
+  },
+  "doctor": {
+    "specialty": "Specialty",
+    "facility": "Facility",
+    "license": "DHA license",
+    "languages": "Languages spoken",
+    "consultation_fee": "Consultation fee",
+    "book": "Book appointment",
+    "message": "Send message",
+    "share": "Share profile",
+    "verified_dha": "DHA-verified profile",
+    "verified_visit": "In-person visits",
+    "experience": "Years of experience",
+    "rating": "Rating",
+    "reviews": "reviews",
+    "location": "Address",
+    "phone": "Phone",
+    "website": "Website",
+    "schedule": "Schedule",
+    "insurance": "Accepted insurance",
+    "about": "About",
+    "similar": "Similar doctors",
+    "back_to_list": "Back to list",
+    "not_found": "Doctor not found",
+    "loading": "Loading profile…"
+  },
+  "search": {
+    "filters": {
+      "specialty": "Specialty",
+      "location": "Location",
+      "language": "Language",
+      "insurance": "Insurance",
+      "gender": "Gender",
+      "availability": "Availability",
+      "all": "All",
+      "any": "Any",
+      "reset": "Reset"
+    },
+    "results_count": "{count} doctor found",
+    "results_count_plural": "{count} doctors found",
+    "no_results": "No doctor found",
+    "no_results_hint": "Try broadening your criteria",
+    "sort": "Sort by",
+    "sort_relevance": "Relevance",
+    "sort_rating": "Top rated",
+    "sort_experience": "Most experienced",
+    "sort_recent": "Most recent",
+    "loading": "Searching…"
+  },
+  "pricing": {
+    "title": "Pricing",
+    "subtitle": "Free for patients. Premium options for professionals.",
+    "free": {
+      "name": "Free",
+      "price": "0 AED",
+      "period": "/ month",
+      "description": "For all patients",
+      "features": [
+        "Unlimited search",
+        "DHA-verified profiles",
+        "Direct phone contact",
+        "Filter by language and specialty"
+      ],
+      "cta": "Get started"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "499 AED",
+      "period": "/ month",
+      "description": "For doctors who want more visibility",
+      "features": [
+        "Featured profile on homepage",
+        "Integrated online booking",
+        "Premium DHA-verified badge",
+        "Visit statistics",
+        "Priority patient messaging",
+        "Dedicated customer support"
+      ],
+      "cta": "Activate Premium",
+      "founding_price": "299 AED/month for the first 100"
+    },
+    "founding_member_badge": "Founding member",
+    "founding_member_desc": "Lifetime preferential rate",
+    "cta": "See options",
+    "faq_title": "Frequently asked questions",
+    "compare_title": "Compare plans",
+    "money_back": "14-day money-back guarantee"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "profile_views": "Profile views",
+    "profile_views_week": "this week",
+    "cta_upgrade": "Upgrade to Premium",
+    "overview": "Overview",
+    "recent_activity": "Recent activity",
+    "no_activity": "No activity yet",
+    "loading": "Loading dashboard…",
+    "upgrade": {
+      "title": "Upgrade to Premium",
+      "subtitle": "Unlock all features",
+      "premium": "Premium",
+      "premium_price": "499 AED/month",
+      "premium_features": [
+        "Online booking",
+        "Advanced statistics",
+        "Verified badge"
+      ],
+      "founding": "Founding member",
+      "founding_price": "299 AED/month lifetime",
+      "founding_left": "{count} spots left",
+      "confirm": "Confirm and pay",
+      "cancel": "Cancel",
+      "processing": "Processing…",
+      "success": "Payment successful! Welcome to Premium.",
+      "error": "Payment error. Please try again."
+    },
+    "billing": {
+      "title": "Billing",
+      "current_plan": "Current plan",
+      "next_billing": "Next billing",
+      "manage": "Manage subscription",
+      "invoices": "My invoices",
+      "no_invoices": "No invoices yet",
+      "cancel": "Cancel subscription",
+      "confirm_cancel": "Are you sure?",
+      "free_plan": "Free plan"
+    },
+    "profile": {
+      "title": "My profile",
+      "edit": "Edit",
+      "save": "Save",
+      "saved": "Profile saved",
+      "photo": "Profile photo",
+      "bio": "Biography",
+      "phone": "Phone",
+      "email": "Email"
+    },
+    "calendar": {
+      "title": "Calendar",
+      "today": "Today",
+      "week": "Week",
+      "month": "Month",
+      "no_events": "No appointments"
+    },
+    "verify": {
+      "title": "DHA verification",
+      "subtitle": "Submit your DHA license for verification",
+      "upload": "Upload my license",
+      "pending": "Verification pending",
+      "approved": "Verified",
+      "rejected": "Rejected"
+    },
+    "logout": "Sign out",
+    "login_required": "Sign in to access the dashboard"
+  },
+  "footer": {
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "cookies": "Cookies",
+    "contact": "Contact",
+    "about": "About",
+    "rights": "All rights reserved",
+    "company": "Company",
+    "for_patients": "For patients",
+    "for_doctors": "For doctors",
+    "follow_us": "Follow us",
+    "newsletter": "Newsletter",
+    "newsletter_placeholder": "Your email",
+    "newsletter_cta": "Subscribe"
+  },
+  "error": {
+    "404": {
+      "title": "Page not found",
+      "message": "The page you're looking for doesn't exist.",
+      "cta": "Back to home"
+    },
+    "500": {
+      "title": "Server error",
+      "message": "Something went wrong. Our team has been notified."
+    },
+    "generic": "Something went wrong",
+    "retry": "Retry",
+    "network": "Network error. Check your connection."
+  },
+  "cookie_banner": {
+    "message": "We use cookies to improve your experience.",
+    "accept": "Accept",
+    "refuse": "Refuse",
+    "learn_more": "Learn more"
+  },
+  "language_switcher": {
+    "label": "Language",
+    "change": "Change language",
+    "fr": "Français",
+    "en": "English",
+    "ar": "العربية"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Error",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "next": "Next",
+    "back": "Back",
+    "see_more": "See more",
+    "see_less": "See less",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "from": "from",
+    "per_consultation": "per consultation",
+    "aed": "AED",
+    "km": "km",
+    "verified": "Verified",
+    "premium": "Premium",
+    "new": "New"
+  },
+  "meta": {
+    "home_title": "DHA-licensed doctors in Dubai — 15,673 verified profiles",
+    "home_description": "Find your DHA-licensed doctor or dentist in Dubai. 15,673 doctors, 5,049 dentists. Trilingual FR/EN/AR. Online booking.",
+    "home_keywords": "doctor Dubai, dentist Dubai, DHA, medical directory, UAE doctor",
+    "doctors_title": "Doctors in Dubai — Full directory",
+    "doctors_description": "Search 15,673 DHA-licensed doctors in Dubai. Filter by specialty, language, insurance.",
+    "dentists_title": "Dentists in Dubai — Full directory",
+    "dentists_description": "5,049 verified dentists in Dubai. Orthodontists, surgeons, implantology.",
+    "pricing_title": "Pricing — Doctors and dentists in Dubai",
+    "pricing_description": "Free for patients. Premium at 499 AED/month for healthcare professionals.",
+    "about_title": "About — FindMyDoctor.ae",
+    "about_description": "The first trilingual directory of DHA-licensed healthcare professionals in Dubai.",
+    "contact_title": "Contact — FindMyDoctor.ae",
+    "contact_description": "Contact our team for any question."
+  }
+}

@@ -1,0 +1,302 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "doctors": "Médecins",
+    "dentists": "Dentistes",
+    "pricing": "Tarifs",
+    "about": "À propos",
+    "contact": "Contact",
+    "dashboard": "Espace médecin",
+    "login": "Connexion",
+    "signup": "Activer mon profil",
+    "search_placeholder": "Médecin, spécialité, clinique…",
+    "search_button": "Rechercher",
+    "my_account": "Mon compte",
+    "my_profile": "Mon profil",
+    "menu": "Menu",
+    "close_menu": "Fermer le menu",
+    "open_menu": "Ouvrir le menu",
+    "change_language": "Changer de langue"
+  },
+  "hero": {
+    "title": "Trouvez votre médecin DHA à Dubai",
+    "subtitle": "15 673 médecins et 5 049 dentistes vérifiés. Réservez en ligne en français, anglais ou arabe.",
+    "cta_search": "Rechercher un médecin",
+    "cta_premium": "Activer mon profil pro"
+  },
+  "home": {
+    "stats": {
+      "doctors": "Médecins DHA-licenciés",
+      "dentists": "Dentistes vérifiés",
+      "facilities": "Établissements de santé",
+      "languages": "Langues parlées"
+    },
+    "categories": {
+      "gp": "Médecin généraliste",
+      "dentist": "Dentiste",
+      "gyneco": "Gynécologue",
+      "pediatre": "Pédiatre",
+      "dermato": "Dermatologue",
+      "orthodontist": "Orthodontiste",
+      "cardio": "Cardiologue",
+      "ophtalmo": "Ophtalmologue"
+    },
+    "categories_title": "Trouvez un spécialiste",
+    "categories_subtitle": "Recherchez par spécialité médicale",
+    "featured": {
+      "title": "Médecins vedettes",
+      "subtitle": "Profils vérifiés par notre équipe"
+    },
+    "premium_cta": {
+      "title": "Vous êtes médecin ?",
+      "subtitle": "Rejoignez le premier annuaire médical trilingue de Dubai",
+      "benefit_1": "Profil vérifié DHA en vedette",
+      "benefit_2": "Prise de rendez-vous en ligne",
+      "benefit_3": "Messagerie directe avec vos patients",
+      "cta": "Activer mon profil"
+    },
+    "how_it_works_title": "Comment ça marche",
+    "how_it_works_subtitle": "3 étapes simples pour trouver votre médecin",
+    "step_1_title": "Recherchez",
+    "step_1_desc": "Par spécialité, nom ou localisation",
+    "step_2_title": "Comparez",
+    "step_2_desc": "Profils vérifiés, langues parlées, tarifs",
+    "step_3_title": "Réservez",
+    "step_3_desc": "En ligne ou par message direct"
+  },
+  "doctor": {
+    "specialty": "Spécialité",
+    "facility": "Établissement",
+    "license": "Licence DHA",
+    "languages": "Langues parlées",
+    "consultation_fee": "Tarif consultation",
+    "book": "Prendre rendez-vous",
+    "message": "Envoyer un message",
+    "share": "Partager le profil",
+    "verified_dha": "Profil vérifié DHA",
+    "verified_visit": "Consultations sur place",
+    "experience": "Années d'expérience",
+    "rating": "Note",
+    "reviews": "avis",
+    "location": "Adresse",
+    "phone": "Téléphone",
+    "website": "Site web",
+    "schedule": "Horaires",
+    "insurance": "Assurances acceptées",
+    "about": "À propos",
+    "similar": "Médecins similaires",
+    "back_to_list": "Retour à la liste",
+    "not_found": "Médecin introuvable",
+    "loading": "Chargement du profil…"
+  },
+  "search": {
+    "filters": {
+      "specialty": "Spécialité",
+      "location": "Localisation",
+      "language": "Langue",
+      "insurance": "Assurance",
+      "gender": "Genre",
+      "availability": "Disponibilité",
+      "all": "Toutes",
+      "any": "Toutes",
+      "reset": "Réinitialiser"
+    },
+    "results_count": "{count} médecin trouvé",
+    "results_count_plural": "{count} médecins trouvés",
+    "no_results": "Aucun médecin trouvé",
+    "no_results_hint": "Essayez d'élargir vos critères",
+    "sort": "Trier par",
+    "sort_relevance": "Pertinence",
+    "sort_rating": "Meilleure note",
+    "sort_experience": "Plus d'expérience",
+    "sort_recent": "Plus récents",
+    "loading": "Recherche en cours…"
+  },
+  "pricing": {
+    "title": "Tarifs",
+    "subtitle": "Gratuit pour les patients. Options premium pour les professionnels.",
+    "free": {
+      "name": "Gratuit",
+      "price": "0 AED",
+      "period": "/ mois",
+      "description": "Pour tous les patients",
+      "features": [
+        "Recherche illimitée",
+        "Profils vérifiés DHA",
+        "Contact direct par téléphone",
+        "Filtres par langue et spécialité"
+      ],
+      "cta": "Commencer"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "499 AED",
+      "period": "/ mois",
+      "description": "Pour les médecins qui veulent plus de visibilité",
+      "features": [
+        "Profil en vedette sur la home",
+        "Réservation en ligne intégrée",
+        "Badge vérifié DHA premium",
+        "Statistiques de visites",
+        "Messagerie patients prioritaire",
+        "Support client dédié"
+      ],
+      "cta": "Activer Premium",
+      "founding_price": "299 AED/mois pour les 100 premiers"
+    },
+    "founding_member_badge": "Membre fondateur",
+    "founding_member_desc": "Tarif préférentiel à vie",
+    "cta": "Voir les options",
+    "faq_title": "Questions fréquentes",
+    "compare_title": "Comparez les plans",
+    "money_back": "Garantie satisfait ou remboursé 14 jours"
+  },
+  "dashboard": {
+    "welcome": "Bienvenue",
+    "profile_views": "Vues du profil",
+    "profile_views_week": "cette semaine",
+    "cta_upgrade": "Passer à Premium",
+    "overview": "Vue d'ensemble",
+    "recent_activity": "Activité récente",
+    "no_activity": "Aucune activité pour le moment",
+    "loading": "Chargement du tableau de bord…",
+    "upgrade": {
+      "title": "Passer à Premium",
+      "subtitle": "Débloquez toutes les fonctionnalités",
+      "premium": "Premium",
+      "premium_price": "499 AED/mois",
+      "premium_features": [
+        "Réservation en ligne",
+        "Statistiques avancées",
+        "Badge vérifié"
+      ],
+      "founding": "Membre fondateur",
+      "founding_price": "299 AED/mois à vie",
+      "founding_left": "{count} places restantes",
+      "confirm": "Confirmer et payer",
+      "cancel": "Annuler",
+      "processing": "Traitement en cours…",
+      "success": "Paiement réussi ! Bienvenue dans Premium.",
+      "error": "Erreur lors du paiement. Réessayez."
+    },
+    "billing": {
+      "title": "Facturation",
+      "current_plan": "Plan actuel",
+      "next_billing": "Prochaine facturation",
+      "manage": "Gérer mon abonnement",
+      "invoices": "Mes factures",
+      "no_invoices": "Aucune facture pour le moment",
+      "cancel": "Annuler l'abonnement",
+      "confirm_cancel": "Êtes-vous sûr ?",
+      "free_plan": "Plan gratuit"
+    },
+    "profile": {
+      "title": "Mon profil",
+      "edit": "Modifier",
+      "save": "Enregistrer",
+      "saved": "Profil enregistré",
+      "photo": "Photo de profil",
+      "bio": "Biographie",
+      "phone": "Téléphone",
+      "email": "Email"
+    },
+    "calendar": {
+      "title": "Calendrier",
+      "today": "Aujourd'hui",
+      "week": "Semaine",
+      "month": "Mois",
+      "no_events": "Aucun rendez-vous"
+    },
+    "verify": {
+      "title": "Vérification DHA",
+      "subtitle": "Soumettez votre licence DHA pour vérification",
+      "upload": "Télécharger ma licence",
+      "pending": "Vérification en cours",
+      "approved": "Vérifié",
+      "rejected": "Rejeté"
+    },
+    "logout": "Déconnexion",
+    "login_required": "Connectez-vous pour accéder au tableau de bord"
+  },
+  "footer": {
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "cookies": "Cookies",
+    "contact": "Contact",
+    "about": "À propos",
+    "rights": "Tous droits réservés",
+    "company": "Société",
+    "for_patients": "Pour les patients",
+    "for_doctors": "Pour les médecins",
+    "follow_us": "Suivez-nous",
+    "newsletter": "Newsletter",
+    "newsletter_placeholder": "Votre email",
+    "newsletter_cta": "S'abonner"
+  },
+  "error": {
+    "404": {
+      "title": "Page introuvable",
+      "message": "La page que vous cherchez n'existe pas.",
+      "cta": "Retour à l'accueil"
+    },
+    "500": {
+      "title": "Erreur serveur",
+      "message": "Une erreur est survenue. Nos équipes ont été notifiées."
+    },
+    "generic": "Une erreur est survenue",
+    "retry": "Réessayer",
+    "network": "Erreur réseau. Vérifiez votre connexion."
+  },
+  "cookie_banner": {
+    "message": "Nous utilisons des cookies pour améliorer votre expérience.",
+    "accept": "Accepter",
+    "refuse": "Refuser",
+    "learn_more": "En savoir plus"
+  },
+  "language_switcher": {
+    "label": "Langue",
+    "change": "Changer de langue",
+    "fr": "Français",
+    "en": "English",
+    "ar": "العربية"
+  },
+  "common": {
+    "loading": "Chargement…",
+    "error": "Erreur",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "next": "Suivant",
+    "back": "Retour",
+    "see_more": "Voir plus",
+    "see_less": "Voir moins",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "close": "Fermer",
+    "yes": "Oui",
+    "no": "Non",
+    "from": "à partir de",
+    "per_consultation": "par consultation",
+    "aed": "AED",
+    "km": "km",
+    "verified": "Vérifié",
+    "premium": "Premium",
+    "new": "Nouveau"
+  },
+  "meta": {
+    "home_title": "Médecins DHA à Dubai — 15 673 profils vérifiés",
+    "home_description": "Trouvez votre médecin ou dentiste DHA-licencié à Dubai. 15 673 médecins, 5 049 dentistes. Trilingue FR/EN/AR. Réservation en ligne.",
+    "home_keywords": "médecin Dubai, dentiste Dubai, DHA, annuaire médical, docteur UAE",
+    "doctors_title": "Médecins à Dubai — Annuaire complet",
+    "doctors_description": "Recherchez parmi 15 673 médecins DHA-licenciés à Dubai. Filtres par spécialité, langue, assurance.",
+    "dentists_title": "Dentistes à Dubai — Annuaire complet",
+    "dentists_description": "5 049 dentistes vérifiés à Dubai. Orthodontistes, chirurgiens, implantologie.",
+    "pricing_title": "Tarifs — Médecins et dentistes à Dubai",
+    "pricing_description": "Gratuit pour les patients. Premium à 499 AED/mois pour les professionnels de santé.",
+    "about_title": "À propos — FindMyDoctor.ae",
+    "about_description": "Le premier annuaire trilingue des professionnels de santé DHA-licenciés à Dubai.",
+    "contact_title": "Contact — FindMyDoctor.ae",
+    "contact_description": "Contactez notre équipe pour toute question."
+  }
+}
