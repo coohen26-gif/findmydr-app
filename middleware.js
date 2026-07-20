@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
-const SUPPORTED_LOCALES = ['fr', 'en', 'ar'];
+const SUPPORTED_LOCALES = ['fr', 'en', 'ar', 'zh', 'ru', 'fa'];
 const DEFAULT_LOCALE = 'en';
-const LOCALE_PREFIX_RE = /^\/(fr|en|ar)(\/|$)/;
+const LOCALE_PREFIX_RE = /^\/(fr|en|ar|zh|ru|fa)(\/|$)/;
 
 function detectLocaleFromAcceptLanguage(acceptLang) {
   if (!acceptLang) return DEFAULT_LOCALE;
@@ -16,6 +16,9 @@ function detectLocaleFromAcceptLanguage(acceptLang) {
   for (const p of parts) {
     if (p.tag.startsWith('fr')) return 'fr';
     if (p.tag.startsWith('ar')) return 'ar';
+    if (p.tag.startsWith('fa')) return 'fa';
+    if (p.tag.startsWith('ru')) return 'ru';
+    if (p.tag.startsWith('zh')) return 'zh';
     if (p.tag.startsWith('en')) return 'en';
   }
   return DEFAULT_LOCALE;

@@ -1,0 +1,302 @@
+{
+  "nav": {
+    "home": "خانه",
+    "doctors": "پزشکان",
+    "dentists": "دندانپزشکان",
+    "pricing": "قیمت‌ها",
+    "about": "درباره ما",
+    "contact": "تماس",
+    "dashboard": "پنل پزشک",
+    "login": "ورود",
+    "signup": "فعال‌سازی پروفایل",
+    "search_placeholder": "پزشک، تخصص، کلینیک…",
+    "search_button": "جستجو",
+    "my_account": "حساب من",
+    "my_profile": "پروفایل من",
+    "menu": "منو",
+    "close_menu": "بستن منو",
+    "open_menu": "باز کردن منو",
+    "change_language": "تغییر زبان"
+  },
+  "hero": {
+    "title": "پزشک دارای مجوز DHA را در دبی پیدا کنید",
+    "subtitle": "۱۵٬۶۷۳ پزشک و ۵٬۰۴۹ دندانپزشک تأیید شده. رزرو آنلاین به فارسی، انگلیسی یا عربی.",
+    "cta_search": "جستجوی پزشک",
+    "cta_premium": "فعال‌سازی پروفایل"
+  },
+  "home": {
+    "stats": {
+      "doctors": "پزشکان دارای مجوز DHA",
+      "dentists": "دندانپزشکان تأیید شده",
+      "facilities": "مراکز درمانی",
+      "languages": "زبان‌ها"
+    },
+    "categories": {
+      "gp": "پزشک عمومی",
+      "dentist": "دندانپزشک",
+      "gyneco": "متخصص زنان",
+      "pediatre": "متخصص کودکان",
+      "dermato": "متخصص پوست",
+      "orthodontist": "ارتودنتیست",
+      "cardio": "متخصص قلب",
+      "ophtalmo": "متخصص چشم"
+    },
+    "categories_title": "یک متخصص پیدا کنید",
+    "categories_subtitle": "جستجو بر اساس تخصص پزشکی",
+    "featured": {
+      "title": "پزشکان برگزیده",
+      "subtitle": "پروفایل‌ها توسط تیم ما تأیید شده"
+    },
+    "premium_cta": {
+      "title": "پزشک هستید؟",
+      "subtitle": "به اولین فهرست چندزبانه پزشکی دبی بپیوندید",
+      "benefit_1": "پروفایل تأیید شده DHA در صدر",
+      "benefit_2": "رزرو آنلاین نوبت",
+      "benefit_3": "پیام مستقیم با بیماران",
+      "cta": "فعال‌سازی پروفایل"
+    },
+    "how_it_works_title": "چگونه کار می‌کند",
+    "how_it_works_subtitle": "۳ مرحله ساده برای یافتن پزشک",
+    "step_1_title": "جستجو",
+    "step_1_desc": "بر اساس تخصص، نام یا موقعیت",
+    "step_2_title": "مقایسه",
+    "step_2_desc": "پروفایل‌های تأیید شده، زبان‌ها، تعرفه‌ها",
+    "step_3_title": "رزرو",
+    "step_3_desc": "آنلاین یا از طریق پیام"
+  },
+  "doctor": {
+    "specialty": "تخصص",
+    "facility": "مرکز درمانی",
+    "license": "مجوز DHA",
+    "languages": "زبان‌ها",
+    "consultation_fee": "هزینه ویزیت",
+    "book": "رزرو نوبت",
+    "message": "ارسال پیام",
+    "share": "اشتراک‌گذاری",
+    "verified_dha": "پروفایل تأیید شده DHA",
+    "verified_visit": "ویزیت‌های حضوری",
+    "experience": "سال‌ها تجربه",
+    "rating": "امتیاز",
+    "reviews": "نظر",
+    "location": "آدرس",
+    "phone": "تلفن",
+    "website": "وب‌سایت",
+    "schedule": "ساعات کاری",
+    "insurance": "بیمه‌های پذیرفته‌شده",
+    "about": "درباره",
+    "similar": "پزشکان مشابه",
+    "back_to_list": "بازگشت به فهرست",
+    "not_found": "پزشک یافت نشد",
+    "loading": "در حال بارگذاری…"
+  },
+  "search": {
+    "filters": {
+      "specialty": "تخصص",
+      "location": "موقعیت",
+      "language": "زبان",
+      "insurance": "بیمه",
+      "gender": "جنسیت",
+      "availability": "دسترسی",
+      "all": "همه",
+      "any": "همه",
+      "reset": "بازنشانی"
+    },
+    "results_count": "{count} پزشک پیدا شد",
+    "results_count_plural": "{count} پزشک پیدا شد",
+    "no_results": "پزشکی یافت نشد",
+    "no_results_hint": "سعی کنید معیارها را گسترده‌تر کنید",
+    "sort": "مرتب‌سازی",
+    "sort_relevance": "مرتبط‌ترین",
+    "sort_rating": "بهترین امتیاز",
+    "sort_experience": "باتجربه‌ترین",
+    "sort_recent": "جدیدترین",
+    "loading": "در حال جستجو…"
+  },
+  "pricing": {
+    "title": "قیمت‌ها",
+    "subtitle": "رایگان برای بیماران. گزینه‌های ویژه برای متخصصان.",
+    "free": {
+      "name": "رایگان",
+      "price": "۰ درهم",
+      "period": "/ ماه",
+      "description": "برای همه بیماران",
+      "features": [
+        "جستجوی نامحدود",
+        "پروفایل‌های تأیید شده DHA",
+        "تماس مستقیم",
+        "فیلتر بر اساس زبان و تخصص"
+      ],
+      "cta": "شروع"
+    },
+    "premium": {
+      "name": "ویژه",
+      "price": "۴۹۹ درهم",
+      "period": "/ ماه",
+      "description": "برای پزشکانی که می‌خواهند دیده شوند",
+      "features": [
+        "پروفایل در صفحه اصلی",
+        "رزرو آنلاین یکپارچه",
+        "نشان ویژه DHA",
+        "آمار بازدید",
+        "پیام‌رسانی اولویت‌دار",
+        "پشتیبانی اختصاصی"
+      ],
+      "cta": "فعال‌سازی ویژه",
+      "founding_price": "۲۹۹ درهم/ماه برای ۱۰۰ نفر اول"
+    },
+    "founding_member_badge": "عضو بنیان‌گذار",
+    "founding_member_desc": "تخفیف مادام‌العمر",
+    "cta": "مشاهده گزینه‌ها",
+    "faq_title": "سوالات متداول",
+    "compare_title": "مقایسه طرح‌ها",
+    "money_back": "۱۴ روز ضمانت بازگشت"
+  },
+  "dashboard": {
+    "welcome": "خوش آمدید",
+    "profile_views": "بازدیدهای پروفایل",
+    "profile_views_week": "این هفته",
+    "cta_upgrade": "ارتقا به ویژه",
+    "overview": "نمای کلی",
+    "recent_activity": "فعالیت اخیر",
+    "no_activity": "هنوز فعالیتی نیست",
+    "loading": "در حال بارگذاری پنل…",
+    "upgrade": {
+      "title": "ارتقا به ویژه",
+      "subtitle": "همه قابلیت‌ها را باز کنید",
+      "premium": "ویژه",
+      "premium_price": "۴۹۹ درهم/ماه",
+      "premium_features": [
+        "رزرو آنلاین",
+        "آمار پیشرفته",
+        "نشان تأیید"
+      ],
+      "founding": "عضو بنیان‌گذار",
+      "founding_price": "۲۹۹ درهم/ماه مادام‌العمر",
+      "founding_left": "{count} جایگاه باقی‌مانده",
+      "confirm": "تأیید و پرداخت",
+      "cancel": "لغو",
+      "processing": "در حال پردازش…",
+      "success": "پرداخت موفق! به ویژه خوش آمدید.",
+      "error": "خطا در پرداخت. دوباره تلاش کنید."
+    },
+    "billing": {
+      "title": "صورتحساب",
+      "current_plan": "طرح فعلی",
+      "next_billing": "صورتحساب بعدی",
+      "manage": "مدیریت اشتراک",
+      "invoices": "صورتحساب‌های من",
+      "no_invoices": "هنوز صورتحسابی نیست",
+      "cancel": "لغو اشتراک",
+      "confirm_cancel": "آیا مطمئن هستید؟",
+      "free_plan": "طرح رایگان"
+    },
+    "profile": {
+      "title": "پروفایل من",
+      "edit": "ویرایش",
+      "save": "ذخیره",
+      "saved": "پروفایل ذخیره شد",
+      "photo": "عکس پروفایل",
+      "bio": "بیوگرافی",
+      "phone": "تلفن",
+      "email": "ایمیل"
+    },
+    "calendar": {
+      "title": "تقویم",
+      "today": "امروز",
+      "week": "هفته",
+      "month": "ماه",
+      "no_events": "نوبتی نیست"
+    },
+    "verify": {
+      "title": "تأیید DHA",
+      "subtitle": "مجوز DHA را برای تأیید ارسال کنید",
+      "upload": "بارگذاری مجوز",
+      "pending": "در حال بررسی",
+      "approved": "تأیید شد",
+      "rejected": "رد شد"
+    },
+    "logout": "خروج",
+    "login_required": "برای دسترسی به پنل وارد شوید"
+  },
+  "footer": {
+    "privacy": "حریم خصوصی",
+    "terms": "شرایط",
+    "cookies": "کوکی‌ها",
+    "contact": "تماس",
+    "about": "درباره ما",
+    "rights": "تمامی حقوق محفوظ است",
+    "company": "شرکت",
+    "for_patients": "برای بیماران",
+    "for_doctors": "برای پزشکان",
+    "follow_us": "ما را دنبال کنید",
+    "newsletter": "خبرنامه",
+    "newsletter_placeholder": "ایمیل شما",
+    "newsletter_cta": "اشتراک"
+  },
+  "error": {
+    "404": {
+      "title": "صفحه پیدا نشد",
+      "message": "صفحه‌ای که جستجو می‌کنید وجود ندارد.",
+      "cta": "بازگشت به خانه"
+    },
+    "500": {
+      "title": "خطای سرور",
+      "message": "خطایی رخ داد. تیم ما مطلع شد."
+    },
+    "generic": "خطایی رخ داد",
+    "retry": "تلاش مجدد",
+    "network": "خطای شبکه. اتصال خود را بررسی کنید."
+  },
+  "cookie_banner": {
+    "message": "ما از کوکی‌ها برای بهبود تجربه شما استفاده می‌کنیم.",
+    "accept": "پذیرش",
+    "refuse": "رد",
+    "learn_more": "بیشتر بدانید"
+  },
+  "language_switcher": {
+    "label": "زبان",
+    "change": "تغییر زبان",
+    "fr": "Français",
+    "en": "English",
+    "ar": "العربية"
+  },
+  "common": {
+    "loading": "در حال بارگذاری…",
+    "error": "خطا",
+    "retry": "تلاش مجدد",
+    "cancel": "لغو",
+    "confirm": "تأیید",
+    "next": "بعدی",
+    "back": "بازگشت",
+    "see_more": "بیشتر ببینید",
+    "see_less": "کمتر ببینید",
+    "save": "ذخیره",
+    "edit": "ویرایش",
+    "delete": "حذف",
+    "close": "بستن",
+    "yes": "بله",
+    "no": "خیر",
+    "from": "از",
+    "per_consultation": "هر ویزیت",
+    "aed": "درهم",
+    "km": "کیلومتر",
+    "verified": "تأیید شده",
+    "premium": "ویژه",
+    "new": "جدید"
+  },
+  "meta": {
+    "home_title": "پزشکان DHA در دبی — ۱۵٬۶۷۳ پروفایل تأیید شده",
+    "home_description": "پزشک یا دندانپزشک دارای مجوز DHA را در دبی پیدا کنید. ۱۵٬۶۷۳ پزشک، ۵٬۰۴۹ دندانپزشک. شش زبانه. رزرو آنلاین.",
+    "home_keywords": "پزشک دبی، دندانپزشک دبی، DHA، فهرست پزشکی، دکتر امارات",
+    "doctors_title": "پزشکان در دبی — فهرست کامل",
+    "doctors_description": "جستجو در میان ۱۵٬۶۷۳ پزشک دارای مجوز DHA در دبی. فیلتر بر اساس تخصص، زبان، بیمه.",
+    "dentists_title": "دندانپزشکان در دبی — فهرست کامل",
+    "dentists_description": "۵٬۰۴۹ دندانپزشک تأیید شده در دبی. ارتودنسی، جراحی، ایمپلنت.",
+    "pricing_title": "قیمت‌ها — پزشکان و دندانپزشکان در دبی",
+    "pricing_description": "رایگان برای بیماران. ویژه ۴۹۹ درهم/ماه برای متخصصان.",
+    "about_title": "درباره ما — FindMyDoctor.ae",
+    "about_description": "اولین فهرست چندزبانه متخصصان دارای مجوز DHA در دبی.",
+    "contact_title": "تماس — FindMyDoctor.ae",
+    "contact_description": "برای هر سوالی با تیم ما تماس بگیرید."
+  }
+}

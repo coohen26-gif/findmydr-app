@@ -1,0 +1,302 @@
+{
+  "nav": {
+    "home": "首页",
+    "doctors": "医生",
+    "dentists": "牙医",
+    "pricing": "价格",
+    "about": "关于",
+    "contact": "联系",
+    "dashboard": "医生门户",
+    "login": "登录",
+    "signup": "激活我的资料",
+    "search_placeholder": "医生、专科、诊所…",
+    "search_button": "搜索",
+    "my_account": "我的账户",
+    "my_profile": "我的资料",
+    "menu": "菜单",
+    "close_menu": "关闭菜单",
+    "open_menu": "打开菜单",
+    "change_language": "切换语言"
+  },
+  "hero": {
+    "title": "在迪拜找到您的DHA认证医生",
+    "subtitle": "15,673 名医生和 5,049 名牙医均已验证。可用中文、英文或阿拉伯语在线预约。",
+    "cta_search": "搜索医生",
+    "cta_premium": "激活我的专业档案"
+  },
+  "home": {
+    "stats": {
+      "doctors": "DHA认证医生",
+      "dentists": "已验证牙医",
+      "facilities": "医疗机构",
+      "languages": "使用语言"
+    },
+    "categories": {
+      "gp": "全科医生",
+      "dentist": "牙医",
+      "gyneco": "妇科医生",
+      "pediatre": "儿科医生",
+      "dermato": "皮肤科医生",
+      "orthodontist": "正畸医生",
+      "cardio": "心脏科医生",
+      "ophtalmo": "眼科医生"
+    },
+    "categories_title": "查找专科医生",
+    "categories_subtitle": "按医疗专科搜索",
+    "featured": {
+      "title": "精选医生",
+      "subtitle": "由我们团队验证的资料"
+    },
+    "premium_cta": {
+      "title": "您是医生吗？",
+      "subtitle": "加入迪拜首个多语种医疗目录",
+      "benefit_1": "DHA认证的精选资料",
+      "benefit_2": "在线预约",
+      "benefit_3": "与患者直接消息",
+      "cta": "激活我的资料"
+    },
+    "how_it_works_title": "使用方法",
+    "how_it_works_subtitle": "三个简单步骤即可找到您的医生",
+    "step_1_title": "搜索",
+    "step_1_desc": "按专科、姓名或位置",
+    "step_2_title": "比较",
+    "step_2_desc": "已验证资料、使用的语言、价格",
+    "step_3_title": "预约",
+    "step_3_desc": "在线或直接消息"
+  },
+  "doctor": {
+    "specialty": "专科",
+    "facility": "医疗机构",
+    "license": "DHA执照",
+    "languages": "使用语言",
+    "consultation_fee": "门诊费用",
+    "book": "预约",
+    "message": "发送消息",
+    "share": "分享资料",
+    "verified_dha": "DHA已验证资料",
+    "verified_visit": "现场就诊",
+    "experience": "从医年限",
+    "rating": "评分",
+    "reviews": "评论",
+    "location": "地址",
+    "phone": "电话",
+    "website": "网站",
+    "schedule": "营业时间",
+    "insurance": "接受的保险",
+    "about": "关于",
+    "similar": "类似医生",
+    "back_to_list": "返回列表",
+    "not_found": "未找到医生",
+    "loading": "资料加载中…"
+  },
+  "search": {
+    "filters": {
+      "specialty": "专科",
+      "location": "位置",
+      "language": "语言",
+      "insurance": "保险",
+      "gender": "性别",
+      "availability": "可用性",
+      "all": "全部",
+      "any": "全部",
+      "reset": "重置"
+    },
+    "results_count": "找到 {count} 位医生",
+    "results_count_plural": "找到 {count} 位医生",
+    "no_results": "未找到医生",
+    "no_results_hint": "尝试放宽条件",
+    "sort": "排序",
+    "sort_relevance": "相关性",
+    "sort_rating": "最高评分",
+    "sort_experience": "经验丰富",
+    "sort_recent": "最新",
+    "loading": "搜索中…"
+  },
+  "pricing": {
+    "title": "价格",
+    "subtitle": "对患者免费。对专业人士提供高级选项。",
+    "free": {
+      "name": "免费",
+      "price": "0 AED",
+      "period": "/ 月",
+      "description": "面向所有患者",
+      "features": [
+        "无限搜索",
+        "DHA已验证资料",
+        "直接电话联系",
+        "按语言和专科筛选"
+      ],
+      "cta": "开始"
+    },
+    "premium": {
+      "name": "高级",
+      "price": "499 AED",
+      "period": "/ 月",
+      "description": "适合希望提高曝光度的医生",
+      "features": [
+        "在首页精选展示资料",
+        "集成在线预约",
+        "DHA高级验证徽章",
+        "访问统计",
+        "患者消息优先",
+        "专属客户支持"
+      ],
+      "cta": "激活高级",
+      "founding_price": "前100名每月299 AED"
+    },
+    "founding_member_badge": "创始成员",
+    "founding_member_desc": "终身优惠价",
+    "cta": "查看选项",
+    "faq_title": "常见问题",
+    "compare_title": "比较套餐",
+    "money_back": "14天满意保证"
+  },
+  "dashboard": {
+    "welcome": "欢迎",
+    "profile_views": "资料浏览量",
+    "profile_views_week": "本周",
+    "cta_upgrade": "升级到高级",
+    "overview": "概览",
+    "recent_activity": "最近活动",
+    "no_activity": "暂无活动",
+    "loading": "仪表板加载中…",
+    "upgrade": {
+      "title": "升级到高级",
+      "subtitle": "解锁所有功能",
+      "premium": "高级",
+      "premium_price": "每月499 AED",
+      "premium_features": [
+        "在线预约",
+        "高级统计",
+        "已验证徽章"
+      ],
+      "founding": "创始成员",
+      "founding_price": "终身每月299 AED",
+      "founding_left": "剩余 {count} 个名额",
+      "confirm": "确认并付款",
+      "cancel": "取消",
+      "processing": "处理中…",
+      "success": "付款成功！欢迎加入高级会员。",
+      "error": "付款出错，请重试。"
+    },
+    "billing": {
+      "title": "账单",
+      "current_plan": "当前套餐",
+      "next_billing": "下次账单",
+      "manage": "管理订阅",
+      "invoices": "我的发票",
+      "no_invoices": "暂无发票",
+      "cancel": "取消订阅",
+      "confirm_cancel": "您确定吗？",
+      "free_plan": "免费套餐"
+    },
+    "profile": {
+      "title": "我的资料",
+      "edit": "编辑",
+      "save": "保存",
+      "saved": "资料已保存",
+      "photo": "头像",
+      "bio": "简介",
+      "phone": "电话",
+      "email": "电子邮件"
+    },
+    "calendar": {
+      "title": "日历",
+      "today": "今天",
+      "week": "周",
+      "month": "月",
+      "no_events": "没有预约"
+    },
+    "verify": {
+      "title": "DHA验证",
+      "subtitle": "提交您的DHA执照以供验证",
+      "upload": "上传我的执照",
+      "pending": "验证中",
+      "approved": "已验证",
+      "rejected": "已拒绝"
+    },
+    "logout": "退出",
+    "login_required": "请登录以访问仪表板"
+  },
+  "footer": {
+    "privacy": "隐私",
+    "terms": "条款",
+    "cookies": "Cookie",
+    "contact": "联系",
+    "about": "关于",
+    "rights": "版权所有",
+    "company": "公司",
+    "for_patients": "对患者",
+    "for_doctors": "对医生",
+    "follow_us": "关注我们",
+    "newsletter": "通讯",
+    "newsletter_placeholder": "您的电子邮件",
+    "newsletter_cta": "订阅"
+  },
+  "error": {
+    "404": {
+      "title": "页面未找到",
+      "message": "您查找的页面不存在。",
+      "cta": "返回首页"
+    },
+    "500": {
+      "title": "服务器错误",
+      "message": "发生错误。已通知我们的团队。"
+    },
+    "generic": "发生错误",
+    "retry": "重试",
+    "network": "网络错误，请检查您的连接。"
+  },
+  "cookie_banner": {
+    "message": "我们使用Cookie来改善您的体验。",
+    "accept": "接受",
+    "refuse": "拒绝",
+    "learn_more": "了解更多"
+  },
+  "language_switcher": {
+    "label": "语言",
+    "change": "更改语言",
+    "fr": "Français",
+    "en": "English",
+    "ar": "العربية"
+  },
+  "common": {
+    "loading": "加载中…",
+    "error": "错误",
+    "retry": "重试",
+    "cancel": "取消",
+    "confirm": "确认",
+    "next": "下一步",
+    "back": "返回",
+    "see_more": "查看更多",
+    "see_less": "查看更少",
+    "save": "保存",
+    "edit": "编辑",
+    "delete": "删除",
+    "close": "关闭",
+    "yes": "是",
+    "no": "否",
+    "from": "起价",
+    "per_consultation": "每次门诊",
+    "aed": "AED",
+    "km": "公里",
+    "verified": "已验证",
+    "premium": "高级",
+    "new": "新"
+  },
+  "meta": {
+    "home_title": "迪拜DHA医生 — 15,673 个已验证资料",
+    "home_description": "查找迪拜DHA认证的医生或牙医。15,673 名医生，5,049 名牙医。六种语言。在线预约。",
+    "home_keywords": "迪拜医生, 迪拜牙医, DHA, 医疗目录, 阿联酋医生",
+    "doctors_title": "迪拜医生 — 完整目录",
+    "doctors_description": "搜索 15,673 名迪拜DHA认证医生。按专科、语言、保险筛选。",
+    "dentists_title": "迪拜牙医 — 完整目录",
+    "dentists_description": "5,049 名已验证的迪拜牙医。正畸、外科、种植。",
+    "pricing_title": "价格 — 迪拜医生和牙医",
+    "pricing_description": "对患者免费。专业人士每月499 AED。",
+    "about_title": "关于 — FindMyDoctor.ae",
+    "about_description": "迪拜首个DHA认证医疗专业人员的六语种目录。",
+    "contact_title": "联系 — FindMyDoctor.ae",
+    "contact_description": "如有疑问，请联系我们的团队。"
+  }
+}

@@ -8,6 +8,9 @@ export const LOCALE_MAP = {
   fr: { dir: 'ltr', label: 'Français', short: 'FR', flag: '🇫🇷' },
   en: { dir: 'ltr', label: 'English', short: 'EN', flag: '🇬🇧' },
   ar: { dir: 'rtl', label: 'العربية', short: 'AR', flag: '🇦🇪' },
+  zh: { dir: 'ltr', label: '中文', short: 'ZH', flag: '🇨🇳' },
+  ru: { dir: 'ltr', label: 'Русский', short: 'RU', flag: '🇷🇺' },
+  fa: { dir: 'rtl', label: 'فارسی', short: 'FA', flag: '🇮🇷' },
 };
 
 export const LocaleContext = React.createContext({ lang: 'fr', switchLang: () => {} });
@@ -17,7 +20,7 @@ function DetectLangWrapper({ children }) {
   const router = useRouter();
 
   React.useEffect(() => {
-    const fromPath = (router.asPath || '').match(/^\/(fr|en|ar)(\/|$)/);
+    const fromPath = (router.asPath || '').match(/^\/(fr|en|ar|zh|ru|fa)(\/|$)/);
     const qLang = router.query.lang;
     if (fromPath) {
       setLang(fromPath[1]);
@@ -34,15 +37,12 @@ function DetectLangWrapper({ children }) {
   }, [router.query.lang, router.asPath]);
 
   React.useEffect(() => {
-    document.documentElement.dir = LOCALE_MAP[lang]?.dir || 'ltr';
+    const cur = LOCALE_MAP[lang];
+    const dir = cur?.dir || 'ltr';
+    document.documentElement.dir = dir;
     document.documentElement.lang = lang;
-    if (lang === 'ar') {
-      document.body.classList.add('rtl');
-      document.body.classList.remove('ltr');
-    } else {
-      document.body.classList.add('ltr');
-      document.body.classList.remove('rtl');
-    }
+    document.body.classList.remove('rtl', 'ltr');
+    document.body.classList.add(dir);
   }, [lang]);
 
   const switchLang = (newLang) => {
@@ -67,7 +67,7 @@ function AppInner({ Component, pageProps }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Cairo:wght@400;500;600;700;800;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&family=Vazirmatn:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
         <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A9%BA%3C/text%3E%3C/svg%3E" />
