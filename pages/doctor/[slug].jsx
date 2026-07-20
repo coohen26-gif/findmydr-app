@@ -36,7 +36,9 @@ export async function getServerSideProps({ query, req, locale }) {
               COALESCE(pr.is_dha_verified, false) as is_dha_verified,
               pr.profile_picture_url,
               pr.plan,
-              pr.bio_fr
+              pr.bio_fr,
+              pr.phone,
+              pr.phone_source
          FROM public.physicians p
          LEFT JOIN dmd.professional pr ON p.name = pr.full_name
         WHERE p.id = $1 LIMIT 1`,

@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     let rows = [];
     if (licenseHint) {
       const result = await pool.query(
-        `SELECT dha_unique_id, full_name, category, specialty, license_type, facility_name
+        `SELECT dha_unique_id, full_name, category, specialty, license_type, facility_name, phone, phone_source
            FROM dmd.professional
           WHERE dha_unique_id = $1
              OR LOWER(full_name) LIKE $2
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       rows = result.rows;
     } else {
       const result = await pool.query(
-        `SELECT dha_unique_id, full_name, category, specialty, license_type, facility_name
+        `SELECT dha_unique_id, full_name, category, specialty, license_type, facility_name, phone, phone_source
            FROM dmd.professional
           WHERE LOWER(full_name) LIKE $1
           ORDER BY length(full_name) ASC

@@ -30,7 +30,9 @@ export async function getServerSideProps({ query, req, locale }) {
   }
   try {
     const r = await pool.query(
-      `SELECT d.id, d.name, d.specialty, d.facility_name, pr.bio_fr
+      `SELECT d.id, d.name, d.specialty, d.facility_name, pr.bio_fr,
+              pr.phone,
+              pr.phone_source
            FROM public.dentists d
            LEFT JOIN dmd.professional pr ON d.name = pr.full_name
           WHERE d.id = $1 LIMIT 1`,
