@@ -130,7 +130,7 @@
     },
     "premium": {
       "name": "高级",
-      "price": "499 AED",
+      "price": "200 AED",
       "period": "/ 月",
       "description": "适合希望提高曝光度的医生",
       "features": [
@@ -164,7 +164,7 @@
       "title": "升级到高级",
       "subtitle": "解锁所有功能",
       "premium": "高级",
-      "premium_price": "每月499 AED",
+      "premium_price": "每月200 AED",
       "premium_features": [
         "在线预约",
         "高级统计",
@@ -293,7 +293,7 @@
     "dentists_title": "迪拜牙医 — 完整目录",
     "dentists_description": "5,049 名已验证的迪拜牙医。正畸、外科、种植。",
     "pricing_title": "价格 — 迪拜医生和牙医",
-    "pricing_description": "对患者免费。专业人士每月499 AED。",
+    "pricing_description": "对患者免费。专业人士每月200 AED。",
     "about_title": "关于 — FindMyDoctor.ae",
     "about_description": "迪拜首个DHA认证医疗专业人员的六语种目录。",
     "contact_title": "联系 — FindMyDoctor.ae",

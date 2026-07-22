@@ -79,11 +79,18 @@ export function middleware(request) {
   }
 
   // 4) Apply host-based rewrite (findmydr.ae → /doctor/*, findmydentist.ae → /dentist/*)
+  //    EXCEPT for the root path: serve pages/index.js (the actual home page)
+  //    with the correct locale propagated via NEXT_LOCALE cookie.
   let rewritePath = null;
-  if (host.includes('findmydentist.ae')) {
-    if (pathWithoutLocale === '/' || pathWithoutLocale === '') {
-      rewritePath = '/dentist';
-    } else if (pathWithoutLocale.startsWith('/dentist/') || pathWithoutLocale === '/dentist') {
+  if (pathWithoutLocale === '/' || pathWithoutLocale === '') {
+    // Root: don't rewrite, let Next.js serve pages/index.js
+    // The locale will be picked up from the URL prefix or NEXT_LOCALE cookie
+    const res = NextResponse.next();
+    res.headers.set('x-dmd-locale', locale);
+    res.cookies.set('NEXT_LOCALE', locale, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
+    return res;
+  } else if (host.includes('findmydentist.ae')) {
+    if (pathWithoutLocale.startsWith('/dentist/') || pathWithoutLocale === '/dentist') {
       if (pathWithoutLocale === '/dentist' && search.includes('id=')) {
         const id = new URLSearchParams(search).get('id');
         if (id && /^\d+$/.test(id)) {
@@ -98,9 +105,7 @@ export function middleware(request) {
       rewritePath = '/dentist' + pathWithoutLocale;
     }
   } else if (host.includes('findmydr.ae')) {
-    if (pathWithoutLocale === '/' || pathWithoutLocale === '') {
-      rewritePath = '/doctor';
-    } else if (pathWithoutLocale.startsWith('/doctor/') || pathWithoutLocale === '/doctor') {
+    if (pathWithoutLocale.startsWith('/doctor/') || pathWithoutLocale === '/doctor') {
       if (pathWithoutLocale === '/doctor' && search.includes('id=')) {
         const id = new URLSearchParams(search).get('id');
         if (id && /^\d+$/.test(id)) {
@@ -118,13 +123,8 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // 5) IMPORTANT: Pages Router with next-i18next serves canonical paths
-  //    (e.g. /doctor/[slug]) and the locale is resolved from the URL prefix
-  //    OR from the default-locale. We rewrite to the CANONICAL path (no locale)
-  //    so the page exists. The locale is propagated via the x-dmd-locale header
-  //    and a NEXT_LOCALE cookie for next-i18next to pick up.
+  // 5) Pages Router rewrite to canonical path (locale resolved from URL prefix or NEXT_LOCALE)
   url.pathname = rewritePath;
-  // Strip query string for pro detail pages
   if (rewritePath.startsWith('/dentist/') || rewritePath.startsWith('/doctor/')) {
     url.search = '';
   } else {
@@ -134,7 +134,6 @@ export function middleware(request) {
   const res = NextResponse.rewrite(url);
   res.headers.set('x-dmd-locale', locale);
   res.headers.set('Vary', 'Accept-Language');
-  // Set/refresh cookie so next-i18next's getServerSideProps({ locale }) picks the right one
   res.cookies.set('NEXT_LOCALE', locale, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
   return res;
 }

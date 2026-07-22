@@ -130,7 +130,7 @@
     },
     "premium": {
       "name": "Premium",
-      "price": "499 AED",
+      "price": "200 AED",
       "period": "/ month",
       "description": "For doctors who want more visibility",
       "features": [
@@ -164,7 +164,7 @@
       "title": "Upgrade to Premium",
       "subtitle": "Unlock all features",
       "premium": "Premium",
-      "premium_price": "499 AED/month",
+      "premium_price": "200 AED/month",
       "premium_features": [
         "Online booking",
         "Advanced statistics",
@@ -293,7 +293,7 @@
     "dentists_title": "Dentists in Dubai — Full directory",
     "dentists_description": "5,049 verified dentists in Dubai. Orthodontists, surgeons, implantology.",
     "pricing_title": "Pricing — Doctors and dentists in Dubai",
-    "pricing_description": "Free for patients. Premium at 499 AED/month for healthcare professionals.",
+    "pricing_description": "Free for patients. Premium at 200 AED/month for healthcare professionals.",
     "about_title": "About — FindMyDoctor.ae",
     "about_description": "The first trilingual directory of DHA-licensed healthcare professionals in Dubai.",
     "contact_title": "Contact — FindMyDoctor.ae",
