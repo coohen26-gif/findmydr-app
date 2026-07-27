@@ -281,7 +281,7 @@ export default function UpgradePage() {
   );
 }
 
-export async function getStaticProps({ locale }) {
+export async function getServerSideProps({ locale, req }) {
   return {
     props: {
       ...(await serverSideTranslations(locale, ['common'])),

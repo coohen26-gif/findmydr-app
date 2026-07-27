@@ -2,6 +2,8 @@ import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Save, Loader2, ChevronLeft, Check, Image as ImageIcon, User, FileText, Briefcase, Phone, Globe, Mail, Camera, Sparkles } from 'lucide-react';
 import { SiteHeader } from '../../components/Header';
 import { Button } from '../../components/Button';
@@ -20,7 +22,16 @@ const SECTIONS = [
 
 const LANGUAGES = ['Français', 'English', 'العربية', 'हिन्दी', 'Español', 'Português', 'Русский', '中文'];
 
+export async function getServerSideProps({ locale, req }) {
+  if (!locale) {
+    try { locale = req?.cookies?.NEXT_LOCALE; } catch (e) {}
+  }
+  if (!locale || !['fr','en','ar','zh','ru','fa'].includes(locale)) locale = 'en';
+  return { props: { ...(await serverSideTranslations(locale, ['common'])) } };
+}
+
 export default function Profile() {
+  const { t } = useTranslation('common');
   const router = useRouter();
   const [user, setUser] = React.useState(null);
   const [form, setForm] = React.useState({});

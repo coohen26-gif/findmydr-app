@@ -8,6 +8,8 @@ import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Calendar as CalendarIcon, Clock, ChevronLeft, ChevronRight, Plus, X, Check, Video, MapPin, User, Loader2, CalendarDays, Filter, Phone, MessageCircle } from 'lucide-react';
 import { SiteHeader } from '../../components/Header';
 import { Button } from '../../components/Button';
@@ -47,7 +49,17 @@ function fmtTime(d) {
   return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 }
 
+export async function getServerSideProps({ locale, req }) {
+  if (!locale) {
+    try { locale = req?.cookies?.NEXT_LOCALE; } catch (e) {}
+  }
+  if (!locale || !['fr','en','ar','zh','ru','fa'].includes(locale)) locale = 'en';
+  return { props: { ...(await serverSideTranslations(locale, ['common'])) } };
+}
+
 export default function CalendarPage() {
+  const { t } = useTranslation('common');
+
   const router = useRouter();
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);

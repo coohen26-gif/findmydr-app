@@ -2,6 +2,8 @@ import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Mail, Loader2, Stethoscope, ShieldCheck, Sparkles, ArrowRight, ChevronLeft, KeyRound, Globe } from 'lucide-react';
 import { Logo } from '../../components/Header';
 import { Button } from '../../components/Button';
@@ -9,7 +11,16 @@ import { Card } from '../../components/Card';
 import { Input } from '../../components/Input';
 import { Badge } from '../../components/Badge';
 
+export async function getServerSideProps({ locale, req }) {
+  if (!locale) {
+    try { locale = req?.cookies?.NEXT_LOCALE; } catch (e) {}
+  }
+  if (!locale || !['fr','en','ar','zh','ru','fa'].includes(locale)) locale = 'en';
+  return { props: { ...(await serverSideTranslations(locale, ['common'])) } };
+}
+
 export default function Login() {
+  const { t } = useTranslation('common');
   const router = useRouter();
   const [email, setEmail] = React.useState('');
   const [license, setLicense] = React.useState('');
@@ -44,7 +55,7 @@ export default function Login() {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       <Head>
-        <title>Connexion médecin — FindMyDoctor.ae</title>
+        <title>{t("dashboard.login.title", "Connexion médecin")} — FindMyDoctor.ae</title>
       </Head>
 
       {/* LEFT — Visual hero */}
@@ -123,13 +134,9 @@ export default function Login() {
         <div className="flex-1 flex items-center justify-center">
           <div className="w-full max-w-md space-y-6">
             <div>
-              <Link href="/" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-6">
-                <ChevronLeft className="h-4 w-4" /> Retour au site
-              </Link>
-              <h2 className="text-3xl font-extrabold mb-2">Bienvenue, docteur.</h2>
-              <p className="text-muted-foreground">
-                Connectez-vous à votre espace en un clic.
-              </p>
+              <Link href="/" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-6"><ChevronLeft className="h-4 w-4" /> {t("dashboard.login.back_site")}</Link>
+              <h2 className="text-3xl font-extrabold mb-2">{t("dashboard.login.welcome")}</h2>
+              <p className="text-muted-foreground">{t("dashboard.login.subtitle")}</p>
             </div>
 
             {magicLink ? (
@@ -139,10 +146,8 @@ export default function Login() {
                     <Mail className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold mb-1">Lien envoyé !</h3>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      En mode dev, voici votre lien magique (valable 24h) :
-                    </p>
+                    <h3 className="font-bold mb-1">{t("dashboard.login.link_sent")}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">{t("dashboard.login.link_help")}</p>
                     <a
                       href={magicLink}
                       className="block bg-white border border-emerald-200 rounded-md p-3 text-xs font-mono break-all text-primary hover:bg-emerald-50 transition-colors"
@@ -155,15 +160,13 @@ export default function Login() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold mb-2">
-                    Adresse email professionnelle
-                  </label>
+                  <label htmlFor="email" className="block text-sm font-semibold mb-2">{t("dashboard.login.email_label")}</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="email"
                       type="email"
-                      placeholder="dr.nom@exemple.com"
+                      placeholder={t("dashboard.login.email_placeholder")}
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                       required
@@ -172,24 +175,20 @@ export default function Login() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="license" className="block text-sm font-semibold mb-2">
-                    Numéro de licence DHA <span className="text-muted-foreground font-normal">(optionnel)</span>
-                  </label>
+                  <label htmlFor="license" className="block text-sm font-semibold mb-2">{t("dashboard.login.license_label")} <span className="text-muted-foreground font-normal">{t("dashboard.login.license_optional")}</span></label>
                   <div className="relative">
                     <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="license"
                       type="text"
-                      placeholder="00000000"
+                      placeholder={t("dashboard.login.license_placeholder")}
                       value={license}
                       onChange={e => setLicense(e.target.value)}
                       className="pl-10"
                       maxLength={8}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1.5">
-                    Permet de pré-remplir votre profil avec les données DHA officielles.
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-1.5">{t("dashboard.login.license_help")}</p>
                 </div>
                 {error && (
                   <div className="bg-destructive/10 text-destructive text-sm rounded-md p-3">
@@ -199,26 +198,26 @@ export default function Login() {
                 <Button type="submit" size="lg" className="w-full" disabled={loading}>
                   {loading ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin" /> Envoi en cours…
+                      <Loader2 className="h-4 w-4 animate-spin" /> {t("dashboard.login.submitting")}
                     </>
                   ) : (
                     <>
-                      Recevoir mon lien magique
+                      {t("dashboard.login.submit")}
                       <ArrowRight className="h-4 w-4" />
                     </>
                   )}
                 </Button>
                 <p className="text-xs text-center text-muted-foreground">
-                  Vous recevrez un lien sécurisé par email. Aucun mot de passe à retenir.
+                  {t("dashboard.login.help_text")}
                 </p>
               </form>
             )}
 
             <div className="pt-6 border-t">
               <p className="text-xs text-center text-muted-foreground">
-                Vous n'avez pas encore de profil ?{' '}
+                {t('dashboard.login.no_profile')}{' '}
                 <Link href="/" className="text-primary hover:underline font-medium">
-                  Activez votre profil gratuitement
+                  {t('dashboard.login.activate_free')}
                 </Link>
               </p>
             </div>
