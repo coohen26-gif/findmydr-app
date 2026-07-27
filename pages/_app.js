@@ -24,12 +24,12 @@ function DetectLangWrapper({ children }) {
     const qLang = router.query.lang;
     if (fromPath) {
       setLang(fromPath[1]);
-      document.cookie = `locale=${fromPath[1]};path=/;max-age=31536000;SameSite=Lax`;
+      document.cookie = `NEXT_LOCALE=${fromPath[1]};path=/;max-age=31536000;SameSite=Lax`;
     } else if (qLang && LOCALE_MAP[qLang]) {
       setLang(qLang);
-      document.cookie = `locale=${qLang};path=/;max-age=31536000;SameSite=Lax`;
+      document.cookie = `NEXT_LOCALE=${qLang};path=/;max-age=31536000;SameSite=Lax`;
     } else {
-      const cookieLang = document.cookie.match(/locale=(\w+)/)?.[1];
+      const cookieLang = document.cookie.match(/NEXT_LOCALE=(\w+)/)?.[1];
       if (cookieLang && LOCALE_MAP[cookieLang]) {
         setLang(cookieLang);
       }
@@ -46,7 +46,7 @@ function DetectLangWrapper({ children }) {
   }, [lang]);
 
   const switchLang = (newLang) => {
-    document.cookie = `locale=${newLang};path=/;max-age=31536000;SameSite=Lax`;
+    document.cookie = `NEXT_LOCALE=${newLang};path=/;max-age=31536000;SameSite=Lax`;
     setLang(newLang);
   };
 
