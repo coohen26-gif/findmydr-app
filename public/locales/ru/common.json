@@ -282,7 +282,25 @@
     "index.view": "просмотр",
     "index.views_plural": "просмотров",
     "verify.loading_title": "Вход в систему...",
-    "verify.loading_help": "Если ничего не происходит, нажмите здесь."
+    "verify.loading_help": "Если ничего не происходит, нажмите здесь.",
+    "reviews": {
+      "page_title": "Отзывы пациентов",
+      "title": "Мои отзывы",
+      "total": "Всего",
+      "verified": "Проверенные",
+      "avg_rating": "Средняя оценка",
+      "pending_response": "Ожидают ответа",
+      "filter_all": "Все",
+      "filter_verified": "Проверенные",
+      "filter_pending": "Ожидают ответа",
+      "filter_responded": "С ответом",
+      "respond": "Ответить",
+      "no_reviews": "Отзывов пока нет.",
+      "your_response": "Ваш ответ",
+      "response_placeholder": "Поблагодарите пациента, ответьте на его вопрос…",
+      "send_response": "Отправить ответ",
+      "anonymous": "Аноним"
+    }
   },
   "footer": {
     "privacy": "Конфиденциальность",

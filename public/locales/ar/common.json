@@ -282,7 +282,25 @@
     "index.view": "مشاهدة",
     "index.views_plural": "مشاهدات",
     "verify.loading_title": "جارٍ تسجيل الدخول...",
-    "verify.loading_help": "إن لم يحدث شيء، انقر هنا."
+    "verify.loading_help": "إن لم يحدث شيء، انقر هنا.",
+    "reviews": {
+      "page_title": "آراء المرضى",
+      "title": "آرائي",
+      "total": "المجموع",
+      "verified": "موثقة",
+      "avg_rating": "متوسط التقييم",
+      "pending_response": "بانتظار الرد",
+      "filter_all": "الكل",
+      "filter_verified": "موثقة",
+      "filter_pending": "بانتظار الرد",
+      "filter_responded": "تم الرد",
+      "respond": "الرد",
+      "no_reviews": "لا توجد آراء بعد.",
+      "your_response": "ردك",
+      "response_placeholder": "اشكر المريض، اعرض مخاوفه…",
+      "send_response": "إرسال الرد",
+      "anonymous": "مجهول"
+    }
   },
   "footer": {
     "privacy": "الخصوصية",

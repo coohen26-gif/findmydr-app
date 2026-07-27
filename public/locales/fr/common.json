@@ -282,7 +282,25 @@
     "index.view": "vue",
     "index.views_plural": "vues",
     "verify.loading_title": "Connexion en cours...",
-    "verify.loading_help": "Si rien ne se passe, cliquez ici."
+    "verify.loading_help": "Si rien ne se passe, cliquez ici.",
+    "reviews": {
+      "page_title": "Avis des patients",
+      "title": "Mes avis",
+      "total": "Total",
+      "verified": "Vérifiés",
+      "avg_rating": "Note moyenne",
+      "pending_response": "À répondre",
+      "filter_all": "Tous",
+      "filter_verified": "Vérifiés",
+      "filter_pending": "À répondre",
+      "filter_responded": "Répondus",
+      "respond": "Répondre",
+      "no_reviews": "Aucun avis pour le moment.",
+      "your_response": "Votre réponse",
+      "response_placeholder": "Remerciez le patient, répondez à sa préoccupation…",
+      "send_response": "Envoyer la réponse",
+      "anonymous": "Anonyme"
+    }
   },
   "footer": {
     "privacy": "Confidentialité",

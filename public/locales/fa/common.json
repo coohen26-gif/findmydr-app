@@ -282,7 +282,25 @@
     "index.view": "بازدید",
     "index.views_plural": "بازدید",
     "verify.loading_title": "در حال ورود...",
-    "verify.loading_help": "اگر اتفاقی نیفتاد، اینجا کلیک کنید."
+    "verify.loading_help": "اگر اتفاقی نیفتاد، اینجا کلیک کنید.",
+    "reviews": {
+      "page_title": "نظرات بیماران",
+      "title": "نظرات من",
+      "total": "مجموع",
+      "verified": "تأیید شده",
+      "avg_rating": "میانگین امتیاز",
+      "pending_response": "در انتظار پاسخ",
+      "filter_all": "همه",
+      "filter_verified": "تأیید شده",
+      "filter_pending": "در انتظار پاسخ",
+      "filter_responded": "پاسخ داده شده",
+      "respond": "پاسخ",
+      "no_reviews": "هنوز نظری وجود ندارد.",
+      "your_response": "پاسخ شما",
+      "response_placeholder": "از بیمار تشکر کنید، به نگرانی او رسیدگی کنید…",
+      "send_response": "ارسال پاسخ",
+      "anonymous": "ناشناس"
+    }
   },
   "footer": {
     "privacy": "حریم خصوصی",

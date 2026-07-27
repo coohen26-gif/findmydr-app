@@ -282,7 +282,25 @@
     "index.view": "view",
     "index.views_plural": "views",
     "verify.loading_title": "Signing you in...",
-    "verify.loading_help": "If nothing happens, click here."
+    "verify.loading_help": "If nothing happens, click here.",
+    "reviews": {
+      "page_title": "Patient Reviews",
+      "title": "My Reviews",
+      "total": "Total",
+      "verified": "Verified",
+      "avg_rating": "Average Rating",
+      "pending_response": "Pending Response",
+      "filter_all": "All",
+      "filter_verified": "Verified",
+      "filter_pending": "Pending Response",
+      "filter_responded": "Responded",
+      "respond": "Respond",
+      "no_reviews": "No reviews yet.",
+      "your_response": "Your response",
+      "response_placeholder": "Thank the patient, address their concern…",
+      "send_response": "Send Response",
+      "anonymous": "Anonymous"
+    }
   },
   "footer": {
     "privacy": "Privacy",

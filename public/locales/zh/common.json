@@ -282,7 +282,25 @@
     "index.view": "次浏览",
     "index.views_plural": "次浏览",
     "verify.loading_title": "正在登录...",
-    "verify.loading_help": "若无反应，请点击此处。"
+    "verify.loading_help": "若无反应，请点击此处。",
+    "reviews": {
+      "page_title": "患者评价",
+      "title": "我的评价",
+      "total": "总计",
+      "verified": "已验证",
+      "avg_rating": "平均评分",
+      "pending_response": "待回复",
+      "filter_all": "全部",
+      "filter_verified": "已验证",
+      "filter_pending": "待回复",
+      "filter_responded": "已回复",
+      "respond": "回复",
+      "no_reviews": "暂无评价。",
+      "your_response": "您的回复",
+      "response_placeholder": "感谢患者,回应他们的关注…",
+      "send_response": "发送回复",
+      "anonymous": "匿名"
+    }
   },
   "footer": {
     "privacy": "隐私",
