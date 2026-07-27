@@ -72,23 +72,33 @@ function LangSelector() {
 
   const current = LOCALE_MAP[lang] || LOCALE_MAP.fr;
 
+  const SUPPORTED_LANGS = ['fr', 'en', 'ar', 'zh', 'ru', 'fa'];
+  const LOCALE_REGEX = new RegExp(`^/(${SUPPORTED_LANGS.join('|')})(/|$)`);
+
   const localeFromPath = (path) => {
-    const m = (path || router.asPath || '/').match(/^\/(fr|en|ar)(\/|$)/);
+    const m = (path || router.asPath || '/').match(LOCALE_REGEX);
     return m ? m[1] : null;
   };
 
+  const stripLocale = (path) => {
+    const cleaned = (path || router.asPath || '/').replace(LOCALE_REGEX, '/');
+    return cleaned === '' ? '/' : cleaned;
+  };
+
   const switchTo = (code) => {
+    if (!SUPPORTED_LANGS.includes(code)) return;
     switchLang(code);
-    const cur = localeFromPath(router.asPath);
+    const stripped = stripLocale(router.asPath);
     let nextPath;
-    if (cur) {
-      nextPath = router.asPath.replace(/^\/(fr|en|ar)/, `/${code}`);
+    if (router.asPath === '/' || router.asPath === '') {
+      nextPath = `/${code}`;
+    } else if (stripped === '/') {
+      nextPath = `/${code}/`;
     } else {
-      const base = router.asPath.startsWith('/') ? router.asPath : `/${router.asPath}`;
-      nextPath = `/${code}${base === '/' ? '/' : base}`;
+      nextPath = `/${code}${stripped}`;
     }
-    if (nextPath.startsWith(`/${code}/${code}`)) {
-      nextPath = nextPath.replace(`/${code}/${code}`, `/${code}`);
+    if (nextPath.match(/^\/[a-z]{2}\/[a-z]{2}\//)) {
+      nextPath = nextPath.replace(/^\/[a-z]{2}\/[a-z]{2}/, (m) => m.split('/').slice(0, 2).join('/'));
     }
     setOpen(false);
     router.push(nextPath);
