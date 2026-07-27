@@ -38,6 +38,7 @@ export function middleware(request) {
     path.startsWith('/static') ||
     path.startsWith('/dashboard') ||
     path.startsWith('/blog') ||
+    path.startsWith('/review') ||
     path === '/favicon.ico' ||
     /\/[a-f0-9]{32}\.txt$/.test(path) ||
     path === '/robots.txt' ||
