@@ -182,10 +182,10 @@ export default function DentistProfile({ pro, baseUrl }) {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={() => setShowShare(true)} className="h-10 w-10 rounded-md border border-white/30 bg-white/10 text-white hover:bg-white/20 flex items-center justify-center" aria-label="Partager">
+                    <button onClick={() => setShowShare(true)} className="h-10 w-10 min-h-[44px] min-w-[44px] rounded-md border border-white/30 bg-white/10 text-white hover:bg-white/20 flex items-center justify-center" aria-label="Partager">
                       <Share2 className="h-4 w-4" />
                     </button>
-                    <button className="h-10 w-10 rounded-md border border-white/30 bg-white/10 text-white hover:bg-white/20 flex items-center justify-center" aria-label="Sauvegarder">
+                    <button className="h-10 w-10 min-h-[44px] min-w-[44px] rounded-md border border-white/30 bg-white/10 text-white hover:bg-white/20 flex items-center justify-center" aria-label="Sauvegarder">
                       <Bookmark className="h-4 w-4" />
                     </button>
                   </div>
