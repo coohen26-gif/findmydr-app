@@ -348,23 +348,43 @@ export default function DoctorProfile({ pro, baseUrl }) {
         </div>
       </section>
 
-      {/* WhatsApp sticky button (mobile only) - shown only when a real phone exists */}
-      {waPhone && (
+      {/* Mobile sticky bottom CTA bar - shown for ALL doctors (WhatsApp if phone, else RDV+Message) */}
       <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 backdrop-blur-md border-t border-border/60 px-4 py-3 flex items-center gap-3 shadow-2xl animate-fade-in">
-        <a
-          href={`https://wa.me/${waPhone}?text=Bonjour%20Dr.%20${encodeURIComponent(fullName)}%2C%20je%20vous%20contacte%20depuis%20FindMyDoctor.ae`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1 flex items-center justify-center gap-2 bg-emerald-500 text-white font-bold rounded-xl py-3.5 text-sm hover:bg-emerald-600 transition-colors animate-pulse-slow"
-        >
-          <MessageCircle className="h-5 w-5" />
-          Contacter par WhatsApp
-        </a>
-        <a href={`tel:+${waPhone}`} className="flex items-center justify-center h-11 w-11 rounded-xl bg-muted hover:bg-muted/80 transition-colors">
-          <Phone className="h-5 w-5" />
-        </a>
+        {waPhone ? (
+          <>
+            <a
+              href={`https://wa.me/${waPhone}?text=Bonjour%20Dr.%20${encodeURIComponent(fullName)}%2C%20je%20vous%20contacte%20depuis%20FindMyDoctor.ae`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 bg-emerald-500 text-white font-bold rounded-xl py-3.5 text-sm min-h-[44px] hover:bg-emerald-600 transition-colors animate-pulse-slow"
+            >
+              <MessageCircle className="h-5 w-5" />
+              WhatsApp
+            </a>
+            <a href={`tel:+${waPhone}`} className="flex items-center justify-center h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl bg-muted hover:bg-muted/80 transition-colors" aria-label="Appeler">
+              <Phone className="h-5 w-5" />
+            </a>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => setShowRdv(true)}
+              className="flex-1 flex items-center justify-center gap-2 bg-primary text-white font-bold rounded-xl py-3.5 text-sm min-h-[44px] hover:bg-primary-600 transition-colors"
+              aria-label="Prendre rendez-vous"
+            >
+              <Calendar className="h-5 w-5" />
+              Prendre RDV
+            </button>
+            <button
+              onClick={() => setShowMsg(true)}
+              className="flex items-center justify-center h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl bg-muted hover:bg-muted/80 transition-colors"
+              aria-label="Envoyer un message"
+            >
+              <MessageCircle className="h-5 w-5" />
+            </button>
+          </>
+        )}
       </div>
-      )}
 
       {showRdv && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setShowRdv(false)}>
