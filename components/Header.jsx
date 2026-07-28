@@ -190,9 +190,8 @@ export function SiteHeader({ user = null, currentPath = '/' }) {
           )}
         </div>
         <div className="flex md:hidden items-center gap-1">
-          <LangSelector />
           <button
-            className="h-10 w-10 rounded-md hover:bg-muted flex items-center justify-center transition-colors"
+            className="min-h-[44px] min-w-[44px] h-10 w-10 rounded-md hover:bg-muted flex items-center justify-center transition-colors"
             onClick={() => setOpen(true)}
             aria-label="Ouvrir le menu"
           >
@@ -224,13 +223,19 @@ export function SiteHeader({ user = null, currentPath = '/' }) {
               <Link href="/dashboard" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-md text-sm font-medium hover:bg-muted">Tableau de bord</Link>
               <Link href="/dashboard/profile" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-md text-sm font-medium hover:bg-muted">Mon profil</Link>
             </nav>
-            <div className="p-4 border-t space-y-2">
-              <Link href="/dashboard/login" onClick={() => setOpen(false)}>
-                <Button variant="outline" className="w-full">Connexion</Button>
-              </Link>
-              <Link href="/dashboard/login" onClick={() => setOpen(false)}>
-                <Button className="w-full">Activer mon profil</Button>
-              </Link>
+            <div className="p-4 border-t">
+              <div className="flex items-center justify-between mb-3 pb-3 border-b border-border/60">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Langue</span>
+                <LangSelector />
+              </div>
+              <div className="space-y-2">
+                <Link href="/dashboard/login" onClick={() => setOpen(false)}>
+                  <Button variant="outline" className="w-full min-h-[44px]">Connexion</Button>
+                </Link>
+                <Link href="/dashboard/login" onClick={() => setOpen(false)}>
+                  <Button className="w-full min-h-[44px]">Activer mon profil</Button>
+                </Link>
+              </div>
             </div>
           </div>
         </>
