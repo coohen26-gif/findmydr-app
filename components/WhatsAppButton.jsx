@@ -2,6 +2,17 @@ import * as React from 'react';
 import { MessageCircle } from 'lucide-react';
 import { useTranslation } from 'next-i18next';
 
+function trackWhatsAppClick(proType, proId) {
+  try {
+    fetch('/api/track/click', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: proType, id: proId, click_type: 'whatsapp' }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {}
+}
+
 /**
  * WhatsAppButton - click-to-chat link to a pro.
  * Props:
@@ -44,6 +55,7 @@ export function WhatsAppButton({
     return (
       <a
         href={url}
+        onClick={() => trackWhatsAppClick(typeof proType !== "undefined" ? proType : "doctor", typeof proId !== "undefined" ? proId : 0)}
         target="_blank"
         rel="noopener noreferrer"
         className={`inline-flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#1ebe5a] transition-colors ${className}`}

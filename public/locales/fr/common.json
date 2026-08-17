@@ -39,7 +39,13 @@
       "dermato": "Dermatologue",
       "orthodontist": "Orthodontiste",
       "cardio": "Cardiologue",
-      "ophtalmo": "Ophtalmologue"
+      "ophtalmo": "Ophtalmologue",
+      "neuro": "Neurologue",
+      "ortho": "Orthopédiste",
+      "orl": "ORL",
+      "endocrino": "Endocrinologue",
+      "anesthesiste": "Anesthésiste",
+      "all": "Voir tous"
     },
     "categories_title": "Trouvez un spécialiste",
     "categories_subtitle": "Recherchez par spécialité médicale",
@@ -62,7 +68,8 @@
     "step_2_title": "Comparez",
     "step_2_desc": "Profils vérifiés, langues parlées, tarifs",
     "step_3_title": "Réservez",
-    "step_3_desc": "En ligne ou par message direct"
+    "step_3_desc": "En ligne ou par message direct",
+    "verified_dha": "Made in UAE · 100% vérifié DHA"
   },
   "doctor": {
     "specialty": "Spécialité",
@@ -87,7 +94,11 @@
     "similar": "Médecins similaires",
     "back_to_list": "Retour à la liste",
     "not_found": "Médecin introuvable",
-    "loading": "Chargement du profil…"
+    "loading": "Chargement du profil…",
+    "rating_keys": {
+      "no_reviews": "Aucun avis pour le moment",
+      "avg_label": "Note moyenne"
+    }
   },
   "search": {
     "filters": {
@@ -101,8 +112,6 @@
       "any": "Toutes",
       "reset": "Réinitialiser"
     },
-    "results_count": "{count} médecin trouvé",
-    "results_count_plural": "{count} médecins trouvés",
     "no_results": "Aucun médecin trouvé",
     "no_results_hint": "Essayez d'élargir vos critères",
     "sort": "Trier par",
@@ -110,7 +119,9 @@
     "sort_rating": "Meilleure note",
     "sort_experience": "Plus d'expérience",
     "sort_recent": "Plus récents",
-    "loading": "Recherche en cours…"
+    "loading": "Recherche en cours…",
+    "results_count_one": "{count} médecin trouvé",
+    "results_count_other": "{count} médecins trouvés"
   },
   "pricing": {
     "title": "Tarifs",
@@ -177,7 +188,9 @@
       "cancel": "Annuler",
       "processing": "Traitement en cours…",
       "success": "Paiement réussi ! Bienvenue dans Premium.",
-      "error": "Erreur lors du paiement. Réessayez."
+      "error": "Erreur lors du paiement. Réessayez.",
+      "founding_left_one": "{count} place restante",
+      "founding_left_other": "{count} places restantes"
     },
     "billing": {
       "title": "Facturation",
@@ -315,7 +328,26 @@
     "follow_us": "Suivez-nous",
     "newsletter": "Newsletter",
     "newsletter_placeholder": "Votre email",
-    "newsletter_cta": "S'abonner"
+    "newsletter_cta": "S'abonner",
+    "tagline": "L'annuaire médical #1 à Dubai. Données officielles Dubai Health Authority (Sheryan).",
+    "col_patients": "Patients",
+    "col_pros": "Praticiens",
+    "col_legal": "Légal",
+    "link_find_doctor": "Trouver un médecin",
+    "link_find_dentist": "Trouver un dentiste",
+    "link_pricing_pros": "Tarifs praticiens",
+    "link_about": "À propos",
+    "link_contact": "Contact",
+    "link_whatsapp_support": "WhatsApp support",
+    "link_activate_profile": "Activer mon profil",
+    "link_doctor_login": "Connexion médecin",
+    "link_plans_pricing": "Plans & tarifs",
+    "link_compare_plans": "Comparer les formules",
+    "link_legal_notice": "Mentions légales",
+    "link_privacy": "Politique de confidentialité",
+    "link_cgu": "CGU",
+    "copyright": "© 2026 FindMyDoctor.ae · Tous droits réservés",
+    "made_in_uae": "Made with ❤️ in UAE"
   },
   "error": {
     "404": {

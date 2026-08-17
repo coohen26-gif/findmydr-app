@@ -53,7 +53,33 @@ export default function DentistProfile({ pro, baseUrl }) {
   const [rdvDate, setRdvDate] = useState('');
   const [rdvReason, setRdvReason] = useState('');
   const { t, i18n } = useTranslation('common');
+  // Track profile view on mount (fire-and-forget)
+  React.useEffect(() => {
+    if (!pro || !pro.id) return;
+    try {
+      fetch('/api/track/view', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'dentist', id: pro.id }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch {}
+  }, [pro?.id]);
+
   const router = useRouter();
+
+  // Fire-and-forget click tracker for phone / email / website
+  const trackClick = (click_type) => {
+    if (!pro || !pro.id) return;
+    try {
+      fetch('/api/track/click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'dentist', id: pro.id, click_type }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch {}
+  };
   const localePrefix = `/${i18n.language || 'en'}`;
 
   if (!pro) {
@@ -105,14 +131,17 @@ export default function DentistProfile({ pro, baseUrl }) {
   ], baseUrl);
 
   const handleRdv = (e) => {
-    e.preventDefault();
-    setRdvSent(true);
-    setTimeout(() => {
-      setShowRdv(false);
-      setRdvSent(false);
-      setRdvDate('');
-      setRdvReason('');
-    }, 2500);
+    if (e && e.preventDefault) e.preventDefault();
+    if (!waPhone) return; // no phone: keep modal open as fallback
+    const messages = {'fr': 'Bonjour Dr {name}, je vous contacte via {site} ({host}) pour un(e) {specialty}. Est-ce que vous avez des disponibilités cette semaine ?', 'en': 'Hello Dr {name}, I am reaching out via {site} ({host}) for a {specialty} consultation. Do you have availability this week?', 'ar': 'مرحباً د. {name}، أتواصل معك عبر {site} ({host}) بخصوص استشارة في {specialty}. هل لديكِ مواعيد متاحة هذا الأسبوع؟', 'zh': '您好 {name} 医生，我通过 {site} ({host}) 联系您咨询 {specialty}。本周有可预约时间吗？', 'ru': 'Здравствуйте, д-р {name}. Я обращаюсь через {site} ({host}) по вопросу {specialty}. Есть ли у вас свободные места на этой неделе?', 'fa': 'سلام دکتر {name}، از طریق {site} ({host}) با شما تماس می\u200cگیرم برای {specialty}. آیا این هفته نوبت خالی دارید؟'};
+    const locale = (typeof window !== 'undefined' && (window.localStorage?.getItem('NEXT_LOCALE') || document.cookie.match(/NEXT_LOCALE=(\w+)/)?.[1])) || 'en';
+    const template = messages[locale] || messages.en;
+    const text = template
+      .replace('{name}', fullName)
+      .replace('{site}', 'FindMyDentist.ae')
+      .replace('{host}', 'findmydentist.ae')
+      .replace('{specialty}', specialty);
+    window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -194,10 +223,10 @@ export default function DentistProfile({ pro, baseUrl }) {
                   <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1.5">
                     <div className="flex">
                       {[1, 2, 3, 4, 5].map(i => (
-                        <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                        <Star key={i} className={"w-3.5 h-3.5 " + (i <= 5 ? "fill-amber-400 text-amber-400" : "text-amber-400/30")} />
                       ))}
                     </div>
-                    <span className="text-sm font-medium">4.8 (98 avis)</span>
+                    <span className="text-sm font-medium">{t('doctor.rating_keys.no_reviews')}</span>
                   </div>
                 </div>
               </div>
@@ -205,7 +234,7 @@ export default function DentistProfile({ pro, baseUrl }) {
           </div>
 
           <div className="p-6 md:p-8 flex flex-col md:flex-row gap-3 flex-wrap">
-            <Button size="lg" className="flex-1 md:flex-none bg-cyan-600 hover:bg-cyan-700" onClick={() => setShowRdv(true)}>
+            <Button size="lg" className="flex-1 md:flex-none bg-cyan-600 hover:bg-cyan-700" onClick={handleRdv} disabled={!waPhone} title={waPhone ? '' : 'Aucun numéro de téléphone'}>
               <Calendar className="h-4 w-4" /> Prendre rendez-vous
             </Button>
             <Button variant="outline" size="lg" className="flex-1 md:flex-none" onClick={() => setShowMsg(true)}>

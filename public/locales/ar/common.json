@@ -39,7 +39,13 @@
       "dermato": "طبيب جلدية",
       "orthodontist": "تقويم الأسنان",
       "cardio": "طبيب قلب",
-      "ophtalmo": "طبيب عيون"
+      "ophtalmo": "طبيب عيون",
+      "neuro": "طبيب أعصاب",
+      "ortho": "طبيب عظام",
+      "orl": "أنف وأذن وحنجرة",
+      "endocrino": "طبيب غدد صماء",
+      "anesthesiste": "طبيب تخدير",
+      "all": "عرض الكل"
     },
     "categories_title": "ابحث عن متخصص",
     "categories_subtitle": "ابحث حسب التخصص الطبي",
@@ -62,7 +68,8 @@
     "step_2_title": "قارن",
     "step_2_desc": "ملفات معتمدة، لغات، رسوم",
     "step_3_title": "احجز",
-    "step_3_desc": "عبر الإنترنت أو بالرسالة المباشرة"
+    "step_3_desc": "عبر الإنترنت أو بالرسالة المباشرة",
+    "verified_dha": "صُنع في الإمارات · معتمد 100% من هيئة الصحة"
   },
   "doctor": {
     "specialty": "التخصص",
@@ -87,7 +94,11 @@
     "similar": "أطباء مشابهون",
     "back_to_list": "العودة إلى القائمة",
     "not_found": "الطبيب غير موجود",
-    "loading": "جارٍ تحميل الملف…"
+    "loading": "جارٍ تحميل الملف…",
+    "rating_keys": {
+      "no_reviews": "لا توجد تقييمات بعد",
+      "avg_label": "متوسط التقييم"
+    }
   },
   "search": {
     "filters": {
@@ -101,8 +112,6 @@
       "any": "أي",
       "reset": "إعادة تعيين"
     },
-    "results_count": "تم العثور على طبيب واحد",
-    "results_count_plural": "تم العثور على {count} طبيب",
     "no_results": "لم يتم العثور على طبيب",
     "no_results_hint": "حاول توسيع معاييرك",
     "sort": "ترتيب حسب",
@@ -110,7 +119,9 @@
     "sort_rating": "الأعلى تقييماً",
     "sort_experience": "الأكثر خبرة",
     "sort_recent": "الأحدث",
-    "loading": "جارٍ البحث…"
+    "loading": "جارٍ البحث…",
+    "results_count_one": "تم العثور على طبيب واحد",
+    "results_count_other": "تم العثور على {count} طبيب"
   },
   "pricing": {
     "title": "الأسعار",
@@ -177,7 +188,9 @@
       "cancel": "إلغاء",
       "processing": "جارٍ المعالجة…",
       "success": "تم الدفع بنجاح! مرحباً بك في المميز.",
-      "error": "خطأ في الدفع. حاول مرة أخرى."
+      "error": "خطأ في الدفع. حاول مرة أخرى.",
+      "founding_left_one": "مكان واحد متبقي",
+      "founding_left_other": "{count} أماكن متبقية"
     },
     "billing": {
       "title": "الفواتير",
@@ -315,7 +328,26 @@
     "follow_us": "تابعنا",
     "newsletter": "النشرة الإخبارية",
     "newsletter_placeholder": "بريدك الإلكتروني",
-    "newsletter_cta": "اشترك"
+    "newsletter_cta": "اشترك",
+    "tagline": "الدليل الطبي الأول في دبي. بيانات رسمية من هيئة الصحة بدبي (Sheryan).",
+    "col_patients": "للمرضى",
+    "col_pros": "للممارسين",
+    "col_legal": "قانوني",
+    "link_find_doctor": "ابحث عن طبيب",
+    "link_find_dentist": "ابحث عن طبيب أسنان",
+    "link_pricing_pros": "أسعار الممارسين",
+    "link_about": "من نحن",
+    "link_contact": "اتصل بنا",
+    "link_whatsapp_support": "دعم واتساب",
+    "link_activate_profile": "تفعيل ملفي",
+    "link_doctor_login": "دخول الطبيب",
+    "link_plans_pricing": "الباقات والأسعار",
+    "link_compare_plans": "مقارنة الباقات",
+    "link_legal_notice": "إشعار قانوني",
+    "link_privacy": "سياسة الخصوصية",
+    "link_cgu": "شروط الاستخدام",
+    "copyright": "© 2026 FindMyDoctor.ae · جميع الحقوق محفوظة",
+    "made_in_uae": "صُنع بحب ❤️ في الإمارات"
   },
   "error": {
     "404": {

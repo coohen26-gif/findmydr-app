@@ -92,7 +92,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <Badge variant="info" className="text-sm px-3 py-1">
-                🇦🇪 {t('home.verified_dha', { defaultValue: 'Made in UAE · 100% vérifié DHA' })}
+                🇦🇪 {t('home.verified_dha')}
               </Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-balance">
                 {t('hero.title')}
@@ -130,7 +130,7 @@ export default function Home() {
                           <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                         ))}
                       </div>
-                      <span className="text-sm font-medium">4.9 (127 {t('doctor.reviews')})</span>
+                      <span className="text-sm font-medium">{t('doctor.rating_keys.no_reviews')}</span>
                     </div>
                     <Button className="w-full">{t('doctor.book')}</Button>
                   </div>
