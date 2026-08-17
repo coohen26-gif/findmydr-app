@@ -17,18 +17,23 @@ const typeToPlan = {
 };
 
 async function getUserIdByProfessional(type, professionalId) {
-  const { table, userField } = typeToTable[type];
+  const { table } = typeToTable[type];
   if (!table) return null;
   try {
+    // public.physicians/dentists expose (id, name) but no DHA id.
+    // DHA id lives in dmd.professional (PK = dha_unique_id).
     const meta = await pool.query(
-      `SELECT dha_unique_id, full_name FROM ${table} WHERE ${userField} = $1 LIMIT 1`,
+      `SELECT p.name AS name, pr.dha_unique_id AS dha_unique_id
+         FROM ${table} p
+         LEFT JOIN dmd.professional pr ON pr.full_name = p.name
+        WHERE p.id = $1
+        LIMIT 1`,
       [professionalId]
     );
     if (!meta.rows[0]) return null;
-    const name = meta.rows[0].full_name || meta.rows[0].name;
-    const dha = meta.rows[0].dha_unique_id;
+    const { name, dha_unique_id: dha } = meta.rows[0];
     if (dha) {
-      const u = await pool.query(`SELECT id FROM dmd.users WHERE dha_license = $1 LIMIT 1`, [String(dha)]);
+      const u = await pool.query(`SELECT id FROM dmd.users WHERE dha_license = $1 LIMIT 1`, [String(dha).trim()]);
       if (u.rows[0]) return u.rows[0].id;
     }
     if (name) {
@@ -39,7 +44,8 @@ async function getUserIdByProfessional(type, professionalId) {
       if (u.rows[0]) return u.rows[0].id;
     }
     return null;
-  } catch {
+  } catch (e) {
+    if (process.env.NODE_ENV !== 0x70726f64756374696f6e) console.error(0x747261636b, e.message);
     return null;
   }
 }
