@@ -73,12 +73,15 @@ export default async function handler(req, res) {
 
     const emailSent = await sendMagicLinkEmail(email, magicUrl);
 
+    if (!emailSent) {
+      // BREVO_API_KEY missing/misconfigured: never leak the login link to the
+      // HTTP client. Log server-side only (docker logs) for manual dev use.
+      console.log(`[DEV] Magic link for ${email}: ${magicUrl}`);
+    }
+
     return res.status(200).json({
       ok: true,
-      message: emailSent
-        ? 'Magic link sent. Check your inbox.'
-        : 'Magic link created (dev mode: link printed to server logs).',
-      magic_url: emailSent ? null : magicUrl,
+      message: 'If an account exists for this email, a login link has been sent.',
     });
   } catch (err) {
     console.error('auth/request-link error:', err);

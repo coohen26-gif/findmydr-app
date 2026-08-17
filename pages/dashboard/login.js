@@ -25,7 +25,7 @@ export default function Login() {
   const [email, setEmail] = React.useState('');
   const [license, setLicense] = React.useState('');
   const [loading, setLoading] = React.useState(false);
-  const [magicLink, setMagicLink] = React.useState(null);
+  const [linkRequested, setLinkRequested] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [language, setLanguage] = React.useState('fr');
 
@@ -43,7 +43,7 @@ export default function Login() {
       if (!r.ok) {
         setError(data.error || 'Une erreur est survenue');
       } else {
-        setMagicLink(data.magic_url);
+        setLinkRequested(true);
       }
     } catch (err) {
       setError('Erreur réseau');
@@ -139,7 +139,7 @@ export default function Login() {
               <p className="text-muted-foreground">{t("dashboard.login.subtitle")}</p>
             </div>
 
-            {magicLink ? (
+            {linkRequested ? (
               <Card className="p-6 bg-emerald-50 border-emerald-200">
                 <div className="flex items-start gap-3">
                   <div className="h-10 w-10 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
@@ -147,13 +147,7 @@ export default function Login() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold mb-1">{t("dashboard.login.link_sent")}</h3>
-                    <p className="text-sm text-muted-foreground mb-3">{t("dashboard.login.link_help")}</p>
-                    <a
-                      href={magicLink}
-                      className="block bg-white border border-emerald-200 rounded-md p-3 text-xs font-mono break-all text-primary hover:bg-emerald-50 transition-colors"
-                    >
-                      {magicLink}
-                    </a>
+                    <p className="text-sm text-muted-foreground">{t("dashboard.login.link_help")}</p>
                   </div>
                 </div>
               </Card>
