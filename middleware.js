@@ -3,6 +3,9 @@ import { NextResponse } from 'next/server';
 const SUPPORTED_LOCALES = ['fr', 'en', 'ar', 'zh', 'ru', 'fa'];
 const DEFAULT_LOCALE = 'en';
 const LOCALE_PREFIX_RE = /^\/(fr|en|ar|zh|ru|fa)(\/|$)/;
+// Top-level static pages that exist as real routes on both domains and must
+// NEVER be prefixed with /doctor or /dentist by the host-based rewrite below.
+const STATIC_PAGES = ['/about', '/contact', '/pricing', '/legal'];
 
 function detectLocaleFromAcceptLanguage(acceptLang) {
   if (!acceptLang) return DEFAULT_LOCALE;
@@ -96,6 +99,16 @@ export function middleware(request) {
   if (host.includes('findmydentist.ae') && pathWithoutLocale.startsWith('/doctor')) {
     const target = new URL(`/${locale}${pathWithoutLocale}${search}`, 'https://findmydr.ae');
     return NextResponse.redirect(target, 308);
+  }
+
+  // 3b) Top-level static pages (about/contact/pricing/legal) - never prefix
+  // these with /doctor or /dentist. They render as-is on both domains; the
+  // pages themselves read req.headers.host to adapt branding.
+  if (STATIC_PAGES.includes(pathWithoutLocale)) {
+    const res = NextResponse.next();
+    res.headers.set('x-dmd-locale', locale);
+    res.cookies.set('NEXT_LOCALE', locale, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
+    return res;
   }
 
   // 4) Apply host-based rewrite (findmydr.ae → /doctor/*, findmydentist.ae → /dentist/*)

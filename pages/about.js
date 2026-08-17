@@ -20,22 +20,22 @@ export async function getServerSideProps({ req, locale }) {
   return { props: { isDentist, baseUrl: isDentist ? 'https://findmydentist.ae' : 'https://findmydr.ae', ...(await serverSideTranslations(locale, ['common'])) } };
 }
 
-const VALUES = [
+const VALUES = (brand) => [
   { icon: Shield,  title: 'Vérification DHA',     desc: 'Chaque praticien est vérifié via le registre officiel Sheryan de la Dubai Health Authority.' },
-  { icon: Globe,   title: 'Trilingue FR/EN/AR',   desc: 'Une plateforme accessible aux 200+ nationalités qui vivent à Dubai.' },
+  { icon: Globe,   title: '6 langues',            desc: 'Une plateforme accessible aux 200+ nationalités qui vivent à Dubai (FR/EN/AR/ZH/RU/FA).' },
   { icon: Heart,   title: 'Patients d\'abord',     desc: '100% gratuit pour les patients. Annuaire ouvert, sans paywall ni inscription obligatoire.' },
-  { icon: Sparkles, title: 'SEO local #1',         desc: 'Notre annuaire remonte en tête de Google pour "Dr [NOM] Dubai" — visibilité maximale pour les praticiens.' },
+  { icon: Sparkles, title: 'SEO local #1',         desc: `Notre annuaire remonte en tête de Google pour "Dr [NOM] Dubai" — visibilité maximale pour les praticiens.` },
 ];
 
 const NUMBERS = [
   { value: '20 722', label: 'Praticiens DHA',           icon: Users },
   { value: '5 241',  label: 'Établissements',           icon: MapPin },
-  { value: '3',      label: 'Langues (FR/EN/AR)',       icon: Globe },
+  { value: '6',      label: 'Langues (FR/EN/AR/ZH/RU/FA)', icon: Globe },
   { value: '24/7',   label: 'Disponibilité de l\'annuaire', icon: TrendingUp },
 ];
 
 const TEAM = [
-  { name: 'Cohen (M.)',      role: 'Fondateur & CEO',       bio: 'Entrepreneur tech basé à Dubai. 10+ ans en digital.' },
+  { name: 'M.',              role: 'Fondateur & CEO',       bio: 'Entrepreneur tech basé à Dubai. 10+ ans en digital.' },
   { name: 'Équipe produit',  role: 'Développement',         bio: 'Next.js, PostgreSQL, IA — tout en interne.' },
   { name: 'Équipe terrain',  role: 'Partenariats cliniques', bio: 'DHA, Mediclinic, Aster, NMC, Emirates Healthcare.' },
 ];
@@ -46,6 +46,8 @@ export default function About({ isDentist, baseUrl }) {
   const localePrefix = `/${i18n.language || 'en'}`;
   const title = t('meta.about_title');
   const headline = t('hero.title');
+  const brand = isDentist ? 'FindMyDentist' : 'FindMyDoctor';
+  const values = VALUES(brand);
 
   return (
     <div className="min-h-screen bg-white">
@@ -63,7 +65,7 @@ export default function About({ isDentist, baseUrl }) {
         <div className="container-narrow text-center">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">{headline}</h1>
           <p className="text-lg md:text-xl text-white/85 max-w-2xl mx-auto">
-            20 722 praticiens vérifiés. 5 241 établissements. Une seule plateforme trilingue, gratuite pour les patients.
+            20 722 praticiens vérifiés. 5 241 établissements. Une seule plateforme en 6 langues, gratuite pour les patients.
           </p>
         </div>
       </section>
@@ -73,7 +75,7 @@ export default function About({ isDentist, baseUrl }) {
           <h2 className="text-3xl font-extrabold mb-6 text-center">Notre mission</h2>
           <p className="text-lg text-muted-foreground text-center leading-relaxed">
             Dubai accueille 3,6 millions d'habitants représentant plus de 200 nationalités. Trouver un médecin de confiance,
-            parlant sa langue et acceptant son assurance, relève du parcours du combattant. <strong className="text-foreground">FindMyDoctor.ae</strong> résout ce problème
+            parlant sa langue et acceptant son assurance, relève du parcours du combattant. <strong className="text-foreground">{brand}.ae</strong> résout ce problème
             en référençant 100% des praticiens DHA-licensés de l'émirat, dans toutes les spécialités, avec une fiche vérifiée, multilingue et accessible en un clic.
           </p>
         </div>
@@ -83,7 +85,7 @@ export default function About({ isDentist, baseUrl }) {
         <div className="container-wide">
           <h2 className="text-3xl font-extrabold mb-10 text-center">Nos valeurs</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {VALUES.map((v, i) => {
+            {values.map((v, i) => {
               const Icon = v.icon;
               return (
                 <Card key={i} className="text-center p-6">

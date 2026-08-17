@@ -1,10 +1,14 @@
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://findmydr.ae';
+export async function getServerSideProps({ req, res }) {
+  const host = req.headers.host || 'findmydr.ae';
+  const isDentist = host.includes('findmydentist');
+  const domain = isDentist ? 'findmydentist.ae' : 'findmydr.ae';
+  const siteUrl = `https://${domain}`;
+  const brand = isDentist ? 'FindMyDentist.ae' : 'FindMyDoctor.ae';
 
-export async function getServerSideProps({ res }) {
   res.setHeader('Content-Type', 'text/plain');
   res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=172800');
 
-  const body = `# FindMyDoctor.ae robots.txt
+  const body = `# ${brand} robots.txt
 User-agent: *
 Allow: /
 Disallow: /api/
@@ -14,9 +18,7 @@ Disallow: /dashboard/
 Crawl-delay: 1
 
 # Sitemaps
-Sitemap: ${SITE_URL}/sitemap.xml
-Sitemap: ${SITE_URL}/sitemap-doctors.xml
-Sitemap: ${SITE_URL}/sitemap-dentists.xml
+Sitemap: ${siteUrl}/sitemap.xml
 
 # AI bots - block training, allow indexing (for SEO)
 User-agent: GPTBot

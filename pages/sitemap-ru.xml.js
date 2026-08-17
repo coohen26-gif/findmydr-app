@@ -8,7 +8,7 @@ export async function getServerSideProps({ req, res }) {
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">';
 
   try {
-    const r = await pool.query("SELECT id FROM public.physicians ORDER BY id LIMIT 25000 OFFSET 25000");
+    const r = await pool.query("SELECT id FROM public.physicians ORDER BY id LIMIT 25000");
     r.rows.forEach(p => {
       const path = `/doctor/${p.id}`;
       xml += '<url>';
