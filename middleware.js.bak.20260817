@@ -28,7 +28,6 @@ export function middleware(request) {
   const host = request.headers.get('host') || '';
   const url = request.nextUrl.clone();
   const path = url.pathname;
-  console.log('[MW]', JSON.stringify({ host, path }));
   const search = url.search;
   const ua = request.headers.get('user-agent') || '';
 
@@ -103,15 +102,12 @@ export function middleware(request) {
   //    with the correct locale propagated via NEXT_LOCALE cookie.
   let rewritePath = null;
   if (pathWithoutLocale === '/' || pathWithoutLocale === '') {
-    // Root: rewrite to the domain's canonical home (/doctor for findmydr.ae, /dentist for findmydentist.ae)
-    if (host.includes('findmydentist.ae')) {
-      rewritePath = '/dentist';
-    } else if (host.includes('findmydr.ae')) {
-      rewritePath = '/doctor';
-    } else {
-      // Unknown host: fall back to doctor home
-      rewritePath = '/doctor';
-    }
+    // Root: don't rewrite, let Next.js serve pages/index.js
+    // The locale will be picked up from the URL prefix or NEXT_LOCALE cookie
+    const res = NextResponse.next();
+    res.headers.set('x-dmd-locale', locale);
+    res.cookies.set('NEXT_LOCALE', locale, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
+    return res;
   } else if (host.includes('findmydentist.ae')) {
     if (pathWithoutLocale.startsWith('/dentist/') || pathWithoutLocale === '/dentist') {
       if (pathWithoutLocale === '/dentist' && search.includes('id=')) {
@@ -162,8 +158,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!api|_next|static|dashboard|favicon.ico).*)',
-    '/'
-  ],
+  matcher: ['/((?!api|_next|static|dashboard|favicon.ico).*)'],
 };

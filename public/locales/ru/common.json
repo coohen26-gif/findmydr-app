@@ -39,7 +39,13 @@
       "dermato": "Дерматолог",
       "orthodontist": "Ортодонт",
       "cardio": "Кардиолог",
-      "ophtalmo": "Офтальмолог"
+      "ophtalmo": "Офтальмолог",
+      "neuro": "Невролог",
+      "ortho": "Ортопед",
+      "orl": "ЛОР",
+      "endocrino": "Эндокринолог",
+      "anesthesiste": "Анестезиолог",
+      "all": "Смотреть все"
     },
     "categories_title": "Найти специалиста",
     "categories_subtitle": "Поиск по медицинской специальности",
@@ -62,7 +68,8 @@
     "step_2_title": "Сравнение",
     "step_2_desc": "Проверенные профили, языки, цены",
     "step_3_title": "Запись",
-    "step_3_desc": "Онлайн или через сообщение"
+    "step_3_desc": "Онлайн или через сообщение",
+    "verified_dha": "Сделано в ОАЭ · 100% проверено DHA"
   },
   "doctor": {
     "specialty": "Специальность",
@@ -87,7 +94,11 @@
     "similar": "Похожие врачи",
     "back_to_list": "Назад к списку",
     "not_found": "Врач не найден",
-    "loading": "Загрузка профиля…"
+    "loading": "Загрузка профиля…",
+    "rating_keys": {
+      "no_reviews": "Пока нет отзывов",
+      "avg_label": "Средняя оценка"
+    }
   },
   "search": {
     "filters": {
@@ -101,8 +112,6 @@
       "any": "Любой",
       "reset": "Сбросить"
     },
-    "results_count": "Найден {count} врач",
-    "results_count_plural": "Найдено {count} врачей",
     "no_results": "Врачи не найдены",
     "no_results_hint": "Попробуйте расширить критерии",
     "sort": "Сортировка",
@@ -110,7 +119,9 @@
     "sort_rating": "По рейтингу",
     "sort_experience": "По опыту",
     "sort_recent": "Сначала новые",
-    "loading": "Поиск…"
+    "loading": "Поиск…",
+    "results_count_one": "Найден {count} врач",
+    "results_count_other": "Найдено {count} врачей"
   },
   "pricing": {
     "title": "Цены",
@@ -177,7 +188,9 @@
       "cancel": "Отмена",
       "processing": "Обработка…",
       "success": "Оплата прошла! Добро пожаловать в Премиум.",
-      "error": "Ошибка оплаты. Попробуйте ещё раз."
+      "error": "Ошибка оплаты. Попробуйте ещё раз.",
+      "founding_left_one": "Осталось {count} место",
+      "founding_left_other": "Осталось {count} мест"
     },
     "billing": {
       "title": "Биллинг",
@@ -315,7 +328,26 @@
     "follow_us": "Подписаться",
     "newsletter": "Рассылка",
     "newsletter_placeholder": "Ваш email",
-    "newsletter_cta": "Подписаться"
+    "newsletter_cta": "Подписаться",
+    "tagline": "Лучший медицинский справочник Дубая. Официальные данные Управления здравоохранения Дубая (Sheryan).",
+    "col_patients": "Пациентам",
+    "col_pros": "Врачам",
+    "col_legal": "Правовое",
+    "link_find_doctor": "Найти врача",
+    "link_find_dentist": "Найти стоматолога",
+    "link_pricing_pros": "Цены для врачей",
+    "link_about": "О нас",
+    "link_contact": "Контакты",
+    "link_whatsapp_support": "Поддержка WhatsApp",
+    "link_activate_profile": "Активировать профиль",
+    "link_doctor_login": "Вход для врачей",
+    "link_plans_pricing": "Планы и цены",
+    "link_compare_plans": "Сравнить планы",
+    "link_legal_notice": "Правовое уведомление",
+    "link_privacy": "Политика конфиденциальности",
+    "link_cgu": "Условия использования",
+    "copyright": "© 2026 FindMyDoctor.ae · Все права защищены",
+    "made_in_uae": "Сделано с ❤️ в ОАЭ"
   },
   "error": {
     "404": {

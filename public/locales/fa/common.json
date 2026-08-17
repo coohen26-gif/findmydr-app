@@ -34,12 +34,18 @@
     "categories": {
       "gp": "پزشک عمومی",
       "dentist": "دندانپزشک",
-      "gyneco": "متخصص زنان",
-      "pediatre": "متخصص کودکان",
-      "dermato": "متخصص پوست",
-      "orthodontist": "ارتودنتیست",
-      "cardio": "متخصص قلب",
-      "ophtalmo": "متخصص چشم"
+      "gyneco": "زنان و زایمان",
+      "pediatre": "اطفال",
+      "dermato": "پوست",
+      "orthodontist": "ارتودنسی",
+      "cardio": "قلب و عروق",
+      "ophtalmo": "چشم پزشک",
+      "neuro": "مغز و اعصاب",
+      "ortho": "ارتوپد",
+      "orl": "گوش و حلق و بینی",
+      "endocrino": "غدد",
+      "anesthesiste": "بیهوشی",
+      "all": "مشاهده همه"
     },
     "categories_title": "یک متخصص پیدا کنید",
     "categories_subtitle": "جستجو بر اساس تخصص پزشکی",
@@ -62,7 +68,8 @@
     "step_2_title": "مقایسه",
     "step_2_desc": "پروفایل‌های تأیید شده، زبان‌ها، تعرفه‌ها",
     "step_3_title": "رزرو",
-    "step_3_desc": "آنلاین یا از طریق پیام"
+    "step_3_desc": "آنلاین یا از طریق پیام",
+    "verified_dha": "ساخت امارات · 100% تأیید شده DHA"
   },
   "doctor": {
     "specialty": "تخصص",
@@ -87,7 +94,11 @@
     "similar": "پزشکان مشابه",
     "back_to_list": "بازگشت به فهرست",
     "not_found": "پزشک یافت نشد",
-    "loading": "در حال بارگذاری…"
+    "loading": "در حال بارگذاری…",
+    "rating_keys": {
+      "no_reviews": "هنوز نظری ثبت نشده",
+      "avg_label": "میانگین امتیاز"
+    }
   },
   "search": {
     "filters": {
@@ -101,8 +112,6 @@
       "any": "همه",
       "reset": "بازنشانی"
     },
-    "results_count": "{count} پزشک پیدا شد",
-    "results_count_plural": "{count} پزشک پیدا شد",
     "no_results": "پزشکی یافت نشد",
     "no_results_hint": "سعی کنید معیارها را گسترده‌تر کنید",
     "sort": "مرتب‌سازی",
@@ -110,7 +119,9 @@
     "sort_rating": "بهترین امتیاز",
     "sort_experience": "باتجربه‌ترین",
     "sort_recent": "جدیدترین",
-    "loading": "در حال جستجو…"
+    "loading": "در حال جستجو…",
+    "results_count_one": "{count} پزشک پیدا شد",
+    "results_count_other": "{count} پزشک پیدا شد"
   },
   "pricing": {
     "title": "قیمت‌ها",
@@ -177,7 +188,9 @@
       "cancel": "لغو",
       "processing": "در حال پردازش…",
       "success": "پرداخت موفق! به ویژه خوش آمدید.",
-      "error": "خطا در پرداخت. دوباره تلاش کنید."
+      "error": "خطا در پرداخت. دوباره تلاش کنید.",
+      "founding_left_one": "فقط {count} جایگاه باقی مانده",
+      "founding_left_other": "{count} جایگاه باقی‌مانده"
     },
     "billing": {
       "title": "صورتحساب",
@@ -315,7 +328,26 @@
     "follow_us": "ما را دنبال کنید",
     "newsletter": "خبرنامه",
     "newsletter_placeholder": "ایمیل شما",
-    "newsletter_cta": "اشتراک"
+    "newsletter_cta": "اشتراک",
+    "tagline": "معتبرترین راهنمای پزشکی دبی. داده‌های رسمی سازمان بهداشت دبی (Sheryan).",
+    "col_patients": "بیماران",
+    "col_pros": "پزشکان",
+    "col_legal": "قانونی",
+    "link_find_doctor": "یافتن پزشک",
+    "link_find_dentist": "یافتن دندانپزشک",
+    "link_pricing_pros": "تعرفه پزشکان",
+    "link_about": "درباره ما",
+    "link_contact": "تماس",
+    "link_whatsapp_support": "پشتیبانی واتس‌اپ",
+    "link_activate_profile": "فعال‌سازی پروفایل",
+    "link_doctor_login": "ورود پزشک",
+    "link_plans_pricing": "پلن‌ها و قیمت‌ها",
+    "link_compare_plans": "مقایسه پلن‌ها",
+    "link_legal_notice": "اطلاعیه حقوقی",
+    "link_privacy": "حریم خصوصی",
+    "link_cgu": "شرایط استفاده",
+    "copyright": "© 2026 FindMyDoctor.ae · تمامی حقوق محفوظ است",
+    "made_in_uae": "ساخته شده با ❤️ در امارات"
   },
   "error": {
     "404": {

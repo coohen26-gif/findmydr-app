@@ -34,12 +34,18 @@
     "categories": {
       "gp": "全科医生",
       "dentist": "牙医",
-      "gyneco": "妇科医生",
-      "pediatre": "儿科医生",
-      "dermato": "皮肤科医生",
+      "gyneco": "妇科",
+      "pediatre": "儿科",
+      "dermato": "皮肤科",
       "orthodontist": "正畸医生",
-      "cardio": "心脏科医生",
-      "ophtalmo": "眼科医生"
+      "cardio": "心脏科",
+      "ophtalmo": "眼科",
+      "neuro": "神经科",
+      "ortho": "骨科",
+      "orl": "耳鼻喉科",
+      "endocrino": "内分泌科",
+      "anesthesiste": "麻醉科",
+      "all": "查看全部"
     },
     "categories_title": "查找专科医生",
     "categories_subtitle": "按医疗专科搜索",
@@ -62,7 +68,8 @@
     "step_2_title": "比较",
     "step_2_desc": "已验证资料、使用的语言、价格",
     "step_3_title": "预约",
-    "step_3_desc": "在线或直接消息"
+    "step_3_desc": "在线或直接消息",
+    "verified_dha": "阿联酋制造 · 100% DHA 验证"
   },
   "doctor": {
     "specialty": "专科",
@@ -87,7 +94,11 @@
     "similar": "类似医生",
     "back_to_list": "返回列表",
     "not_found": "未找到医生",
-    "loading": "资料加载中…"
+    "loading": "资料加载中…",
+    "rating_keys": {
+      "no_reviews": "暂无评价",
+      "avg_label": "平均评分"
+    }
   },
   "search": {
     "filters": {
@@ -101,8 +112,6 @@
       "any": "全部",
       "reset": "重置"
     },
-    "results_count": "找到 {count} 位医生",
-    "results_count_plural": "找到 {count} 位医生",
     "no_results": "未找到医生",
     "no_results_hint": "尝试放宽条件",
     "sort": "排序",
@@ -110,7 +119,9 @@
     "sort_rating": "最高评分",
     "sort_experience": "经验丰富",
     "sort_recent": "最新",
-    "loading": "搜索中…"
+    "loading": "搜索中…",
+    "results_count_one": "找到 {count} 位医生",
+    "results_count_other": "找到 {count} 位医生"
   },
   "pricing": {
     "title": "价格",
@@ -177,7 +188,9 @@
       "cancel": "取消",
       "processing": "处理中…",
       "success": "付款成功！欢迎加入高级会员。",
-      "error": "付款出错，请重试。"
+      "error": "付款出错，请重试。",
+      "founding_left_one": "仅剩 {count} 个名额",
+      "founding_left_other": "剩余 {count} 个名额"
     },
     "billing": {
       "title": "账单",
@@ -315,7 +328,26 @@
     "follow_us": "关注我们",
     "newsletter": "通讯",
     "newsletter_placeholder": "您的电子邮件",
-    "newsletter_cta": "订阅"
+    "newsletter_cta": "订阅",
+    "tagline": "迪拜首选医疗目录。迪拜卫生局 (Sheryan) 官方数据。",
+    "col_patients": "患者",
+    "col_pros": "医生",
+    "col_legal": "法律",
+    "link_find_doctor": "查找医生",
+    "link_find_dentist": "查找牙医",
+    "link_pricing_pros": "医生价格",
+    "link_about": "关于",
+    "link_contact": "联系",
+    "link_whatsapp_support": "WhatsApp 支持",
+    "link_activate_profile": "激活我的资料",
+    "link_doctor_login": "医生登录",
+    "link_plans_pricing": "套餐与价格",
+    "link_compare_plans": "比较套餐",
+    "link_legal_notice": "法律声明",
+    "link_privacy": "隐私政策",
+    "link_cgu": "使用条款",
+    "copyright": "© 2026 FindMyDoctor.ae · 版权所有",
+    "made_in_uae": "阿联酋 ❤️ 制造"
   },
   "error": {
     "404": {

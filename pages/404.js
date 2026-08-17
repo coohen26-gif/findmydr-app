@@ -2,9 +2,18 @@ import * as React from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { Search, ArrowLeft } from "lucide-react";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { SiteHeader } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Button } from "../components/Button";
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale || "en", ["common"])),
+    },
+  };
+}
 
 export default function NotFound() {
   return (
