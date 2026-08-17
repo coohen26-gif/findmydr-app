@@ -6,7 +6,10 @@
 import pool from '../../../lib/db';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.DMD_JWT_SECRET || 'dmd-dev-secret-DO-NOT-USE-IN-PROD';
+const JWT_SECRET = process.env.DMD_JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('DMD_JWT_SECRET env var is required — refusing to start with an insecure default.');
+}
 
 export async function getUserFromCookie(cookieHeader) {
   if (!cookieHeader) return null;

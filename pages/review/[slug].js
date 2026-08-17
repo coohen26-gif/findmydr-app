@@ -17,23 +17,6 @@ import { WhatsAppButton } from '../../components/WhatsAppButton';
 import pool from '../../lib/db';
 import { breadcrumbJsonLd, pageUrl } from '../../lib/seo';
 
-const MOCK_REVIEWS = [
-  { id: 'r1', name: 'Sophie Martin', rating: 5, text: "Excellent medecin ! A l'ecoute et tres professionnel. Je recommande vivement.", date: '2026-05-28', verified: true },
-  { id: 'r2', name: 'Ahmed Benali', rating: 5, text: "Tres bonne consultation. Le cabinet est bien situe et l'accueil est chaleureux.", date: '2026-05-15', verified: true },
-  { id: 'r3', name: 'Marie Dubois', rating: 4, text: 'Bon praticien, rendez-vous facile a obtenir. Seul bemol : un peu d\'attente.', date: '2026-05-02', verified: false },
-  { id: 'r4', name: 'Karim Othman', rating: 5, text: 'Je suis suivi depuis 2 ans, toujours au top. Disponible et a l\'ecoute.', date: '2026-04-20', verified: true },
-  { id: 'r5', name: 'Lina Haddad', rating: 5, text: "Prends le temps d'expliquer, tres pedagogue. Je recommande a 100%.", date: '2026-04-10', verified: true },
-  { id: 'r6', name: 'Thomas Leroy', rating: 4, text: 'Bon docteur, ponctuel et efficace. Tarif raisonnable.', date: '2026-03-28', verified: false },
-];
-
-const RATING_DISTRIBUTION = [
-  { stars: 5, pct: 78, count: 142 },
-  { stars: 4, pct: 14, count: 25 },
-  { stars: 3, pct: 5, count: 9 },
-  { stars: 2, pct: 2, count: 3 },
-  { stars: 1, pct: 1, count: 2 },
-];
-
 export async function getServerSideProps({ query, req, locale }) {
   const { slug } = query;
   const id = slug ? String(slug).split('-').pop() : null;
@@ -54,15 +37,60 @@ export async function getServerSideProps({ query, req, locale }) {
               pr.plan,
               pr.bio_fr,
               pr.phone,
-              pr.phone_source
+              pr.phone_source,
+              pr.dha_unique_id
          FROM public.physicians p
          LEFT JOIN dmd.professional pr ON p.name = pr.full_name
         WHERE p.id = $1 LIMIT 1`,
       [parseInt(id, 10)]
     );
+    const pro = r.rows[0] || null;
+
+    let reviews = [];
+    let avgRating = 0;
+    let totalReviews = 0;
+    let ratingDistribution = [5, 4, 3, 2, 1].map((stars) => ({ stars, count: 0, pct: 0 }));
+
+    if (pro && pro.dha_unique_id) {
+      const rv = await pool.query(
+        `SELECT id, rating, text, author_name, verified, visit_date, created_at
+           FROM dmd.reviews
+          WHERE pro_dha_id = $1
+          ORDER BY created_at DESC
+          LIMIT 20`,
+        [pro.dha_unique_id]
+      );
+      reviews = rv.rows;
+
+      const agg = await pool.query(
+        `SELECT COUNT(*)::int AS total, COALESCE(AVG(rating), 0)::float AS avg,
+                COUNT(*) FILTER (WHERE rating = 5)::int AS c5,
+                COUNT(*) FILTER (WHERE rating = 4)::int AS c4,
+                COUNT(*) FILTER (WHERE rating = 3)::int AS c3,
+                COUNT(*) FILTER (WHERE rating = 2)::int AS c2,
+                COUNT(*) FILTER (WHERE rating = 1)::int AS c1
+           FROM dmd.reviews
+          WHERE pro_dha_id = $1`,
+        [pro.dha_unique_id]
+      );
+      const a = agg.rows[0];
+      totalReviews = a.total;
+      avgRating = totalReviews > 0 ? Math.round(a.avg * 10) / 10 : 0;
+      const counts = { 5: a.c5, 4: a.c4, 3: a.c3, 2: a.c2, 1: a.c1 };
+      ratingDistribution = [5, 4, 3, 2, 1].map((stars) => ({
+        stars,
+        count: counts[stars],
+        pct: totalReviews > 0 ? Math.round((counts[stars] / totalReviews) * 100) : 0,
+      }));
+    }
+
     return {
       props: {
-        pro: r.rows[0] || null,
+        pro,
+        reviews,
+        avgRating,
+        totalReviews,
+        ratingDistribution,
         baseUrl: pageUrl(req.headers.host, '/'),
         ...(await serverSideTranslations(locale, ['common'])),
       },
@@ -72,6 +100,10 @@ export async function getServerSideProps({ query, req, locale }) {
     return {
       props: {
         pro: null,
+        reviews: [],
+        avgRating: 0,
+        totalReviews: 0,
+        ratingDistribution: [5, 4, 3, 2, 1].map((stars) => ({ stars, count: 0, pct: 0 })),
         baseUrl: pageUrl(req.headers.host, '/'),
         ...(await serverSideTranslations(locale, ['common'])),
       },
@@ -79,7 +111,7 @@ export async function getServerSideProps({ query, req, locale }) {
   }
 }
 
-export default function ReviewPage({ pro, baseUrl }) {
+export default function ReviewPage({ pro, reviews, avgRating, totalReviews, ratingDistribution, baseUrl }) {
   const { t, i18n } = useTranslation('common');
   const localePrefix = `/${i18n.language || 'en'}`;
   const [showForm, setShowForm] = useState(false);
@@ -105,11 +137,11 @@ export default function ReviewPage({ pro, baseUrl }) {
   }
 
   const fullName = (pro.name || '').replace(/^Dr\.?\s*/i, '').trim();
-  const avgRating = 4.7;
-  const totalReviews = 181;
 
   const pageTitleStr = `${t('review.title', 'Avis patients')} - Dr. ${fullName} | FindMyDoctor.ae`;
-  const descStr = `${t('review.subtitle', 'Consultez les avis verifies des patients sur')} ${fullName} (${pro.specialty || 'Medecin'}). Note moyenne ${avgRating}/5 sur ${totalReviews} ${t('review.count_label', 'avis')}.`;
+  const descStr = totalReviews > 0
+    ? `${t('review.subtitle', 'Consultez les avis verifies des patients sur')} ${fullName} (${pro.specialty || 'Medecin'}). Note moyenne ${avgRating}/5 sur ${totalReviews} ${t('review.count_label', 'avis')}.`
+    : `${t('review.subtitle', 'Consultez les avis verifies des patients sur')} ${fullName} (${pro.specialty || 'Medecin'}).`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -134,20 +166,24 @@ export default function ReviewPage({ pro, baseUrl }) {
               '@type': 'Physician',
               name: `Dr. ${fullName}`,
               medicalSpecialty: pro.specialty || 'General',
-              aggregateRating: {
-                '@type': 'AggregateRating',
-                ratingValue: avgRating,
-                reviewCount: totalReviews,
-                bestRating: 5,
-                worstRating: 1,
-              },
-              review: MOCK_REVIEWS.slice(0, 4).map((r) => ({
-                '@type': 'Review',
-                author: { '@type': 'Person', name: r.name },
-                datePublished: r.date,
-                reviewBody: r.text,
-                reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5 },
-              })),
+              // Only emit aggregateRating/review when real reviews exist —
+              // fabricated ratings violate Google's structured data guidelines.
+              ...(totalReviews > 0 ? {
+                aggregateRating: {
+                  '@type': 'AggregateRating',
+                  ratingValue: avgRating,
+                  reviewCount: totalReviews,
+                  bestRating: 5,
+                  worstRating: 1,
+                },
+                review: reviews.slice(0, 4).map((r) => ({
+                  '@type': 'Review',
+                  author: { '@type': 'Person', name: r.author_name || 'Patient' },
+                  datePublished: (r.visit_date || r.created_at || '').toString().slice(0, 10),
+                  reviewBody: r.text,
+                  reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5 },
+                })),
+              } : {}),
             }),
           }}
         />
@@ -184,17 +220,28 @@ export default function ReviewPage({ pro, baseUrl }) {
                 {pro.is_dha_verified && <DhaBadge />}
               </div>
               <p className="text-muted-foreground mb-3">{pro.specialty || 'Medecin generaliste'}{pro.facility_name ? ` - ${pro.facility_name}` : ''}</p>
-              <div className="flex items-center gap-3 flex-wrap">
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Star key={i} className={`h-5 w-5 ${i <= Math.round(avgRating) ? 'fill-amber-400 text-amber-400' : 'text-muted-300'}`} />
-                  ))}
-                  <span className="font-extrabold text-lg ml-1.5">{avgRating}</span>
+              {totalReviews > 0 ? (
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star key={i} className={`h-5 w-5 ${i <= Math.round(avgRating) ? 'fill-amber-400 text-amber-400' : 'text-muted-300'}`} />
+                    ))}
+                    <span className="font-extrabold text-lg ml-1.5">{avgRating}</span>
+                  </div>
+                  <span className="text-muted-foreground">-</span>
+                  <span className="text-sm font-semibold">{totalReviews} {t('review.count_label', 'avis')}</span>
+                  <Badge variant="success" className="ml-2"><ShieldCheck className="h-3 w-3 mr-1" />{t('review.verified_label', 'Avis verifies')}</Badge>
                 </div>
-                <span className="text-muted-foreground">-</span>
-                <span className="text-sm font-semibold">{totalReviews} {t('review.count_label', 'avis')}</span>
-                <Badge variant="success" className="ml-2"><ShieldCheck className="h-3 w-3 mr-1" />{t('review.verified_label', 'Avis verifies')}</Badge>
-              </div>
+              ) : (
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star key={i} className="h-5 w-5 text-muted-300" />
+                    ))}
+                  </div>
+                  <span className="text-sm text-muted-foreground">{t('review.no_reviews_yet', 'Pas encore d\'avis - soyez le premier')}</span>
+                </div>
+              )}
             </div>
             <Button size="lg" onClick={() => setShowForm(true)}>
               {t('review.leave_review', 'Laisser un avis')}
@@ -208,7 +255,7 @@ export default function ReviewPage({ pro, baseUrl }) {
           <Card>
             <h3 className="font-bold mb-4">{t('review.rating_breakdown', 'Detail des notes')}</h3>
             <div className="space-y-2.5">
-              {RATING_DISTRIBUTION.map((d) => (
+              {ratingDistribution.map((d) => (
                 <div key={d.stars} className="flex items-center gap-3 text-sm">
                   <span className="w-12 flex items-center gap-0.5 text-muted-foreground">
                     {d.stars} <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
@@ -251,22 +298,37 @@ export default function ReviewPage({ pro, baseUrl }) {
             </select>
           </div>
 
-          <div className="space-y-4">
-            {MOCK_REVIEWS.map((r) => (
-              <div key={r.id} className="relative">
-                <ReviewCard name={r.name} rating={r.rating} text={r.text} date={r.date} />
-                {r.verified && (
-                  <Badge variant="success" className="absolute top-3 right-3 text-[10px]">
-                    <Check className="h-2.5 w-2.5 mr-0.5" />{t('review.verified_short', 'Verifie')}
-                  </Badge>
-                )}
+          {reviews.length > 0 ? (
+            <>
+              <div className="space-y-4">
+                {reviews.map((r) => (
+                  <div key={r.id} className="relative">
+                    <ReviewCard
+                      name={r.author_name || t('review.anonymous', 'Patient')}
+                      rating={r.rating}
+                      text={r.text}
+                      date={(r.visit_date || r.created_at || '').toString().slice(0, 10)}
+                    />
+                    {r.verified && (
+                      <Badge variant="success" className="absolute top-3 right-3 text-[10px]">
+                        <Check className="h-2.5 w-2.5 mr-0.5" />{t('review.verified_short', 'Verifie')}
+                      </Badge>
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-10">
-            <Button variant="outline" size="lg">{t('review.load_more', "Charger plus d'avis")}</Button>
-          </div>
+              {reviews.length >= 20 && (
+                <div className="text-center mt-10">
+                  <Button variant="outline" size="lg">{t('review.load_more', "Charger plus d'avis")}</Button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-16 text-muted-foreground">
+              <div className="text-4xl mb-3">💬</div>
+              <p>{t('review.no_reviews_yet', 'Pas encore d\'avis - soyez le premier')}</p>
+            </div>
+          )}
         </main>
       </div>
 
