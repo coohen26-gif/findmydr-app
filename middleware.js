@@ -35,25 +35,6 @@ export function middleware(request) {
   const search = url.search;
   const ua = request.headers.get('user-agent') || '';
 
-  // Special: /dashboard/ - keep URL, but propagate locale via cookie/header so getServerSideProps can read it
-  if (path.startsWith('/dashboard')) {
-    let dlocale = null;
-    const dm = path.match(LOCALE_PREFIX_RE);
-    if (dm) dlocale = dm[1];
-    if (!dlocale) {
-      const acceptLang = request.headers.get('accept-language') || '';
-      const cookieLocale = (request.cookies.get('NEXT_LOCALE')?.value || '').toLowerCase();
-      if (cookieLocale && SUPPORTED_LOCALES.includes(cookieLocale)) dlocale = cookieLocale;
-      else if (acceptLang) dlocale = detectLocaleFromAcceptLanguage(acceptLang);
-      else dlocale = DEFAULT_LOCALE;
-    }
-    const pathNoLocale = path.replace(LOCALE_PREFIX_RE, '/') || '/';
-    const dres = NextResponse.rewrite(new URL(pathNoLocale, request.url));
-    dres.headers.set('x-dmd-locale', dlocale);
-    dres.cookies.set('NEXT_LOCALE', dlocale, { path: '/', maxAge: 60*60*24*365, sameSite: 'lax' });
-    return dres;
-  }
-
   // Skip API, static, sitemap, robots, blog, review
   if (
     path.startsWith('/api') ||

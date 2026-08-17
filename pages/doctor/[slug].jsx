@@ -17,18 +17,11 @@ import { WhatsAppButton } from '../../components/WhatsAppButton';
 import pool from '../../lib/db';
 import { pageTitle, pageDescription, physicianJsonLd, breadcrumbJsonLd, pageUrl } from '../../lib/seo';
 
-const RELATED = [
-  { id: 'r1', name: 'Dr. Sara Al-Mansouri', specialty: 'Dermatologue' },
-  { id: 'r2', name: 'Dr. Ahmed Khalil', specialty: 'Cardiologue' },
-  { id: 'r3', name: 'Dr. Layla Hassan', specialty: 'Pédiatre' },
-  { id: 'r4', name: 'Dr. Omar Tazi', specialty: 'Généraliste' },
-];
-
 export async function getServerSideProps({ query, req, locale }) {
   const { slug, id: idParam } = query;
   const id = idParam || (slug ? String(slug).split('-').pop() : null);
   if (!id || !/^\d+$/.test(id)) {
-    return { props: { pro: null, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
+    return { props: { pro: null, related: [], baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
   }
   try {
     const r = await pool.query(
@@ -44,14 +37,25 @@ export async function getServerSideProps({ query, req, locale }) {
         WHERE p.id = $1 LIMIT 1`,
       [parseInt(id, 10)]
     );
-    return { props: { pro: r.rows[0] || null, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
+    const pro = r.rows[0] || null;
+    let related = [];
+    if (pro) {
+      const rel = await pool.query(
+        `SELECT id, name, specialty FROM public.physicians
+          WHERE specialty = $1 AND id != $2
+          ORDER BY search_rank DESC NULLS LAST, id LIMIT 4`,
+        [pro.specialty, pro.id]
+      );
+      related = rel.rows;
+    }
+    return { props: { pro, related, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
   } catch (e) {
     console.error('doctor [slug] getServerSideProps error:', e.message);
-    return { props: { pro: null, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
+    return { props: { pro: null, related: [], baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
   }
 }
 
-export default function DoctorProfile({ pro, baseUrl }) {
+export default function DoctorProfile({ pro, related, baseUrl }) {
   const [showRdv, setShowRdv] = useState(false);
   const [showMsg, setShowMsg] = useState(false);
   const [showShare, setShowShare] = useState(false);
@@ -364,10 +368,11 @@ export default function DoctorProfile({ pro, baseUrl }) {
         <ReviewsSection />
       </section>
 
+      {related.length > 0 && (
       <section className="container-wide pb-20">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-6">Médecins similaires à Dubai</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {RELATED.map(p => (
+          {related.map(p => (
             <Link key={p.id} href={`/doctor?id=${p.id}`} className="group bg-white border border-border rounded-xl p-4 hover:shadow-lg transition-all">
               <Avatar name={p.name} size="lg" className="mb-3" verified />
               <h3 className="font-bold text-sm line-clamp-1">{p.name}</h3>
@@ -376,6 +381,7 @@ export default function DoctorProfile({ pro, baseUrl }) {
           ))}
         </div>
       </section>
+      )}
 
       {/* Mobile sticky bottom CTA bar - shown for ALL doctors (WhatsApp if phone, else RDV+Message) */}
       <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 backdrop-blur-md border-t border-border/60 px-4 py-3 flex items-center gap-3 shadow-2xl animate-fade-in">
