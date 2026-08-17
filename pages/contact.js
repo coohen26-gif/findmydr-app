@@ -7,7 +7,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { Mail, MessageCircle, MapPin, Phone, Send, Loader2, Check } from 'lucide-react';
+import { Mail, MapPin, Send, Loader2, Check, AlertCircle } from 'lucide-react';
 import { SiteHeader } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { Button } from '../components/Button';
@@ -20,32 +20,39 @@ export async function getServerSideProps({ req, locale }) {
   return { props: { isDentist, ...(await serverSideTranslations(locale, ['common'])) } };
 }
 
-const CONTACTS = [
-  { icon: Mail,          label: 'Email',       value: 'contact@findmydr.ae',     href: 'mailto:contact@findmydr.ae' },
-  { icon: MessageCircle, label: 'WhatsApp',    value: '+971 50 000 0000',         href: 'https://wa.me/971500000000' },
-  { icon: MapPin,        label: 'Adresse',     value: 'Dubai Internet City, UAE', href: null },
-  { icon: Phone,         label: 'Téléphone',   value: '+971 4 000 0000',         href: 'tel:+97140000000' },
-];
-
 export default function Contact({ isDentist }) {
   const { t, i18n } = useTranslation('common');
   const router = useRouter();
+  const contactEmail = isDentist ? 'contact@findmydentist.ae' : 'contact@findmydr.ae';
+  const CONTACTS = [
+    { icon: Mail,   label: 'Email',   value: contactEmail,               href: `mailto:${contactEmail}` },
+    { icon: MapPin, label: 'Adresse', value: 'Dubai Internet City, UAE', href: null },
+  ];
   const [form, setForm] = React.useState({ name: '', email: '', subject: 'general', message: '' });
   const [sending, setSending] = React.useState(false);
   const [sent, setSent] = React.useState(false);
+  const [error, setError] = React.useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSending(true);
+    setError(null);
     try {
-      await fetch('/api/contact', {
+      const r = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
-      }).catch(() => {});
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok || !data.sent) {
+        setError(data.error || `Envoi indisponible pour le moment. Écrivez-nous directement à ${contactEmail}.`);
+        return;
+      }
       setSent(true);
       setForm({ name: '', email: '', subject: 'general', message: '' });
       setTimeout(() => setSent(false), 4000);
+    } catch (err) {
+      setError('Erreur réseau. Réessayez ou écrivez-nous directement.');
     } finally {
       setSending(false);
     }
@@ -143,6 +150,12 @@ export default function Contact({ isDentist }) {
                       className="w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     />
                   </div>
+                  {error && (
+                    <div className="flex items-start gap-2 bg-destructive/10 text-destructive text-sm rounded-md p-3">
+                      <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                      <span>{error}</span>
+                    </div>
+                  )}
                   <Button type="submit" size="lg" disabled={sending}>
                     {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="h-4 w-4" /> Envoyer</>}
                   </Button>
