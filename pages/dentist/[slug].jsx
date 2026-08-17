@@ -92,10 +92,10 @@ export default function DentistProfile({ pro, related, baseUrl }) {
         <SiteHeader />
         <div className="container-wide py-32 text-center">
           <div className="text-6xl mb-4">😕</div>
-          <h1 className="text-3xl font-extrabold mb-4">{t('doctor.not_found')}</h1>
-          <p className="text-muted-foreground mb-6">Ce profil n'existe pas dans notre annuaire.</p>
+          <h1 className="text-3xl font-extrabold mb-4">{t('dentist.not_found', 'Dentiste introuvable')}</h1>
+          <p className="text-muted-foreground mb-6">{t('review.not_found_body', "Ce profil n'existe pas dans notre annuaire.")}</p>
           <Link href={`${localePrefix}/dentist`}>
-            <Button size="lg"><ChevronLeft className="h-4 w-4" /> {t('doctor.back_to_list')}</Button>
+            <Button size="lg"><ChevronLeft className="h-4 w-4" /> {t('dentist.back_to_list', 'Retour à la liste')}</Button>
           </Link>
         </div>
       </div>
@@ -189,7 +189,7 @@ export default function DentistProfile({ pro, related, baseUrl }) {
 
       <div className="container-wide pt-6">
         <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Link href="/dentist" className="hover:text-cyan-600">Annuaire</Link>
+          <Link href="/dentist" className="hover:text-cyan-600">{t('dentist.detail.directory', 'Annuaire')}</Link>
           <span>/</span>
           <span>{specialty}</span>
           <span>/</span>
@@ -220,10 +220,10 @@ export default function DentistProfile({ pro, related, baseUrl }) {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={() => setShowShare(true)} className="h-10 w-10 min-h-[44px] min-w-[44px] rounded-md border border-white/30 bg-white/10 text-white hover:bg-white/20 flex items-center justify-center" aria-label="Partager">
+                    <button onClick={() => setShowShare(true)} className="h-10 w-10 min-h-[44px] min-w-[44px] rounded-md border border-white/30 bg-white/10 text-white hover:bg-white/20 flex items-center justify-center" aria-label={t('dentist.detail.aria_share', 'Partager')}>
                       <Share2 className="h-4 w-4" />
                     </button>
-                    <button className="h-10 w-10 min-h-[44px] min-w-[44px] rounded-md border border-white/30 bg-white/10 text-white hover:bg-white/20 flex items-center justify-center" aria-label="Sauvegarder">
+                    <button className="h-10 w-10 min-h-[44px] min-w-[44px] rounded-md border border-white/30 bg-white/10 text-white hover:bg-white/20 flex items-center justify-center" aria-label={t('dentist.detail.aria_save', 'Sauvegarder')}>
                       <Bookmark className="h-4 w-4" />
                     </button>
                   </div>
@@ -243,14 +243,14 @@ export default function DentistProfile({ pro, related, baseUrl }) {
           </div>
 
           <div className="p-6 md:p-8 flex flex-col md:flex-row gap-3 flex-wrap">
-            <Button size="lg" className="flex-1 md:flex-none bg-cyan-600 hover:bg-cyan-700" onClick={handleRdv} disabled={!waPhone} title={waPhone ? '' : 'Aucun numéro de téléphone'}>
-              <Calendar className="h-4 w-4" /> Prendre rendez-vous
+            <Button size="lg" className="flex-1 md:flex-none bg-cyan-600 hover:bg-cyan-700" onClick={handleRdv} disabled={!waPhone} title={waPhone ? '' : t('dentist.detail.no_phone', 'Aucun numéro de téléphone')}>
+              <Calendar className="h-4 w-4" /> {t('dentist.book', 'Prendre rendez-vous')}
             </Button>
             <Button variant="outline" size="lg" className="flex-1 md:flex-none" onClick={() => setShowMsg(true)}>
-              <MessageCircle className="h-4 w-4" /> Envoyer un message
+              <MessageCircle className="h-4 w-4" /> {t('dentist.message', 'Envoyer un message')}
             </Button>
             <Button variant="outline" size="lg" className="flex-1 md:flex-none">
-              <Phone className="h-4 w-4" /> Appeler
+              <Phone className="h-4 w-4" /> {t('dentist.detail.call', 'Appeler')}
             </Button>
             <WhatsAppButton
               phone={pro.phone || null}
@@ -266,44 +266,46 @@ export default function DentistProfile({ pro, related, baseUrl }) {
       <section className="container-wide pb-12 grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <Card className="p-6 md:p-8">
-            <h2 className="text-2xl font-extrabold mb-4">À propos de Dr. {fullName.split(' ').slice(-1)[0]}</h2>
+            <h2 className="text-2xl font-extrabold mb-4">{t('dentist.about', 'À propos')} Dr. {fullName.split(' ').slice(-1)[0]}</h2>
             <p className="text-muted-foreground leading-relaxed text-pretty">
-              Dr. {fullName} est {specialty.toLowerCase()} DHA-licensé(e) exerçant à {facility}, Dubai.
-              Soins dentaires de qualité, approche douce, blanchiment, esthétique, implants.
+              {t('dentist.detail.bio_template', "Dr. {name} est {specialty} DHA-licensé(e) exerçant à {facility}, Dubai, Émirats Arabes Unis. Profil vérifié directement via le Dubai Health Authority (Sheryan). {specialty} expérimenté(e), spécialisé(e) dans les soins dentaires de qualité.")
+                .replaceAll('{name}', fullName)
+                .replaceAll('{specialty}', specialty)
+                .replaceAll('{facility}', facility)}
             </p>
           </Card>
           <Card className="p-6 md:p-8">
-            <h2 className="text-2xl font-extrabold mb-4">Soins et services</h2>
+            <h2 className="text-2xl font-extrabold mb-4">{t('dentist.specialty', 'Soins et services')}</h2>
             <div className="flex flex-wrap gap-2">
               <Badge variant="info">{specialty}</Badge>
-              <Badge variant="info">Détartrage</Badge>
-              <Badge variant="info">Blanchiment</Badge>
-              <Badge variant="info">Carie</Badge>
-              <Badge variant="info">Consultation</Badge>
+              <Badge variant="info">{t('dentist.detail.tag_4', 'Détartrage')}</Badge>
+              <Badge variant="info">{t('dentist.detail.tag_1', 'Blanchiment')}</Badge>
+              <Badge variant="info">{t('dentist.detail.tag_2', 'Carie')}</Badge>
+              <Badge variant="info">{t('dentist.detail.tag_3', 'Consultation')}</Badge>
             </div>
           </Card>
           <Card className="p-6 md:p-8">
-            <h2 className="text-2xl font-extrabold mb-4">Établissement</h2>
+            <h2 className="text-2xl font-extrabold mb-4">{t('doctor.facility', 'Établissement')}</h2>
             <div className="flex items-center gap-4">
               <div className="h-14 w-14 rounded-xl bg-cyan-50 flex items-center justify-center">
                 <Building2 className="h-7 w-7 text-cyan-600" />
               </div>
               <div className="flex-1">
                 <h3 className="font-bold text-lg">{facility}</h3>
-                <p className="text-sm text-muted-foreground">📍 Dubai, Émirats Arabes Unis</p>
+                <p className="text-sm text-muted-foreground">📍 {t('dentist.detail.uae_location', 'Dubai, Émirats Arabes Unis')}</p>
               </div>
-              <Button variant="outline" size="sm">Voir</Button>
+              <Button variant="outline" size="sm">{t('dentist.detail.view', 'Voir')}</Button>
             </div>
           </Card>
         </div>
         <div className="space-y-6">
           <Card className="p-6 bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
             <Badge variant="premium" className="mb-3">⭐ Premium</Badge>
-            <h3 className="font-bold text-lg mb-2">Profil vérifié premium</h3>
-            <Link href="/dashboard/login"><Button variant="premium" className="w-full">Activer mon profil →</Button></Link>
+            <h3 className="font-bold text-lg mb-2">{t('dentist.detail.premium_verified_title', 'Profil vérifié premium')}</h3>
+            <Link href="/dashboard/login"><Button variant="premium" className="w-full">{t('nav.signup', 'Activer mon profil')} →</Button></Link>
           </Card>
           <Card className="p-6">
-            <h3 className="font-bold mb-4">Statistiques</h3>
+            <h3 className="font-bold mb-4">{t('dentist.detail.stats_title', 'Statistiques')}</h3>
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between"><span className="text-muted-foreground">👁️ Vues ce mois</span><span className="font-bold">847</span></div>
               <div className="flex items-center justify-between"><span className="text-muted-foreground">📅 RDV pris</span><span className="font-bold">28</span></div>
@@ -315,7 +317,7 @@ export default function DentistProfile({ pro, related, baseUrl }) {
 
       {related.length > 0 && (
       <section className="container-wide pb-20">
-        <h2 className="text-2xl md:text-3xl font-extrabold mb-6">Dentistes similaires à Dubai</h2>
+        <h2 className="text-2xl md:text-3xl font-extrabold mb-6">{t('dentist.detail.similar_dubai', 'Dentistes similaires à Dubai')}</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {related.map(p => (
             <Link key={p.id} href={`/dentist?id=${p.id}`} className="group bg-white border border-border rounded-xl p-4 hover:shadow-lg transition-all">
@@ -332,29 +334,29 @@ export default function DentistProfile({ pro, related, baseUrl }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setShowRdv(false)}>
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 md:p-8" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-extrabold">Prendre rendez-vous</h2>
-              <button onClick={() => setShowRdv(false)} className="h-8 w-8 rounded-md hover:bg-muted flex items-center justify-center"><X className="h-4 w-4" /></button>
+              <h2 className="text-xl font-extrabold">{t('dentist.book', 'Prendre rendez-vous')}</h2>
+              <button onClick={() => setShowRdv(false)} className="h-8 w-8 rounded-md hover:bg-muted flex items-center justify-center" aria-label={t('common.close', 'Fermer')}><X className="h-4 w-4" /></button>
             </div>
             {rdvSent ? (
               <div className="text-center py-8">
                 <div className="h-16 w-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4"><Check className="h-8 w-8 text-emerald-600" /></div>
-                <h3 className="text-lg font-bold mb-1">Demande envoyée !</h3>
-                <p className="text-sm text-muted-foreground">{fullName} vous recontactera dans les 24h.</p>
+                <h3 className="text-lg font-bold mb-1">{t('dentist.detail.rdv_sent_title', 'Demande envoyée !')}</h3>
+                <p className="text-sm text-muted-foreground">{t('dentist.detail.will_contact_24h', '{name} vous recontactera dans les 24h.').replace('{name}', fullName)}</p>
               </div>
             ) : (
               <form onSubmit={handleRdv} className="space-y-4">
-                <p className="text-sm text-muted-foreground">avec <strong className="text-foreground">Dr. {fullName}</strong> · {specialty}</p>
+                <p className="text-sm text-muted-foreground">{t('dentist.detail.rdv_with', 'avec')} <strong className="text-foreground">Dr. {fullName}</strong> · {specialty}</p>
                 <div>
-                  <label className="block text-sm font-semibold mb-1.5">Date souhaitée</label>
+                  <label className="block text-sm font-semibold mb-1.5">{t('dentist.detail.rdv_date_label', 'Date souhaitée')}</label>
                   <input type="date" required value={rdvDate} onChange={e => setRdvDate(e.target.value)} className="flex h-11 w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-1.5">Motif</label>
-                  <textarea required value={rdvReason} onChange={e => setRdvReason(e.target.value)} placeholder="Décrivez brièvement le motif..." rows={3} className="flex w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+                  <label className="block text-sm font-semibold mb-1.5">{t('dentist.detail.rdv_reason_label', 'Motif')}</label>
+                  <textarea required value={rdvReason} onChange={e => setRdvReason(e.target.value)} placeholder={t('dentist.detail.rdv_reason_placeholder', 'Décrivez brièvement le motif...')} rows={3} className="flex w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
                 </div>
                 <div className="flex gap-2 pt-2">
-                  <Button type="button" variant="outline" onClick={() => setShowRdv(false)} className="flex-1">Annuler</Button>
-                  <Button type="submit" className="flex-1 bg-cyan-600 hover:bg-cyan-700">Envoyer la demande</Button>
+                  <Button type="button" variant="outline" onClick={() => setShowRdv(false)} className="flex-1">{t('common.cancel', 'Annuler')}</Button>
+                  <Button type="submit" className="flex-1 bg-cyan-600 hover:bg-cyan-700">{t('dentist.detail.rdv_submit', 'Envoyer la demande')}</Button>
                 </div>
               </form>
             )}
@@ -366,14 +368,14 @@ export default function DentistProfile({ pro, related, baseUrl }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setShowMsg(false)}>
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 md:p-8" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-extrabold">Envoyer un message</h2>
-              <button onClick={() => setShowMsg(false)} className="h-8 w-8 rounded-md hover:bg-muted flex items-center justify-center"><X className="h-4 w-4" /></button>
+              <h2 className="text-xl font-extrabold">{t('dentist.message', 'Envoyer un message')}</h2>
+              <button onClick={() => setShowMsg(false)} className="h-8 w-8 rounded-md hover:bg-muted flex items-center justify-center" aria-label={t('common.close', 'Fermer')}><X className="h-4 w-4" /></button>
             </div>
-            <p className="text-sm text-muted-foreground mb-4">à <strong className="text-foreground">Dr. {fullName}</strong></p>
-            <textarea placeholder="Posez votre question…" rows={5} className="flex w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring mb-4" />
+            <p className="text-sm text-muted-foreground mb-4">{t('dentist.detail.msg_to', 'à')} <strong className="text-foreground">Dr. {fullName}</strong></p>
+            <textarea placeholder={t('dentist.detail.msg_placeholder', 'Posez votre question…')} rows={5} className="flex w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring mb-4" />
             <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={() => setShowMsg(false)} className="flex-1">Annuler</Button>
-              <Button className="flex-1" disabled>Envoyer (connexion requise)</Button>
+              <Button type="button" variant="outline" onClick={() => setShowMsg(false)} className="flex-1">{t('common.cancel', 'Annuler')}</Button>
+              <Button className="flex-1" disabled>{t('dentist.detail.msg_submit', 'Envoyer (connexion requise)')}</Button>
             </div>
           </div>
         </div>
@@ -383,12 +385,12 @@ export default function DentistProfile({ pro, related, baseUrl }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setShowShare(false)}>
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 md:p-8" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-extrabold">Partager le profil de Dr. {fullName}</h2>
-              <button onClick={() => setShowShare(false)} className="h-8 w-8 rounded-md hover:bg-muted flex items-center justify-center"><X className="h-4 w-4" /></button>
+              <h2 className="text-xl font-extrabold">{t('dentist.detail.share_title', 'Partager le profil de Dr. {name}').replace('{name}', fullName)}</h2>
+              <button onClick={() => setShowShare(false)} className="h-8 w-8 rounded-md hover:bg-muted flex items-center justify-center" aria-label={t('common.close', 'Fermer')}><X className="h-4 w-4" /></button>
             </div>
             <div className="flex gap-2">
               <input readOnly value={proUrl} className="flex-1 h-11 rounded-md border border-input bg-muted px-4 py-2 text-sm" onClick={e => e.target.select()} />
-              <Button onClick={() => { if (typeof navigator !== 'undefined' && navigator.clipboard) navigator.clipboard.writeText(proUrl); }}>Copier</Button>
+              <Button onClick={() => { if (typeof navigator !== 'undefined' && navigator.clipboard) navigator.clipboard.writeText(proUrl); }}>{t('dentist.detail.copy_button', 'Copier')}</Button>
             </div>
           </div>
         </div>

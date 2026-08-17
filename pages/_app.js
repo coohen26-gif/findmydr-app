@@ -20,7 +20,12 @@ function DetectLangWrapper({ children }) {
   const router = useRouter();
 
   React.useEffect(() => {
-    const fromPath = (router.asPath || '').match(/^\/(fr|en|ar|zh|ru|fa)(\/|$)/);
+    // Use the real browser path, not router.asPath: on routes rewritten by
+    // middleware.js (e.g. /ar/doctor/100 -> /doctor/100 internally),
+    // router.asPath can desync from the actual URL and this regex would
+    // never match, leaving the page stuck on the default/cookie locale.
+    const realPath = typeof window !== 'undefined' ? window.location.pathname : (router.asPath || '');
+    const fromPath = realPath.match(/^\/(fr|en|ar|zh|ru|fa)(\/|$)/);
     const qLang = router.query.lang;
     if (fromPath) {
       setLang(fromPath[1]);
