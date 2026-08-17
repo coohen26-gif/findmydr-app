@@ -102,6 +102,8 @@ export default function DentistProfile({ pro, baseUrl }) {
   const specialty = pro.specialty || 'Dentiste généraliste';
   const fullName = pro.name || 'Dentiste';
   const proUrl = `${baseUrl}/dentist/${pro.id}`;
+  const phone = pro.phone || null;
+  const waPhone = phone ? String(phone).replace(/[^0-9]/g, '') : null;
 
   const title = pageTitle(`${fullName} - Dentiste ${specialty} Dubai`);
   const description = pageDescription(
