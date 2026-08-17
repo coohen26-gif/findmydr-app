@@ -175,11 +175,14 @@ export default function DoctorProfile({ pro, related, baseUrl }) {
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={ogImage} />
 
-        {/* hreflang for i18n */}
-        <link rel="alternate" hrefLang="fr-AE" href={proUrl} />
-        <link rel="alternate" hrefLang="en-AE" href={`${proUrl}?lang=en`} />
-        <link rel="alternate" hrefLang="ar-AE" href={`${proUrl}?lang=ar`} />
-        <link rel="alternate" hrefLang="x-default" href={proUrl} />
+        {/* hreflang for i18n - real path-prefixed routes, matches middleware.js locale routing */}
+        <link rel="alternate" hrefLang="fr" href={`${baseUrl}/fr/doctor/${pro.id}`} />
+        <link rel="alternate" hrefLang="en" href={`${baseUrl}/en/doctor/${pro.id}`} />
+        <link rel="alternate" hrefLang="ar" href={`${baseUrl}/ar/doctor/${pro.id}`} />
+        <link rel="alternate" hrefLang="zh" href={`${baseUrl}/zh/doctor/${pro.id}`} />
+        <link rel="alternate" hrefLang="ru" href={`${baseUrl}/ru/doctor/${pro.id}`} />
+        <link rel="alternate" hrefLang="fa" href={`${baseUrl}/fa/doctor/${pro.id}`} />
+        <link rel="alternate" hrefLang="x-default" href={`${baseUrl}/en/doctor/${pro.id}`} />
 
         {/* Structured data */}
         {jsonLd && (

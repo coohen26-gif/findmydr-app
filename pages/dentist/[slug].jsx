@@ -169,10 +169,13 @@ export default function DentistProfile({ pro, related, baseUrl }) {
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={ogImage} />
 
-        <link rel="alternate" hrefLang="fr-AE" href={proUrl} />
-        <link rel="alternate" hrefLang="en-AE" href={`${proUrl}?lang=en`} />
-        <link rel="alternate" hrefLang="ar-AE" href={`${proUrl}?lang=ar`} />
-        <link rel="alternate" hrefLang="x-default" href={proUrl} />
+        <link rel="alternate" hrefLang="fr" href={`${baseUrl}/fr/dentist/${pro.id}`} />
+        <link rel="alternate" hrefLang="en" href={`${baseUrl}/en/dentist/${pro.id}`} />
+        <link rel="alternate" hrefLang="ar" href={`${baseUrl}/ar/dentist/${pro.id}`} />
+        <link rel="alternate" hrefLang="zh" href={`${baseUrl}/zh/dentist/${pro.id}`} />
+        <link rel="alternate" hrefLang="ru" href={`${baseUrl}/ru/dentist/${pro.id}`} />
+        <link rel="alternate" hrefLang="fa" href={`${baseUrl}/fa/dentist/${pro.id}`} />
+        <link rel="alternate" hrefLang="x-default" href={`${baseUrl}/en/dentist/${pro.id}`} />
 
         {jsonLd && (
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
