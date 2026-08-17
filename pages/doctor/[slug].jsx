@@ -31,7 +31,8 @@ export async function getServerSideProps({ query, req, locale }) {
               pr.plan,
               pr.bio_fr,
               pr.phone,
-              pr.phone_source
+              pr.phone_source,
+              pr.dha_unique_id
          FROM public.physicians p
          LEFT JOIN dmd.professional pr ON p.name = pr.full_name
         WHERE p.id = $1 LIMIT 1`,
@@ -39,6 +40,7 @@ export async function getServerSideProps({ query, req, locale }) {
     );
     const pro = r.rows[0] || null;
     let related = [];
+    let reviews = [];
     if (pro) {
       const rel = await pool.query(
         `SELECT id, name, specialty FROM public.physicians
@@ -47,15 +49,24 @@ export async function getServerSideProps({ query, req, locale }) {
         [pro.specialty, pro.id]
       );
       related = rel.rows;
+      if (pro.dha_unique_id) {
+        const rv = await pool.query(
+          `SELECT id, rating, text, author_name, verified, visit_date, created_at
+             FROM dmd.reviews WHERE pro_dha_id = $1
+            ORDER BY created_at DESC LIMIT 20`,
+          [pro.dha_unique_id]
+        );
+        reviews = rv.rows;
+      }
     }
-    return { props: { pro, related, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
+    return { props: { pro, related, reviews, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
   } catch (e) {
     console.error('doctor [slug] getServerSideProps error:', e.message);
-    return { props: { pro: null, related: [], baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
+    return { props: { pro: null, related: [], reviews: [], baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
   }
 }
 
-export default function DoctorProfile({ pro, related, baseUrl }) {
+export default function DoctorProfile({ pro, related, reviews, baseUrl }) {
   const [showRdv, setShowRdv] = useState(false);
   const [showMsg, setShowMsg] = useState(false);
   const [showShare, setShowShare] = useState(false);
@@ -370,7 +381,7 @@ export default function DoctorProfile({ pro, related, baseUrl }) {
 
       {/* Reviews section */}
       <section className="container-wide pb-12">
-        <ReviewsSection />
+        <ReviewsSection reviews={reviews} reviewUrl={`${localePrefix}/review/${pro.id}`} />
       </section>
 
       {related.length > 0 && (

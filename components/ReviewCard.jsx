@@ -1,14 +1,8 @@
 import * as React from 'react';
+import { useTranslation } from 'next-i18next';
 import { Star } from 'lucide-react';
 import { Avatar } from './Avatar';
 import { Card } from './Card';
-
-const MOCK_REVIEWS = [
-  { id: 'r1', name: 'Sophie Martin', rating: 5, text: 'Excellent médecin ! À l\'écoute et très professionnel. Je recommande vivement.', date: '2026-05-28', avatar: null },
-  { id: 'r2', name: 'Ahmed Benali', rating: 5, text: 'Très bonne consultation. Le cabinet est bien situé et l\'accueil est chaleureux.', date: '2026-05-15', avatar: null },
-  { id: 'r3', name: 'Marie Dubois', rating: 4, text: 'Bon praticien, rendez-vous facile à obtenir. Seul bémol : un peu d\'attente le jour de la consultation.', date: '2026-05-02', avatar: null },
-  { id: 'r4', name: 'Karim Othman', rating: 5, text: 'Je suis suivi depuis 2 ans, toujours au top. Disponible et à l\'écoute.', date: '2026-04-20', avatar: null },
-];
 
 export function ReviewCard({ name, rating, text, date }) {
   return (
@@ -30,18 +24,36 @@ export function ReviewCard({ name, rating, text, date }) {
   );
 }
 
-export function ReviewsSection({ className }) {
+export function ReviewsSection({ className, reviews = [], reviewUrl }) {
+  const { t } = useTranslation('common');
   return (
     <div className={className}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-extrabold">Avis patients</h2>
-        <span className="text-sm text-muted-foreground">{MOCK_REVIEWS.length} avis</span>
+        <h2 className="text-2xl font-extrabold">{t('review.title', 'Avis patients')}</h2>
+        {reviews.length > 0 && (
+          <span className="text-sm text-muted-foreground">{reviews.length} {t('review.count_label', 'avis')}</span>
+        )}
       </div>
-      <div className="space-y-3">
-        {MOCK_REVIEWS.map(r => (
-          <ReviewCard key={r.id} {...r} />
-        ))}
-      </div>
+      {reviews.length > 0 ? (
+        <div className="space-y-3">
+          {reviews.map(r => (
+            <ReviewCard
+              key={r.id}
+              name={r.author_name || t('review.anonymous', 'Patient')}
+              rating={r.rating}
+              text={r.text}
+              date={(r.visit_date || r.created_at || '').toString().slice(0, 10)}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-muted-foreground">
+          {t('review.no_reviews_yet', "Pas encore d'avis - soyez le premier")}
+          {reviewUrl && (
+            <> · <a href={reviewUrl} className="text-primary hover:underline">{t('review.leave_review', 'Laisser un avis')}</a></>
+          )}
+        </p>
+      )}
     </div>
   );
 }

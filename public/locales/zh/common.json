@@ -509,7 +509,9 @@
     "thanks_body": "您的评价将在24小时内通过验证后发布。",
     "cancel": "取消",
     "submit": "发布",
-    "close": "关闭"
+    "close": "关闭",
+    "no_reviews_yet": "暂无评价 - 成为第一个评价的人",
+    "anonymous": "患者"
   },
   "dentist": {
     "book": "预约",
