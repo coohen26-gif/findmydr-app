@@ -244,7 +244,7 @@ export default function DentistProfile({ pro, baseUrl }) {
               <Phone className="h-4 w-4" /> Appeler
             </Button>
             <WhatsAppButton
-              phone={pro.phone || pro.whatsapp || null}
+              phone={pro.phone || null}
               proName={fullName}
               specialty={specialty}
               locale={i18n.language || 'en'}

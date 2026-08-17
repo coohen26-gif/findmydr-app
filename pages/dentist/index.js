@@ -49,7 +49,7 @@ export default function DentistHome() {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    fetch('/api/dentists?q=' + search)
+    fetch('/api/dentists?q=' + encodeURIComponent(search))
       .then(r => r.json())
       .then(data => {
         setDentists(data.dentists || []);

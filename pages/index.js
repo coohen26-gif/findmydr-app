@@ -60,7 +60,7 @@ export default function Home() {
   const localePrefix = `/${i18n.language || 'en'}`;
 
   React.useEffect(() => {
-    fetch('/api/physicians?q=' + search)
+    fetch('/api/physicians?q=' + encodeURIComponent(search))
       .then(r => r.json())
       .then(data => {
         setPhysicians(data.physicians || []);

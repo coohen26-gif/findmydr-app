@@ -91,15 +91,13 @@ export default async function handler(req, res) {
       professional: {
         ...best,
         slug: slugify(best.full_name + '-' + best.dha_unique_id),
-        zavis_url: best.specialty
-          ? `https://www.zavis.ai/find-a-doctor/${slugify(best.specialty)}/${slugify(best.full_name)}-${best.dha_unique_id}`
-          : null,
       },
       related,
       stats,
     });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.error('api/professional/[slug] error:', err.message);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
 
