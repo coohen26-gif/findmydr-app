@@ -31,7 +31,6 @@ export function middleware(request) {
   const host = request.headers.get('host') || '';
   const url = request.nextUrl.clone();
   const path = url.pathname;
-  console.log('[MW]', JSON.stringify({ host, path }));
   const search = url.search;
   const ua = request.headers.get('user-agent') || '';
 

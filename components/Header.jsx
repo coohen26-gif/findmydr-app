@@ -168,7 +168,7 @@ function LangSelector() {
       >
         <Globe className="h-4 w-4" />
         <span className="text-base leading-none">{current.flag}</span>
-        
+        <span className="text-xs font-semibold">{current.short}</span>
       </button>
       {open && (
         <>

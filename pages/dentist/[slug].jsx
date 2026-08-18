@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { MapPin, Phone, Calendar, Star, Clock, MessageCircle, ChevronLeft, ShieldCheck, Building2, Activity, Share2, Bookmark, X, Check } from 'lucide-react';
@@ -18,6 +17,10 @@ import { pageTitle, pageDescription, physicianJsonLd, breadcrumbJsonLd, pageUrl,
 const OG_LOCALE_MAP = { fr: 'fr_AE', en: 'en_AE', ar: 'ar_AE', zh: 'zh_CN', ru: 'ru_RU', fa: 'fa_IR' };
 
 export async function getServerSideProps({ query, req, locale }) {
+  if (!locale) {
+    try { locale = req?.cookies?.NEXT_LOCALE; } catch (e) {}
+  }
+  if (!locale || !['fr','en','ar','zh','ru','fa'].includes(locale)) locale = 'en';
   const { slug, id: idParam } = query;
   const id = idParam || (slug ? String(slug).split('-').pop() : null);
   if (!id || !/^\d+$/.test(id)) {
@@ -27,7 +30,8 @@ export async function getServerSideProps({ query, req, locale }) {
     const r = await pool.query(
       `SELECT d.id, d.name, d.specialty, d.facility_name, pr.bio_fr,
               pr.phone,
-              pr.phone_source
+              pr.phone_source,
+              pr.dha_unique_id
            FROM public.dentists d
            LEFT JOIN dmd.professional pr ON d.name = pr.full_name
           WHERE d.id = $1 LIMIT 1`,
@@ -71,8 +75,6 @@ export default function DentistProfile({ pro, related, baseUrl }) {
       }).catch(() => {});
     } catch {}
   }, [pro?.id]);
-
-  const router = useRouter();
 
   // Fire-and-forget click tracker for phone / email / website
   const trackClick = (click_type) => {
@@ -125,7 +127,7 @@ export default function DentistProfile({ pro, related, baseUrl }) {
     name: fullName,
     url: proUrl,
     medicalSpecialty: specialty,
-    identifier: `dha-d-${pro.id}`,
+    identifier: pro.dha_unique_id || `dha-d-${pro.id}`,
     affiliation: pro.facility_name
       ? { '@type': 'Dentist', name: pro.facility_name }
       : undefined,

@@ -344,9 +344,10 @@ export default function DentistHome() {
 }
 
 export async function getStaticProps({ locale }) {
+  const safeLocale = (locale && ['fr','en','ar','zh','ru','fa'].includes(locale)) ? locale : 'en';
   return {
     props: {
-      ...(await serverSideTranslations(locale, ['common'])),
+      ...(await serverSideTranslations(safeLocale, ['common'])),
     },
   };
 }

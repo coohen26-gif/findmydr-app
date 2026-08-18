@@ -16,6 +16,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../co
 import { Badge } from '../components/Badge';
 
 export async function getServerSideProps({ req, locale }) {
+  if (!locale) {
+    try { locale = req?.cookies?.NEXT_LOCALE; } catch (e) {}
+  }
+  if (!locale || !['fr','en','ar','zh','ru','fa'].includes(locale)) locale = 'en';
   const host = req.headers.host || '';
   const isDentist = host.includes('findmydentist');
   return { props: { isDentist, ...(await serverSideTranslations(locale, ['common'])) } };

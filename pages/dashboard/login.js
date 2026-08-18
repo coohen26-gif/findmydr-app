@@ -10,6 +10,10 @@ import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Input } from '../../components/Input';
 import { Badge } from '../../components/Badge';
+import { LOCALE_MAP } from '../_app';
+
+const SUPPORTED_LANGS = Object.keys(LOCALE_MAP);
+const LOCALE_REGEX = new RegExp(`^/(${SUPPORTED_LANGS.join('|')})(/|$)`);
 
 export async function getServerSideProps({ locale, req }) {
   if (!locale) {
@@ -27,7 +31,19 @@ export default function Login() {
   const [loading, setLoading] = React.useState(false);
   const [linkRequested, setLinkRequested] = React.useState(false);
   const [error, setError] = React.useState(null);
-  const [language, setLanguage] = React.useState('fr');
+  const [language, setLanguage] = React.useState(router.locale || 'en');
+
+  const handleLanguageChange = (e) => {
+    const code = e.target.value;
+    if (!LOCALE_MAP[code]) return;
+    setLanguage(code);
+    if (typeof document !== 'undefined') {
+      document.cookie = `NEXT_LOCALE=${code};path=/;max-age=31536000;SameSite=Lax`;
+    }
+    const stripped = (router.asPath || '/').replace(LOCALE_REGEX, '/') || '/';
+    const nextPath = stripped === '/' ? `/${code}/` : `/${code}${stripped}`;
+    router.push(nextPath);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -121,12 +137,13 @@ export default function Login() {
             <Globe className="h-4 w-4 text-muted-foreground" />
             <select
               value={language}
-              onChange={e => setLanguage(e.target.value)}
+              onChange={handleLanguageChange}
               className="text-sm bg-transparent border-0 focus:ring-0 cursor-pointer"
+              aria-label={t("nav.change_language")}
             >
-              <option value="fr">FR</option>
-              <option value="en">EN</option>
-              <option value="ar">AR</option>
+              {SUPPORTED_LANGS.map((code) => (
+                <option key={code} value={code}>{LOCALE_MAP[code].short}</option>
+              ))}
             </select>
           </div>
         </div>

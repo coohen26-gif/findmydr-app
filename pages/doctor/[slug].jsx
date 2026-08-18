@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { MapPin, Phone, Calendar, Star, Clock, MessageCircle, ChevronLeft, ShieldCheck, Building2, Stethoscope, Share2, Bookmark, X, Check, Globe, Award, Lock, Image as ImageIcon } from 'lucide-react';
@@ -20,6 +19,10 @@ import { pageTitle, pageDescription, physicianJsonLd, breadcrumbJsonLd, pageUrl 
 const OG_LOCALE_MAP = { fr: 'fr_AE', en: 'en_AE', ar: 'ar_AE', zh: 'zh_CN', ru: 'ru_RU', fa: 'fa_IR' };
 
 export async function getServerSideProps({ query, req, locale }) {
+  if (!locale) {
+    try { locale = req?.cookies?.NEXT_LOCALE; } catch (e) {}
+  }
+  if (!locale || !['fr','en','ar','zh','ru','fa'].includes(locale)) locale = 'en';
   const { slug, id: idParam } = query;
   const id = idParam || (slug ? String(slug).split('-').pop() : null);
   if (!id || !/^\d+$/.test(id)) {
@@ -88,8 +91,6 @@ export default function DoctorProfile({ pro, related, reviews, baseUrl }) {
       }).catch(() => {});
     } catch {}
   }, [pro?.id]);
-
-  const router = useRouter();
 
   // Fire-and-forget click tracker for phone / email / website
   const trackClick = (click_type) => {

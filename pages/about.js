@@ -15,6 +15,10 @@ import { Button } from '../components/Button';
 import { Card, CardContent } from '../components/Card';
 
 export async function getServerSideProps({ req, locale }) {
+  if (!locale) {
+    try { locale = req?.cookies?.NEXT_LOCALE; } catch (e) {}
+  }
+  if (!locale || !['fr','en','ar','zh','ru','fa'].includes(locale)) locale = 'en';
   const host = req.headers.host || '';
   const isDentist = host.includes('findmydentist');
   return { props: { isDentist, baseUrl: isDentist ? 'https://findmydentist.ae' : 'https://findmydr.ae', ...(await serverSideTranslations(locale, ['common'])) } };
