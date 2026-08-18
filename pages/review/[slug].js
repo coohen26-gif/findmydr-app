@@ -31,6 +31,12 @@ export async function getServerSideProps({ query, req, locale }) {
     };
   }
   try {
+    // The review page is a shared route (middleware.js excludes /review from
+    // the host-based rewrite), so the same [slug].js handles both doctor and
+    // dentist reviews - it must query whichever table `isDentist` points to,
+    // not always physicians. `sourceTable` is never user input (derived from
+    // req.headers.host above), so interpolating it is safe.
+    const sourceTable = isDentist ? 'dentists' : 'physicians';
     const r = await pool.query(
       `SELECT p.id, p.name, p.specialty, p.facility_name,
               COALESCE(pr.is_dha_verified, false) as is_dha_verified,
@@ -40,8 +46,16 @@ export async function getServerSideProps({ query, req, locale }) {
               COALESCE(u.phone, pr.phone) AS phone,
               pr.phone_source,
               pr.dha_unique_id
-         FROM public.physicians p
-         LEFT JOIN dmd.professional pr ON p.name = pr.full_name
+         FROM public.${sourceTable} p
+         LEFT JOIN LATERAL (
+           SELECT pr2.*
+             FROM dmd.professional pr2
+            WHERE pr2.full_name = p.name
+            ORDER BY (pr2.specialty = p.specialty) DESC NULLS LAST,
+                     pr2.is_dha_verified DESC NULLS LAST,
+                     pr2.dha_unique_id ASC
+            LIMIT 1
+         ) pr ON true
          LEFT JOIN dmd.users u ON u.dha_license = pr.dha_unique_id
         WHERE p.id = $1 LIMIT 1`,
       [parseInt(id, 10)]
@@ -257,7 +271,7 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
             {t('review.back_to_profile', 'Retour au profil')}
           </Link>
           <div className="flex flex-col md:flex-row md:items-end gap-6">
-            <Avatar name={`Dr. ${fullName}`} size="xl" verified />
+            <Avatar name={`Dr. ${fullName}`} size="xl" verified={pro.is_dha_verified === true} />
             <div className="flex-1">
               <div className="flex items-center gap-2 flex-wrap mb-1">
                 <h1 className="text-2xl md:text-3xl font-extrabold">Dr. {fullName}</h1>

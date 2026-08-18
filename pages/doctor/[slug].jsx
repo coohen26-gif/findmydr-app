@@ -40,7 +40,15 @@ export async function getServerSideProps({ query, req, locale }) {
               pr.phone_source,
               pr.dha_unique_id
          FROM public.physicians p
-         LEFT JOIN dmd.professional pr ON p.name = pr.full_name
+         LEFT JOIN LATERAL (
+           SELECT pr2.*
+             FROM dmd.professional pr2
+            WHERE pr2.full_name = p.name
+            ORDER BY (pr2.specialty = p.specialty) DESC NULLS LAST,
+                     pr2.is_dha_verified DESC NULLS LAST,
+                     pr2.dha_unique_id ASC
+            LIMIT 1
+         ) pr ON true
          LEFT JOIN dmd.users u ON u.dha_license = pr.dha_unique_id
         WHERE p.id = $1 LIMIT 1`,
       [parseInt(id, 10)]
@@ -51,9 +59,19 @@ export async function getServerSideProps({ query, req, locale }) {
     let stats = { views: 0, whatsappClicks: 0, avgRating: 0, totalReviews: 0 };
     if (pro) {
       const rel = await pool.query(
-        `SELECT id, name, specialty FROM public.physicians
-          WHERE specialty = $1 AND id != $2
-          ORDER BY search_rank DESC NULLS LAST, id LIMIT 4`,
+        `SELECT rp.id, rp.name, rp.specialty,
+                COALESCE(pr2.is_dha_verified, false) as is_dha_verified
+           FROM public.physicians rp
+           LEFT JOIN LATERAL (
+             SELECT pr3.is_dha_verified
+               FROM dmd.professional pr3
+              WHERE pr3.full_name = rp.name
+              ORDER BY (pr3.specialty = rp.specialty) DESC NULLS LAST,
+                       pr3.is_dha_verified DESC NULLS LAST
+              LIMIT 1
+           ) pr2 ON true
+          WHERE rp.specialty = $1 AND rp.id != $2
+          ORDER BY rp.search_rank DESC NULLS LAST, rp.id LIMIT 4`,
         [pro.specialty, pro.id]
       );
       related = rel.rows;
@@ -414,7 +432,7 @@ export default function DoctorProfile({ pro, related, reviews, stats, baseUrl })
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {related.map(p => (
             <Link key={p.id} href={`/doctor?id=${p.id}`} className="group bg-white border border-border rounded-xl p-4 hover:shadow-lg transition-all">
-              <Avatar name={p.name} size="lg" className="mb-3" verified />
+              <Avatar name={p.name} size="lg" className="mb-3" verified={p.is_dha_verified === true} />
               <h3 className="font-bold text-sm line-clamp-1">{p.name}</h3>
               <p className="text-xs text-muted-foreground line-clamp-1">{p.specialty}</p>
             </Link>

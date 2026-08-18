@@ -242,13 +242,15 @@ export default function Home() {
                     className="group bg-white rounded-xl border border-border p-5 hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
                   >
                     <div className="flex items-start gap-3 mb-4">
-                      <Avatar name={p.name} size="lg" verified />
+                      <Avatar name={p.name} size="lg" verified={p.is_dha_verified === true} />
                       <div className="flex-1 min-w-0">
                         <h3 className="font-bold text-sm leading-tight line-clamp-1">{p.name}</h3>
                         <p className="text-xs text-muted-foreground line-clamp-1">{p.specialty || '—'}</p>
-                        <Badge variant="verified" className="mt-2 text-[10px] py-0">
-                          <ShieldCheck className="h-3 w-3" /> DHA
-                        </Badge>
+                        {p.is_dha_verified === true && (
+                          <Badge variant="verified" className="mt-2 text-[10px] py-0">
+                            <ShieldCheck className="h-3 w-3" /> DHA
+                          </Badge>
+                        )}
                       </div>
                     </div>
                     <div className="space-y-1 pt-3 border-t border-border">

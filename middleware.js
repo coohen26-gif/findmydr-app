@@ -71,6 +71,25 @@ export function middleware(request) {
     locale = preferred;
   }
 
+  // 2b) Dashboard routes (professional login/profile/etc.) are shared across
+  // both domains and must never be prefixed with /doctor or /dentist by the
+  // host-rewrite below. Excluding a bare leading `/dashboard` in the matcher
+  // config at the bottom of this file is not enough on its own: the matcher's
+  // negative lookahead only excludes paths where `dashboard` appears right
+  // after the leading slash, so a locale-prefixed path like `/fr/dashboard/login`
+  // still reaches this function. Without this check it would fall through to
+  // the host-rewrite (step 4/5) and become the nonexistent `/doctor/dashboard/login`
+  // route, 404ing every time a user switches language while on a dashboard page.
+  // Mirror the STATIC_PAGES passthrough below: leave the path (including its
+  // locale prefix) untouched so Next's built-in i18n routing resolves the
+  // locale itself from the URL, and just propagate it via header/cookie too.
+  if (pathWithoutLocale === '/dashboard' || pathWithoutLocale.startsWith('/dashboard/')) {
+    const res = NextResponse.next();
+    res.headers.set('x-dmd-locale', locale);
+    res.cookies.set('NEXT_LOCALE', locale, { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
+    return res;
+  }
+
   // 3) Cross-domain redirects (preserve user's locale choice)
   if (host.includes('findmydr.ae') && pathWithoutLocale.startsWith('/dentist')) {
     const target = new URL(`/${locale}${pathWithoutLocale}${search}`, 'https://findmydentist.ae');

@@ -237,9 +237,16 @@ function UserMenu({ t, onLogout }) {
   );
 }
 
-export function SiteHeader({ user = null, currentPath = '/', isDentist }) {
+export function SiteHeader({ user = null, currentPath, isDentist }) {
   const { t } = useTranslation('common');
   const router = useRouter();
+  // Derive the active path from the router instead of relying on callers to
+  // pass currentPath - none of this app's ~22 call sites did, so the nav
+  // highlight was always comparing against the hardcoded '/' default.
+  // router.pathname (not asPath) matches the format detectBrandFromPath
+  // above already relies on: the matched page route, host-rewritten by
+  // middleware.js, with no locale prefix to strip.
+  const activePath = currentPath ?? router.pathname;
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (open) {
@@ -270,13 +277,13 @@ export function SiteHeader({ user = null, currentPath = '/', isDentist }) {
               <a href="https://findmydr.ae/" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
                 {t('nav.doctors')}
               </a>
-              <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', currentPath === '/' ? 'text-primary' : 'text-muted-foreground')}>
+              <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', activePath === '/' ? 'text-primary' : 'text-muted-foreground')}>
                 {t('nav.dentists')}
               </Link>
             </>
           ) : (
             <>
-              <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', currentPath === '/' ? 'text-primary' : 'text-muted-foreground')}>
+              <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', activePath === '/' ? 'text-primary' : 'text-muted-foreground')}>
                 {t('nav.doctors')}
               </Link>
               <a href="https://findmydentist.ae/" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
@@ -284,16 +291,16 @@ export function SiteHeader({ user = null, currentPath = '/', isDentist }) {
               </a>
             </>
           )}
-          <Link href="/pricing" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', currentPath === '/pricing' ? 'text-primary' : 'text-muted-foreground')}>
+          <Link href="/pricing" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', activePath === '/pricing' ? 'text-primary' : 'text-muted-foreground')}>
             {t('nav.pricing')}
           </Link>
-          <Link href="/about" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', currentPath === '/about' ? 'text-primary' : 'text-muted-foreground')}>
+          <Link href="/about" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', activePath === '/about' ? 'text-primary' : 'text-muted-foreground')}>
             {t('nav.about')}
           </Link>
-          <Link href="/contact" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', currentPath === '/contact' ? 'text-primary' : 'text-muted-foreground')}>
+          <Link href="/contact" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', activePath === '/contact' ? 'text-primary' : 'text-muted-foreground')}>
             {t('nav.contact')}
           </Link>
-          <Link href="/dashboard" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', currentPath.startsWith('/dashboard') ? 'text-primary' : 'text-muted-foreground')}>
+          <Link href="/dashboard" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', activePath.startsWith('/dashboard') ? 'text-primary' : 'text-muted-foreground')}>
             {t('nav.dashboard')}
           </Link>
         </nav>

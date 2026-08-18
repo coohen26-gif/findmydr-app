@@ -110,9 +110,6 @@ export default function DentistHome() {
                   onChange={e => setSearch(e.target.value)}
                   className="pl-12 h-14 text-base shadow-lg border-0"
                 />
-                <Button size="lg" className="absolute right-1.5 top-1.5 h-11 bg-cyan-600 hover:bg-cyan-700">
-                  {t('nav.search_button')}
-                </Button>
               </div>
               <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                 <span>{t('dentist.listing.popular_label', 'Populaire :')}</span>
@@ -229,16 +226,18 @@ export default function DentistHome() {
                     className="group bg-white rounded-xl border border-border p-5 hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
                   >
                     <div className="flex items-start gap-3 mb-4">
-                      <Avatar name={p.name} size="lg" verified />
+                      <Avatar name={p.name} size="lg" verified={p.is_dha_verified === true} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap mb-0.5">
                           <h3 className="font-bold text-sm leading-tight line-clamp-1">{p.name}</h3>
                           {p.search_rank > 0 && <FeaturedBadge size="sm" />}
                         </div>
                         <p className="text-xs text-muted-foreground line-clamp-1">{p.specialty || '—'}</p>
-                        <Badge variant="verified" className="mt-2 text-[10px] py-0">
-                          <ShieldCheck className="h-3 w-3" /> DHA
-                        </Badge>
+                        {p.is_dha_verified === true && (
+                          <Badge variant="verified" className="mt-2 text-[10px] py-0">
+                            <ShieldCheck className="h-3 w-3" /> DHA
+                          </Badge>
+                        )}
                       </div>
                     </div>
                     <div className="space-y-1 pt-3 border-t border-border">

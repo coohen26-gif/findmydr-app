@@ -10,6 +10,7 @@ import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Avatar } from '../../components/Avatar';
 import { Badge } from '../../components/Badge';
+import { DhaBadge } from '../../components/DhaBadge';
 import { WhatsAppButton } from '../../components/WhatsAppButton';
 import pool from '../../lib/db';
 import { pageTitle, pageDescription, physicianJsonLd, breadcrumbJsonLd, pageUrl, SITE_DESCRIPTION } from '../../lib/seo';
@@ -30,12 +31,21 @@ export async function getServerSideProps({ query, req, locale }) {
   try {
     const r = await pool.query(
       `SELECT d.id, d.name, d.specialty, d.facility_name,
+              COALESCE(pr.is_dha_verified, false) as is_dha_verified,
               COALESCE(u.bio_fr, pr.bio_fr) AS bio_fr,
               COALESCE(u.phone, pr.phone) AS phone,
               pr.phone_source,
               pr.dha_unique_id
            FROM public.dentists d
-           LEFT JOIN dmd.professional pr ON d.name = pr.full_name
+           LEFT JOIN LATERAL (
+             SELECT pr2.*
+               FROM dmd.professional pr2
+              WHERE pr2.full_name = d.name
+              ORDER BY (pr2.specialty = d.specialty) DESC NULLS LAST,
+                       pr2.is_dha_verified DESC NULLS LAST,
+                       pr2.dha_unique_id ASC
+              LIMIT 1
+           ) pr ON true
            LEFT JOIN dmd.users u ON u.dha_license = pr.dha_unique_id
           WHERE d.id = $1 LIMIT 1`,
       [parseInt(id, 10)]
@@ -45,9 +55,19 @@ export async function getServerSideProps({ query, req, locale }) {
     let stats = { views: 0, whatsappClicks: 0, avgRating: 0, totalReviews: 0 };
     if (pro) {
       const rel = await pool.query(
-        `SELECT id, name, specialty FROM public.dentists
-          WHERE specialty = $1 AND id != $2
-          ORDER BY search_rank DESC NULLS LAST, id LIMIT 4`,
+        `SELECT rd.id, rd.name, rd.specialty,
+                COALESCE(pr2.is_dha_verified, false) as is_dha_verified
+           FROM public.dentists rd
+           LEFT JOIN LATERAL (
+             SELECT pr3.is_dha_verified
+               FROM dmd.professional pr3
+              WHERE pr3.full_name = rd.name
+              ORDER BY (pr3.specialty = rd.specialty) DESC NULLS LAST,
+                       pr3.is_dha_verified DESC NULLS LAST
+              LIMIT 1
+           ) pr2 ON true
+          WHERE rd.specialty = $1 AND rd.id != $2
+          ORDER BY rd.search_rank DESC NULLS LAST, rd.id LIMIT 4`,
         [pro.specialty, pro.id]
       );
       related = rel.rows;
@@ -114,6 +134,7 @@ export default function DentistProfile({ pro, related, stats, baseUrl }) {
   const facility = pro.facility_name || 'Clinique privée à Dubai';
   const specialty = pro.specialty || 'Dentiste généraliste';
   const fullName = pro.name || 'Dentiste';
+  const dhaVerified = pro.is_dha_verified === true;
   const proUrl = `${baseUrl}/dentist/${pro.id}`;
   const phone = pro.phone || null;
   const waPhone = phone ? String(phone).replace(/[^0-9]/g, '') : null;
@@ -216,7 +237,7 @@ export default function DentistProfile({ pro, related, stats, baseUrl }) {
         <Card className="overflow-hidden">
           <div className="bg-gradient-to-br from-cyan-500 to-emerald-500 p-6 md:p-8 text-white">
             <div className="flex flex-col md:flex-row md:items-start gap-6">
-              <Avatar name={fullName} size="2xl" verified className="ring-4 ring-white/30" />
+              <Avatar name={fullName} size="2xl" verified={dhaVerified} className="ring-4 ring-white/30" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div>
@@ -225,9 +246,13 @@ export default function DentistProfile({ pro, related, stats, baseUrl }) {
                       <Badge variant="info" className="bg-white/20 text-white border-0">
                         <Activity className="h-3 w-3" /> {specialty}
                       </Badge>
-                      <Badge variant="verified" className="bg-emerald-500/20 text-white border-0">
-                        <ShieldCheck className="h-3 w-3" /> DHA Vérifié
-                      </Badge>
+                      {dhaVerified ? (
+                        <DhaBadge size="sm" />
+                      ) : (
+                        <Badge variant="verified" className="bg-emerald-500/20 text-white border-0">
+                          <ShieldCheck className="h-3 w-3" /> DHA Licencié
+                        </Badge>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 text-white/90 text-sm">
                       <MapPin className="h-4 w-4" />
@@ -348,7 +373,7 @@ export default function DentistProfile({ pro, related, stats, baseUrl }) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {related.map(p => (
             <Link key={p.id} href={`/dentist?id=${p.id}`} className="group bg-white border border-border rounded-xl p-4 hover:shadow-lg transition-all">
-              <Avatar name={p.name} size="lg" className="mb-3" verified />
+              <Avatar name={p.name} size="lg" className="mb-3" verified={p.is_dha_verified === true} />
               <h3 className="font-bold text-sm line-clamp-1">{p.name}</h3>
               <p className="text-xs text-muted-foreground line-clamp-1">{p.specialty}</p>
             </Link>
