@@ -130,33 +130,40 @@ function LangSelector() {
   const SUPPORTED_LANGS = ['fr', 'en', 'ar', 'zh', 'ru', 'fa'];
   const LOCALE_REGEX = new RegExp(`^/(${SUPPORTED_LANGS.join('|')})(/|$)`);
 
-  const localeFromPath = (path) => {
-    const m = (path || router.asPath || '/').match(LOCALE_REGEX);
-    return m ? m[1] : null;
-  };
+  // Use the real browser URL, not router.asPath: on this app's hybrid
+  // middleware+built-in-i18n routing, asPath can already be locale-stripped
+  // (or not) depending on how the current page was reached client-side,
+  // which produced double-prefixed URLs like /fr/en/doctor?id=707. Same
+  // desync documented in _app.js's DetectLangWrapper for the same reason.
+  const realPathWithSearch = () =>
+    typeof window !== 'undefined'
+      ? window.location.pathname + window.location.search
+      : (router.asPath || '/');
 
   const stripLocale = (path) => {
-    const cleaned = (path || router.asPath || '/').replace(LOCALE_REGEX, '/');
+    const cleaned = path.replace(LOCALE_REGEX, '/');
     return cleaned === '' ? '/' : cleaned;
   };
 
   const switchTo = (code) => {
     if (!SUPPORTED_LANGS.includes(code)) return;
-    switchLang(code);
-    const stripped = stripLocale(router.asPath);
+    const realPath = realPathWithSearch();
+    const stripped = stripLocale(realPath);
     let nextPath;
-    if (router.asPath === '/' || router.asPath === '') {
+    if (realPath === '/' || realPath === '') {
       nextPath = `/${code}`;
     } else if (stripped === '/') {
       nextPath = `/${code}/`;
     } else {
       nextPath = `/${code}${stripped}`;
     }
-    if (nextPath.match(/^\/[a-z]{2}\/[a-z]{2}\//)) {
-      nextPath = nextPath.replace(/^\/[a-z]{2}\/[a-z]{2}/, (m) => m.split('/').slice(0, 2).join('/'));
-    }
     setOpen(false);
-    router.push(nextPath);
+    switchLang(code);
+    // Hard navigation (not router.push): guarantees middleware runs and the
+    // page is served fresh for the target locale, avoiding any client-side
+    // routing mismatch between this app's custom locale system and Next's
+    // built-in i18n page matching (which caused the double-prefix 404).
+    window.location.href = nextPath;
   };
 
   return (
