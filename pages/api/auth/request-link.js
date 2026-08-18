@@ -3,28 +3,41 @@
  * Magic link authentication. POST { email, dha_license? }
  * - Generates a one-time token (24h expiry)
  * - Sends it via Brevo (or prints to console in dev mode)
- * - Rate limited: 5 requests per email per hour
+ * - Rate limited: 5 requests per email per hour (DB-backed, dmd.rate_limits)
  */
 import pool from '../../../lib/db';
 import crypto from 'crypto';
 import { sendMagicLinkEmail } from '../../../lib/email';
 
-const rateLimitMap = new Map();
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000;
+const RATE_LIMIT_WINDOW_SQL = '1 hour';
 const RATE_LIMIT_MAX = 5;
 
-function checkRateLimit(email) {
-  const key = email.toLowerCase();
-  const now = Date.now();
-  const record = rateLimitMap.get(key) || { count: 0, resetAt: now + RATE_LIMIT_WINDOW };
-  if (now > record.resetAt) {
-    record.count = 0;
-    record.resetAt = now + RATE_LIMIT_WINDOW;
+async function checkRateLimit(email) {
+  const key = `email:${email.toLowerCase()}`;
+  try {
+    const { rows } = await pool.query(
+      `INSERT INTO dmd.rate_limits (key, attempts, window_start)
+       VALUES ($1, 1, now())
+       ON CONFLICT (key) DO UPDATE
+       SET
+         attempts = CASE
+           WHEN dmd.rate_limits.window_start <= now() - $2::interval THEN 1
+           ELSE dmd.rate_limits.attempts + 1
+         END,
+         window_start = CASE
+           WHEN dmd.rate_limits.window_start <= now() - $2::interval THEN now()
+           ELSE dmd.rate_limits.window_start
+         END
+       RETURNING attempts`,
+      [key, RATE_LIMIT_WINDOW_SQL]
+    );
+    const attempts = rows[0]?.attempts ?? 1;
+    return attempts <= RATE_LIMIT_MAX;
+  } catch (err) {
+    // Never let a rate-limit infra issue lock out all logins: fail open.
+    console.error('checkRateLimit error (failing open):', err);
+    return true;
   }
-  if (record.count >= RATE_LIMIT_MAX) return false;
-  record.count += 1;
-  rateLimitMap.set(key, record);
-  return true;
 }
 
 function generateToken() {
@@ -39,7 +52,7 @@ export default async function handler(req, res) {
   if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
     return res.status(400).json({ error: 'Invalid email' });
   }
-  if (!checkRateLimit(email)) {
+  if (!(await checkRateLimit(email))) {
     return res.status(429).json({ error: 'Too many requests. Try again in 1 hour.' });
   }
 
