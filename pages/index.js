@@ -60,12 +60,24 @@ export default function Home() {
   const localePrefix = `/${i18n.language || 'en'}`;
 
   React.useEffect(() => {
-    fetch('/api/physicians?q=' + encodeURIComponent(search))
-      .then(r => r.json())
-      .then(data => {
-        setPhysicians(data.physicians || []);
-        setLoading(false);
-      });
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      fetch('/api/physicians?q=' + encodeURIComponent(search), { signal: controller.signal })
+        .then(r => r.json())
+        .then(data => {
+          setPhysicians(data.physicians || []);
+          setLoading(false);
+        })
+        .catch(err => {
+          if (err.name !== 'AbortError') {
+            setLoading(false);
+          }
+        });
+    }, 350);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [search]);
 
   return (

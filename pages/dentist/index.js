@@ -5,7 +5,8 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Search, MapPin, Calendar, ShieldCheck, Activity, Sparkles, Award, Clock, ChevronRight, Star, ArrowRight, Heart, Wrench, Smile, Baby, Zap, Hammer, Scissors } from 'lucide-react';
-import { SiteHeader, Logo } from '../../components/Header';
+import { SiteHeader } from '../../components/Header';
+import { Footer } from '../../components/Footer';
 import { Button } from '../../components/Button';
 import { Card, CardContent } from '../../components/Card';
 import { Avatar } from '../../components/Avatar';
@@ -49,12 +50,24 @@ export default function DentistHome() {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    fetch('/api/dentists?q=' + encodeURIComponent(search))
-      .then(r => r.json())
-      .then(data => {
-        setDentists(data.dentists || []);
-        setLoading(false);
-      });
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      fetch('/api/dentists?q=' + encodeURIComponent(search), { signal: controller.signal })
+        .then(r => r.json())
+        .then(data => {
+          setDentists(data.dentists || []);
+          setLoading(false);
+        })
+        .catch(err => {
+          if (err.name !== 'AbortError') {
+            setLoading(false);
+          }
+        });
+    }, 350);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [search]);
 
   return (
@@ -302,43 +315,7 @@ export default function DentistHome() {
         </Card>
       </section>
 
-      <footer className="border-t border-border bg-muted/30">
-        <div className="container-wide py-12">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <Logo size="lg" />
-              <p className="text-sm text-muted-foreground mt-4 text-pretty">
-                {t('dentist.listing.footer.tagline', "L'annuaire dentaire #1 à Dubai. Données officielles DHA (Sheryan).")}
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3">{t('footer.col_patients', 'Patients')}</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="https://findmydr.ae" className="hover:text-cyan-600">{t('footer.link_find_doctor', 'Trouver un médecin')}</a></li>
-                <li><Link href="/dentist" className="hover:text-cyan-600">{t('footer.link_find_dentist', 'Trouver un dentiste')}</Link></li>
-                <li><Link href="/dentist" className="hover:text-cyan-600">{t('dentist.listing.footer.specialties_link', 'Spécialités dentaires')}</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3">{t('footer.col_pros', 'Praticiens')}</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/dashboard/login" className="hover:text-cyan-600">{t('footer.link_activate_profile', 'Activer mon profil')}</Link></li>
-                <li><Link href="/dashboard/login" className="hover:text-cyan-600">{t('dentist.listing.footer.dentist_login', 'Connexion dentiste')}</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3">{t('footer.col_legal', 'Légal')}</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-cyan-600">{t('footer.link_legal_notice', 'Mentions légales')}</a></li>
-                <li><a href="#" className="hover:text-cyan-600">{t('footer.link_privacy', 'Politique de confidentialité')}</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-10 pt-6 border-t border-border text-center">
-            <p className="text-xs text-muted-foreground">{t('dentist.listing.footer.copyright', '© 2026 FindMyDentist.ae · Made with ❤️ in UAE')}</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
