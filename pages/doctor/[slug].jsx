@@ -17,6 +17,8 @@ import { WhatsAppButton } from '../../components/WhatsAppButton';
 import pool from '../../lib/db';
 import { pageTitle, pageDescription, physicianJsonLd, breadcrumbJsonLd, pageUrl } from '../../lib/seo';
 
+const OG_LOCALE_MAP = { fr: 'fr_AE', en: 'en_AE', ar: 'ar_AE', zh: 'zh_CN', ru: 'ru_RU', fa: 'fa_IR' };
+
 export async function getServerSideProps({ query, req, locale }) {
   const { slug, id: idParam } = query;
   const id = idParam || (slug ? String(slug).split('-').pop() : null);
@@ -155,6 +157,7 @@ export default function DoctorProfile({ pro, related, reviews, baseUrl }) {
       .replace('{host}', 'findmydr.ae')
       .replace('{specialty}', specialty);
     window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+    setRdvSent(true);
   };
 
   return (
@@ -173,9 +176,10 @@ export default function DoctorProfile({ pro, related, reviews, baseUrl }) {
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="FindMyDoctor.ae" />
-        <meta property="og:locale" content="fr_AE" />
-        <meta property="og:locale:alternate" content="en_AE" />
-        <meta property="og:locale:alternate" content="ar_AE" />
+        <meta property="og:locale" content={OG_LOCALE_MAP[i18n.language] || OG_LOCALE_MAP.en} />
+        {Object.entries(OG_LOCALE_MAP).filter(([code]) => code !== (i18n.language || 'en')).map(([code, val]) => (
+          <meta key={code} property="og:locale:alternate" content={val} />
+        ))}
         <meta property="profile:first_name" content={fullName.split(' ')[0]} />
         <meta property="profile:last_name" content={fullName.split(' ').slice(-1)[0]} />
 
@@ -285,6 +289,8 @@ export default function DoctorProfile({ pro, related, reviews, baseUrl }) {
               specialty={specialty}
               locale={i18n.language || 'en'}
               variant="primary"
+              proType="doctor"
+              proId={pro.id}
             />
           </div>
         </Card>

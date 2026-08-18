@@ -447,7 +447,9 @@
     "about_title": "درباره ما — FindMyDoctor.ae",
     "about_description": "اولین فهرست چندزبانه متخصصان دارای مجوز DHA در دبی.",
     "contact_title": "تماس — FindMyDoctor.ae",
-    "contact_description": "برای هر سوالی با تیم ما تماس بگیرید."
+    "contact_description": "برای هر سوالی با تیم ما تماس بگیرید.",
+    "legal_title": "اطلاعیه‌های قانونی — FindMyDoctor.ae",
+    "legal_description": "شرایط استفاده، سیاست حریم خصوصی و اطلاعیه‌های قانونی FindMyDoctor.ae و FindMyDentist.ae، مطابق با قوانین امارات متحده عربی."
   },
   "whatsapp": {
     "cta": "تماس از طریق واتساپ",

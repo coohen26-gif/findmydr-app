@@ -447,7 +447,9 @@
     "about_title": "À propos — FindMyDoctor.ae",
     "about_description": "Le premier annuaire trilingue des professionnels de santé DHA-licenciés à Dubai.",
     "contact_title": "Contact — FindMyDoctor.ae",
-    "contact_description": "Contactez notre équipe pour toute question."
+    "contact_description": "Contactez notre équipe pour toute question.",
+    "legal_title": "Mentions légales — FindMyDoctor.ae",
+    "legal_description": "Conditions générales, politique de confidentialité et mentions légales de FindMyDoctor.ae et FindMyDentist.ae, conformes au droit des Émirats Arabes Unis."
   },
   "whatsapp": {
     "cta": "Contacter sur WhatsApp",

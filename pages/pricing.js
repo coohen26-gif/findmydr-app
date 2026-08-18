@@ -93,7 +93,7 @@ export default function Pricing({ isDentist }) {
         <link rel="alternate" hrefLang="ar" href={`https://findmydr.ae/ar${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
         <link rel="alternate" hrefLang="x-default" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
       </Head>
-      <SiteHeader />
+      <SiteHeader isDentist={isDentist} />
 
       <section className="container-narrow py-16 md:py-20 text-center">
         <Badge variant="info" className="mb-4">{t('pricing.title')}</Badge>

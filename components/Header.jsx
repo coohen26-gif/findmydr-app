@@ -17,33 +17,59 @@ function useSiteBrand() {
 
 function detectBrandFromPath(pathname) {
   if (!pathname) return null;
+  // router.pathname is the matched page route (e.g. "/doctor/[slug]"), which
+  // never carries a locale prefix - it already reflects the host-based
+  // rewrite done in middleware.js, so no locale-stripping is needed here.
   const clean = pathname.replace(/^\/(fr|en|ar|zh|ru|fa)(\/|$)/, '/');
   if (clean.startsWith('/dentist')) return { name: 'FindMyDentist', suffix: '.ae', site: 'findmydentist.ae' };
   if (clean.startsWith('/doctor')) return { name: 'FindMyDoctor', suffix: '.ae', site: 'findmydr.ae' };
   return null;
 }
 
-export function Logo({ size = 'md' }) {
+// Resolve the brand from data available at SSR time - an explicit isDentist
+// prop (pages that already compute it from req.headers.host) or the resolved
+// route pathname (already host-aware via middleware.js's rewrite). Both are
+// identical on server and first client render, unlike window.location.
+function resolveBrand(isDentist, pathname) {
+  if (typeof isDentist === 'boolean') {
+    return isDentist
+      ? { name: 'FindMyDentist', suffix: '.ae', site: 'findmydentist.ae' }
+      : { name: 'FindMyDoctor', suffix: '.ae', site: 'findmydr.ae' };
+  }
+  return detectBrandFromPath(pathname);
+}
+
+export function Logo({ size = 'md', isDentist }) {
   const router = useRouter();
   const fontSize = size === 'sm' ? 'text-lg' : size === 'lg' ? 'text-2xl' : 'text-xl';
-  const [brand, setBrand] = React.useState({ name: 'FindMyDoctor', suffix: '.ae' });
+  const defaultBrand = { name: 'FindMyDoctor', suffix: '.ae', site: 'findmydr.ae' };
+  // Computed synchronously (no window) so SSR markup and the first client
+  // render agree - this is what removes the wrong-brand flash.
+  const [brand, setBrand] = React.useState(
+    () => resolveBrand(isDentist, router.pathname) || defaultBrand
+  );
   React.useEffect(() => {
-    const fromPath = detectBrandFromPath(router.asPath);
-    if (fromPath) {
-      setBrand(fromPath);
+    const resolved = resolveBrand(isDentist, router.pathname);
+    if (resolved) {
+      setBrand(resolved);
       return;
     }
+    // Last-resort client-only correction for pages that pass neither an
+    // isDentist prop nor render under a /doctor or /dentist route.
     setBrand(useSiteBrand());
-  }, [router.asPath]);
-  const isDentist = brand.name === 'FindMyDentist';
+  }, [isDentist, router.pathname]);
+
+  const brandPrefix = brand.name.slice(0, 6); // "FindMy"
+  const brandWord = brand.name.slice(6); // "Doctor" | "Dentist"
+
   return (
     <Link href="/" className="flex items-center gap-2 group">
       <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-cyan-500 text-white shadow-sm group-hover:shadow-md transition-shadow">
         <Stethoscope className="h-5 w-5" />
       </div>
       <div className={cn('font-extrabold tracking-tight', fontSize)}>
-        <span className="text-foreground">{brand.name}</span>
-        <span className="text-primary">{isDentist ? '' : ''}</span>
+        <span className="text-foreground">{brandPrefix}</span>
+        <span className="text-primary">{brandWord}</span>
         <span className="text-foreground">{brand.suffix}</span>
       </div>
     </Link>
@@ -168,7 +194,7 @@ function LangSelector() {
   );
 }
 
-export function SiteHeader({ user = null, currentPath = '/' }) {
+export function SiteHeader({ user = null, currentPath = '/', isDentist }) {
   const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
   useEffect(() => {
@@ -183,7 +209,7 @@ export function SiteHeader({ user = null, currentPath = '/' }) {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-white/80 backdrop-blur-xl">
       <div className="container-wide flex h-16 items-center justify-between">
-        <Logo />
+        <Logo isDentist={isDentist} />
         <nav className="hidden md:flex items-center gap-1">
           <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', currentPath === '/' ? 'text-primary' : 'text-muted-foreground')}>
             {t('nav.doctors')}
@@ -239,7 +265,7 @@ export function SiteHeader({ user = null, currentPath = '/' }) {
           />
           <div className="md:hidden fixed top-0 right-0 h-full w-72 max-w-[80vw] bg-white shadow-2xl z-50 flex flex-col animate-fade-in">
             <div className="flex items-center justify-between p-4 border-b">
-              <Logo size="sm" />
+              <Logo size="sm" isDentist={isDentist} />
               <button onClick={() => setOpen(false)} className="h-9 w-9 rounded-md hover:bg-muted flex items-center justify-center" aria-label={t("nav.close_menu")}>
                 <X className="h-5 w-5" />
               </button>

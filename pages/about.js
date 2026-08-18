@@ -54,12 +54,15 @@ export default function About({ isDentist, baseUrl }) {
       <Head>
         <title>{title}</title>
         <meta name="description" content={t('meta.about_description')} />
-        <link rel="alternate" hrefLang="fr" href={`https://findmydr.ae/fr${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
-        <link rel="alternate" hrefLang="en" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
-        <link rel="alternate" hrefLang="ar" href={`https://findmydr.ae/ar${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
-        <link rel="alternate" hrefLang="x-default" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
+        <link rel="alternate" hrefLang="fr" href={`${baseUrl}/fr${router.asPath.replace(/^\/(fr|en|ar|zh|ru|fa)(?=\/|$)/, '')}`} />
+        <link rel="alternate" hrefLang="en" href={`${baseUrl}/en${router.asPath.replace(/^\/(fr|en|ar|zh|ru|fa)(?=\/|$)/, '')}`} />
+        <link rel="alternate" hrefLang="ar" href={`${baseUrl}/ar${router.asPath.replace(/^\/(fr|en|ar|zh|ru|fa)(?=\/|$)/, '')}`} />
+        <link rel="alternate" hrefLang="zh" href={`${baseUrl}/zh${router.asPath.replace(/^\/(fr|en|ar|zh|ru|fa)(?=\/|$)/, '')}`} />
+        <link rel="alternate" hrefLang="ru" href={`${baseUrl}/ru${router.asPath.replace(/^\/(fr|en|ar|zh|ru|fa)(?=\/|$)/, '')}`} />
+        <link rel="alternate" hrefLang="fa" href={`${baseUrl}/fa${router.asPath.replace(/^\/(fr|en|ar|zh|ru|fa)(?=\/|$)/, '')}`} />
+        <link rel="alternate" hrefLang="x-default" href={`${baseUrl}/en${router.asPath.replace(/^\/(fr|en|ar|zh|ru|fa)(?=\/|$)/, '')}`} />
       </Head>
-      <SiteHeader />
+      <SiteHeader isDentist={isDentist} />
 
       <section className="gradient-hero text-white py-20 md:py-28">
         <div className="container-narrow text-center">

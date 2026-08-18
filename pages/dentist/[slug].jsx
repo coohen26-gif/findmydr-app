@@ -15,6 +15,8 @@ import { WhatsAppButton } from '../../components/WhatsAppButton';
 import pool from '../../lib/db';
 import { pageTitle, pageDescription, physicianJsonLd, breadcrumbJsonLd, pageUrl, SITE_DESCRIPTION } from '../../lib/seo';
 
+const OG_LOCALE_MAP = { fr: 'fr_AE', en: 'en_AE', ar: 'ar_AE', zh: 'zh_CN', ru: 'ru_RU', fa: 'fa_IR' };
+
 export async function getServerSideProps({ query, req, locale }) {
   const { slug, id: idParam } = query;
   const id = idParam || (slug ? String(slug).split('-').pop() : null);
@@ -148,6 +150,7 @@ export default function DentistProfile({ pro, related, baseUrl }) {
       .replace('{host}', 'findmydentist.ae')
       .replace('{specialty}', specialty);
     window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+    setRdvSent(true);
   };
 
   return (
@@ -163,7 +166,10 @@ export default function DentistProfile({ pro, related, baseUrl }) {
         <meta property="og:description" content={description} />
         <meta property="og:image" content={ogImage} />
         <meta property="og:site_name" content="FindMyDentist.ae" />
-        <meta property="og:locale" content="fr_AE" />
+        <meta property="og:locale" content={OG_LOCALE_MAP[i18n.language] || OG_LOCALE_MAP.en} />
+        {Object.entries(OG_LOCALE_MAP).filter(([code]) => code !== (i18n.language || 'en')).map(([code, val]) => (
+          <meta key={code} property="og:locale:alternate" content={val} />
+        ))}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
@@ -258,6 +264,8 @@ export default function DentistProfile({ pro, related, baseUrl }) {
               specialty={specialty}
               locale={i18n.language || 'en'}
               variant="primary"
+              proType="dentist"
+              proId={pro.id}
             />
           </div>
         </Card>

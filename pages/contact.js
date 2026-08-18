@@ -68,7 +68,7 @@ export default function Contact({ isDentist }) {
         <link rel="alternate" hrefLang="ar" href={`https://findmydr.ae/ar${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
         <link rel="alternate" hrefLang="x-default" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
       </Head>
-      <SiteHeader />
+      <SiteHeader isDentist={isDentist} />
 
       <section className="gradient-hero text-white py-16 md:py-20">
         <div className="container-narrow text-center">

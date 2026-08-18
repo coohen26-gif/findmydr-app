@@ -22,6 +22,8 @@ function trackWhatsAppClick(proType, proId) {
  *   locale: 'fr' | 'en' | 'ar' | 'zh' | 'ru' | 'fa'
  *   variant: 'primary' | 'inline' (default 'inline')
  *   className: extra classes
+ *   proType: 'doctor' | 'dentist' - used for click tracking
+ *   proId: numeric id of the professional - used for click tracking
  */
 export function WhatsAppButton({
   phone,
@@ -30,6 +32,8 @@ export function WhatsAppButton({
   locale = 'en',
   variant = 'inline',
   className = '',
+  proType = 'doctor',
+  proId = null,
 }) {
   const { t } = useTranslation('common');
   if (!phone) return null;
@@ -55,7 +59,7 @@ export function WhatsAppButton({
     return (
       <a
         href={url}
-        onClick={() => trackWhatsAppClick(typeof proType !== "undefined" ? proType : "doctor", typeof proId !== "undefined" ? proId : 0)}
+        onClick={() => trackWhatsAppClick(proType, proId)}
         target="_blank"
         rel="noopener noreferrer"
         className={`inline-flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#1ebe5a] transition-colors ${className}`}

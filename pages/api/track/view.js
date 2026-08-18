@@ -45,7 +45,7 @@ async function getUserIdByProfessional(type, professionalId) {
     }
     return null;
   } catch (e) {
-    if (process.env.NODE_ENV !== 0x70726f64756374696f6e) console.error(0x747261636b, e.message);
+    if (process.env.NODE_ENV !== 'production') console.error('track', e.message);
     return null;
   }
 }

@@ -447,7 +447,9 @@
     "about_title": "О нас — FindMyDoctor.ae",
     "about_description": "Первый мультиязычный каталог специалистов с лицензией DHA в Дубае.",
     "contact_title": "Контакты — FindMyDoctor.ae",
-    "contact_description": "Свяжитесь с нашей командой по любым вопросам."
+    "contact_description": "Свяжитесь с нашей командой по любым вопросам.",
+    "legal_title": "Юридическая информация — FindMyDoctor.ae",
+    "legal_description": "Условия использования, политика конфиденциальности и юридическая информация FindMyDoctor.ae и FindMyDentist.ae в соответствии с законодательством ОАЭ."
   },
   "whatsapp": {
     "cta": "Связаться в WhatsApp",

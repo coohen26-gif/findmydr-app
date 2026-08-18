@@ -250,9 +250,9 @@ export default function Legal({ isDentist }) {
     <div className="min-h-screen bg-white">
       <Head>
         <title>{t('footer.terms')} — {brand}.ae</title>
-        <meta name="description" content={t('meta.about_description')} />
+        <meta name="description" content={t('meta.legal_description')} />
       </Head>
-      <SiteHeader />
+      <SiteHeader isDentist={isDentist} />
 
       <section className="gradient-hero text-white py-12">
         <div className="container-narrow text-center">
