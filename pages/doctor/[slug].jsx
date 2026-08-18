@@ -153,14 +153,16 @@ export default function DoctorProfile({ pro, related, reviews, stats, baseUrl })
   const handleRdv = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     if (!waPhone) return; // no phone: keep modal open as fallback
-    const messages = {'fr': 'Bonjour Dr {name}, je vous contacte via {site} ({host}) pour un(e) {specialty}. Est-ce que vous avez des disponibilités cette semaine ?', 'en': 'Hello Dr {name}, I am reaching out via {site} ({host}) for a {specialty} consultation. Do you have availability this week?', 'ar': 'مرحباً د. {name}، أتواصل معك عبر {site} ({host}) بخصوص استشارة في {specialty}. هل لديكِ مواعيد متاحة هذا الأسبوع؟', 'zh': '您好 {name} 医生，我通过 {site} ({host}) 联系您咨询 {specialty}。本周有可预约时间吗？', 'ru': 'Здравствуйте, д-р {name}. Я обращаюсь через {site} ({host}) по вопросу {specialty}. Есть ли у вас свободные места на этой неделе?', 'fa': 'سلام دکتر {name}، از طریق {site} ({host}) با شما تماس می\u200cگیرم برای {specialty}. آیا این هفته نوبت خالی دارید؟'};
+    const messages = {'fr': 'Bonjour Dr {name}, je vous contacte via {site} ({host}) pour un(e) {specialty}. Date souhaitée : {date}. Motif : {reason}. Est-ce que vous avez des disponibilités cette semaine ?', 'en': 'Hello Dr {name}, I am reaching out via {site} ({host}) for a {specialty} consultation. Preferred date: {date}. Reason: {reason}. Do you have availability this week?', 'ar': 'مرحباً د. {name}، أتواصل معك عبر {site} ({host}) بخصوص استشارة في {specialty}. التاريخ المفضل: {date}. السبب: {reason}. هل لديكِ مواعيد متاحة هذا الأسبوع؟', 'zh': '您好 {name} 医生，我通过 {site} ({host}) 联系您咨询 {specialty}。期望日期：{date}。原因：{reason}。本周有可预约时间吗？', 'ru': 'Здравствуйте, д-р {name}. Я обращаюсь через {site} ({host}) по вопросу {specialty}. Желаемая дата: {date}. Причина: {reason}. Есть ли у вас свободные места на этой неделе?', 'fa': 'سلام دکتر {name}، از طریق {site} ({host}) با شما تماس می\u200cگیرم برای {specialty}. تاریخ مورد نظر: {date}. دلیل: {reason}. آیا این هفته نوبت خالی دارید؟'};
     const locale = (typeof window !== 'undefined' && (window.localStorage?.getItem('NEXT_LOCALE') || document.cookie.match(/NEXT_LOCALE=(\w+)/)?.[1])) || 'en';
     const template = messages[locale] || messages.en;
     const text = template
       .replace('{name}', fullName)
       .replace('{site}', 'FindMyDoctor.ae')
       .replace('{host}', 'findmydr.ae')
-      .replace('{specialty}', specialty);
+      .replace('{specialty}', specialty)
+      .replace('{date}', rdvDate)
+      .replace('{reason}', rdvReason);
     window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
     setRdvSent(true);
   };
