@@ -243,10 +243,10 @@ export default function DentistProfile({ pro, related, stats, baseUrl }) {
                   <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1.5">
                     <div className="flex">
                       {[1, 2, 3, 4, 5].map(i => (
-                        <Star key={i} className={"w-3.5 h-3.5 " + (i <= 5 ? "fill-amber-400 text-amber-400" : "text-amber-400/30")} />
+                        <Star key={i} className={"w-3.5 h-3.5 " + (i <= Math.round(stats.avgRating) ? "fill-amber-400 text-amber-400" : "text-amber-400/30")} />
                       ))}
                     </div>
-                    <span className="text-sm font-medium">{t('doctor.rating_keys.no_reviews')}</span>
+                    <span className="text-sm font-medium">{stats.totalReviews > 0 ? `${stats.avgRating}/5 (${stats.totalReviews})` : t('doctor.rating_keys.no_reviews')}</span>
                   </div>
                 </div>
               </div>
