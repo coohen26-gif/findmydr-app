@@ -15,6 +15,7 @@ import { ReviewsSection } from '../../components/ReviewCard';
 import { WhatsAppButton } from '../../components/WhatsAppButton';
 import pool from '../../lib/db';
 import { pageTitle, pageDescription, physicianJsonLd, breadcrumbJsonLd, pageUrl } from '../../lib/seo';
+import { getProStats } from '../../lib/proStats';
 
 const OG_LOCALE_MAP = { fr: 'fr_AE', en: 'en_AE', ar: 'ar_AE', zh: 'zh_CN', ru: 'ru_RU', fa: 'fa_IR' };
 
@@ -46,6 +47,7 @@ export async function getServerSideProps({ query, req, locale }) {
     const pro = r.rows[0] || null;
     let related = [];
     let reviews = [];
+    let stats = { views: 0, whatsappClicks: 0, avgRating: 0, totalReviews: 0 };
     if (pro) {
       const rel = await pool.query(
         `SELECT id, name, specialty FROM public.physicians
@@ -63,15 +65,16 @@ export async function getServerSideProps({ query, req, locale }) {
         );
         reviews = rv.rows;
       }
+      stats = await getProStats(pool, pro);
     }
-    return { props: { pro, related, reviews, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
+    return { props: { pro, related, reviews, stats, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
   } catch (e) {
     console.error('doctor [slug] getServerSideProps error:', e.message);
-    return { props: { pro: null, related: [], reviews: [], baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
+    return { props: { pro: null, related: [], reviews: [], stats: { views: 0, whatsappClicks: 0, avgRating: 0, totalReviews: 0 }, baseUrl: pageUrl(req.headers.host, '/'), ...(await serverSideTranslations(locale, ['common'])) } };
   }
 }
 
-export default function DoctorProfile({ pro, related, reviews, baseUrl }) {
+export default function DoctorProfile({ pro, related, reviews, stats, baseUrl }) {
   const [showRdv, setShowRdv] = useState(false);
   const [showMsg, setShowMsg] = useState(false);
   const [showShare, setShowShare] = useState(false);
@@ -349,10 +352,13 @@ export default function DoctorProfile({ pro, related, reviews, baseUrl }) {
           <Card className="p-6">
             <h3 className="font-bold mb-4">{t('doctor.detail.stats_title', 'Statistiques')}</h3>
             <div className="space-y-3 text-sm">
-              <div className="flex items-center justify-between"><span className="text-muted-foreground">👁️ Vues ce mois</span><span className="font-bold">1 247</span></div>
-              <div className="flex items-center justify-between"><span className="text-muted-foreground">📅 RDV pris</span><span className="font-bold">42</span></div>
-              <div className="flex items-center justify-between"><span className="text-muted-foreground">⭐ Note moyenne</span><span className="font-bold">—</span></div>
+              <div className="flex items-center justify-between"><span className="text-muted-foreground">{t('doctor.detail.stats_views_label', '👁️ Vues (30j)')}</span><span className="font-bold">{stats.views}</span></div>
+              <div className="flex items-center justify-between"><span className="text-muted-foreground">{t('doctor.detail.stats_contacts_label', '💬 Contacts WhatsApp (30j)')}</span><span className="font-bold">{stats.whatsappClicks}</span></div>
+              <div className="flex items-center justify-between"><span className="text-muted-foreground">{t('doctor.detail.stats_rating_label', '⭐ Note moyenne')}</span><span className="font-bold">{stats.totalReviews > 0 ? `${stats.avgRating}/5` : '—'}</span></div>
             </div>
+            {stats.views === 0 && stats.whatsappClicks === 0 && stats.totalReviews === 0 && (
+              <p className="text-xs text-muted-foreground mt-3">{t('doctor.detail.stats_no_data', 'Pas encore de donnees')}</p>
+            )}
           </Card>
 
           <Card className="p-6">

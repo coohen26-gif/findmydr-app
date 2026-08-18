@@ -119,6 +119,9 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
   const [formText, setFormText] = useState('');
   const [formName, setFormName] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const canReview = Boolean(pro && pro.dha_unique_id);
 
   if (!pro) {
     return (
@@ -143,9 +146,45 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
     ? `${t('review.subtitle', 'Consultez les avis verifies des patients sur')} ${fullName} (${pro.specialty || 'Medecin'}). Note moyenne ${avgRating}/5 sur ${totalReviews} ${t('review.count_label', 'avis')}.`
     : `${t('review.subtitle', 'Consultez les avis verifies des patients sur')} ${fullName} (${pro.specialty || 'Medecin'}).`;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    if (isSubmitting || !canReview) return;
+    setFormError('');
+
+    if (formText.trim().length < 10) {
+      setFormError(t('review.error_text_short', 'Votre avis est trop court (10 caracteres minimum).'));
+      return;
+    }
+    if (formText.trim().length > 2000) {
+      setFormError(t('review.error_text_long', 'Votre avis est trop long (2000 caracteres maximum).'));
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/reviews/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pro_dha_id: pro.dha_unique_id,
+          rating: formRating,
+          text: formText.trim(),
+          author_name: formName.trim() || undefined,
+          language: i18n.language || 'en',
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        setFormError(data.error || t('review.error_generic', 'Une erreur est survenue. Veuillez reessayer.'));
+        setIsSubmitting(false);
+        return;
+      }
+      setSubmitted(true);
+      setIsSubmitting(false);
+    } catch {
+      setFormError(t('review.error_generic', 'Une erreur est survenue. Veuillez reessayer.'));
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -243,9 +282,16 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
                 </div>
               )}
             </div>
-            <Button size="lg" onClick={() => setShowForm(true)}>
-              {t('review.leave_review', 'Laisser un avis')}
-            </Button>
+            <div className="flex flex-col items-end gap-1">
+              <Button size="lg" onClick={() => setShowForm(true)} disabled={!canReview} title={canReview ? '' : t('review.unavailable', "Les avis ne sont pas encore disponibles pour ce profil.")}>
+                {t('review.leave_review', 'Laisser un avis')}
+              </Button>
+              {!canReview && (
+                <span className="text-xs text-muted-foreground max-w-[220px] text-right">
+                  {t('review.unavailable', "Les avis ne sont pas encore disponibles pour ce profil.")}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -337,7 +383,7 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 md:p-8" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-extrabold">{t('review.form_title', 'Laisser un avis')}</h2>
-              <button onClick={() => { setShowForm(false); setSubmitted(false); }} className="h-8 w-8 rounded-md hover:bg-muted flex items-center justify-center" aria-label="Close">
+              <button onClick={() => { setShowForm(false); setSubmitted(false); setFormError(''); setFormText(''); setFormName(''); setFormRating(5); }} className="h-8 w-8 rounded-md hover:bg-muted flex items-center justify-center" aria-label="Close">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -348,7 +394,7 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
                 </div>
                 <h3 className="text-lg font-bold mb-1">{t('review.thanks_title', 'Merci pour votre avis !')}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{t('review.thanks_body', 'Votre avis sera publie apres verification (sous 24h).')}</p>
-                <Button variant="outline" onClick={() => { setShowForm(false); setSubmitted(false); }}>{t('review.close', 'Fermer')}</Button>
+                <Button variant="outline" onClick={() => { setShowForm(false); setSubmitted(false); setFormError(''); setFormText(''); setFormName(''); setFormRating(5); }}>{t('review.close', 'Fermer')}</Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -365,15 +411,20 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1.5">{t('review.form_name', 'Votre prenom')}</label>
-                  <input required value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Marie" className="flex h-11 w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+                  <input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Marie" className="flex h-11 w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1.5">{t('review.form_comment', 'Votre commentaire')}</label>
-                  <textarea required value={formText} onChange={(e) => setFormText(e.target.value)} rows={4} placeholder="Decrivez votre experience..." className="flex w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+                  <textarea required minLength={10} maxLength={2000} value={formText} onChange={(e) => setFormText(e.target.value)} rows={4} placeholder="Decrivez votre experience..." className="flex w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" />
                 </div>
+                {formError && (
+                  <p className="text-sm text-red-600">{formError}</p>
+                )}
                 <div className="flex gap-2 pt-2">
-                  <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="flex-1">{t('review.cancel', 'Annuler')}</Button>
-                  <Button type="submit" className="flex-1">{t('review.submit', 'Publier')}</Button>
+                  <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="flex-1" disabled={isSubmitting}>{t('review.cancel', 'Annuler')}</Button>
+                  <Button type="submit" className="flex-1" disabled={isSubmitting}>
+                    {isSubmitting ? t('review.submitting', 'Envoi...') : t('review.submit', 'Publier')}
+                  </Button>
                 </div>
               </form>
             )}
