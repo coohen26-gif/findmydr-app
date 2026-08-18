@@ -279,13 +279,20 @@ export default function DoctorProfile({ pro, related, reviews, stats, baseUrl })
           </div>
 
           <div className="p-6 md:p-8 flex flex-col md:flex-row gap-3 flex-wrap">
-            <Button size="lg" className="flex-1 md:flex-none" onClick={handleRdv} disabled={!waPhone} title={waPhone ? '' : t('doctor.detail.no_phone', 'Aucun numéro de téléphone')}>
+            <Button size="lg" className="flex-1 md:flex-none" onClick={waPhone ? handleRdv : () => setShowRdv(true)}>
               <Calendar className="h-4 w-4" /> {t('doctor.book', 'Prendre rendez-vous')}
             </Button>
             <Button variant="outline" size="lg" className="flex-1 md:flex-none" onClick={() => setShowMsg(true)}>
               <MessageCircle className="h-4 w-4" /> {t('doctor.message', 'Envoyer un message')}
             </Button>
-            <Button variant="outline" size="lg" className="flex-1 md:flex-none">
+            <Button
+              variant="outline"
+              size="lg"
+              className="flex-1 md:flex-none"
+              disabled={!waPhone}
+              title={waPhone ? '' : t('doctor.detail.no_phone', 'Aucun numéro de téléphone')}
+              onClick={() => { trackClick('phone'); window.location.href = `tel:+${waPhone}`; }}
+            >
               <Phone className="h-4 w-4" /> {t('doctor.detail.call', 'Appeler')}
             </Button>
             <WhatsAppButton
