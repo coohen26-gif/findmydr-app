@@ -91,18 +91,28 @@ export function middleware(request) {
     return res;
   }
 
-  // 4) Apply host-based rewrite (findmydr.ae → /doctor/*, findmydentist.ae → /dentist/*)
-  //    EXCEPT for the root path: serve pages/index.js (the actual home page)
-  //    with the correct locale propagated via NEXT_LOCALE cookie.
+  // 4) Apply host-based rewrite (findmydr.ae → /doctor/*, findmydentist.ae → /dentist/*).
+  //    NOTE: the root path is NOT an exception — it is always rewritten too (see
+  //    below), so pages/index.js and pages/en/index.js are never actually reached
+  //    in production. They are kept in place as inert fallbacks/history rather than
+  //    deleted (pages/en/index.js in particular was a deliberate fix for a real
+  //    /en root 404 back when this root-rewrite was conditional; that condition
+  //    was later removed). If a future change reintroduces a path where the root
+  //    rewrite does not apply, these files provide a safe landing page instead of
+  //    a 404 or a raw Next.js page not found.
   let rewritePath = null;
   if (pathWithoutLocale === '/' || pathWithoutLocale === '') {
-    // Root: rewrite to the domain's canonical home (/doctor for findmydr.ae, /dentist for findmydentist.ae)
+    // Root: always rewritten to the domain's canonical home (/doctor for
+    // findmydr.ae, /dentist for findmydentist.ae) for every host, including
+    // unrecognized ones (see fallback below) — pages/index.js is unreachable.
     if (host.includes('findmydentist.ae')) {
       rewritePath = '/dentist';
     } else if (host.includes('findmydr.ae')) {
       rewritePath = '/doctor';
     } else {
-      // Unknown host: fall back to doctor home
+      // Unknown host: fall back to doctor home. In practice nginx's per-domain
+      // SNI/server_name routing rejects unrecognized hosts before they ever
+      // reach this app, so this branch is also effectively unreachable today.
       rewritePath = '/doctor';
     }
   } else if (host.includes('findmydentist.ae')) {

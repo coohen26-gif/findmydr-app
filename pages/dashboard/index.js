@@ -189,7 +189,7 @@ export default function Dashboard() {
               <div className="h-12 w-12 rounded-xl bg-emerald-50 flex items-center justify-center">
                 <MessageCircle className="h-6 w-6 text-emerald-600" />
               </div>
-              <TrendBadge values={stats?.clicks?.filter?.(c => c.click_type === 'whatsapp')?.map?.(c => ({ count: c.count })) || []} />
+              <TrendBadge values={stats?.whatsapp_clicks_per_day || []} />
             </div>
             <div className="text-3xl font-extrabold mb-1">{whatsappClicksNum.toLocaleString()}</div>
             <div className="text-sm text-muted-foreground mb-3">Clics WhatsApp</div>

@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const [views, appts, clicks] = await Promise.all([
+  const [views, appts, clicks, whatsappPerDay] = await Promise.all([
     safeQuery(
       `SELECT DATE(viewed_at) as day, COUNT(*) as count
          FROM dmd.profile_views
@@ -46,6 +46,15 @@ export default async function handler(req, res) {
         GROUP BY click_type`,
       [user.id]
     ),
+    // Per-day WhatsApp click series (mirrors views.per_day) so the dashboard
+    // can compute a real first-vs-last trend instead of a single aggregate.
+    safeQuery(
+      `SELECT DATE(clicked_at) as day, COUNT(*) as count
+         FROM dmd.link_clicks
+        WHERE user_id = $1 AND click_type = 'whatsapp' AND clicked_at > NOW() - INTERVAL '30 days'
+        GROUP BY DATE(clicked_at) ORDER BY day`,
+      [user.id]
+    ),
   ]);
 
   return res.status(200).json({
@@ -59,6 +68,7 @@ export default async function handler(req, res) {
       total: appts.reduce((s, r) => s + parseInt(r.count || 0), 0),
     },
     clicks,
+    whatsapp_clicks_per_day: whatsappPerDay,
     profile_completeness: user.profile_completeness || 0,
     plan: user.plan || 'free',
   });
