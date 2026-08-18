@@ -4,3 +4,9 @@
 node_modules/
 .next/
 *.log
+
+# Scratch/debug/backup file hygiene (BUG-8 cleanup 2026-08-19)
+*.bak.*
+*.before-*
+check_*.js
+test_og*
