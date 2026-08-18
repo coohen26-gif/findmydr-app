@@ -14,29 +14,29 @@ import { FeaturedBadge } from "../../components/FeaturedBadge";
 import { Input } from '../../components/Input';
 import { slugify } from '../../lib/utils';
 
-const STATS = [
-  { value: '5 049', label: 'Dentistes DHA-licensés', icon: Activity, color: 'text-cyan-600' },
-  { value: '15 673', label: 'Médecins', icon: Heart, color: 'text-rose-600' },
-  { value: '3 120', label: 'Cliniques dentaires', icon: MapPin, color: 'text-emerald-600' },
-  { value: '24/7', label: 'Urgences dentaires', icon: Zap, color: 'text-amber-600' },
+const STATS_KEYS = [
+  { key: 'dentists', value: '5 049', icon: Activity, color: 'text-cyan-600' },
+  { key: 'doctors', value: '15 673', icon: Heart, color: 'text-rose-600' },
+  { key: 'clinics', value: '3 120', icon: MapPin, color: 'text-emerald-600' },
+  { key: 'emergency', value: '24/7', icon: Zap, color: 'text-amber-600' },
 ];
 
 const SPECIALTIES = [
-  { icon: Activity, name: 'Dentiste généraliste', count: '2 134', slug: 'general', color: 'from-cyan-500 to-blue-500' },
-  { icon: Sparkles, name: 'Esthétique dentaire', count: '684', slug: 'esthetique', color: 'from-pink-500 to-rose-500' },
-  { icon: Wrench, name: 'Orthodontiste', count: '342', slug: 'orthodontiste', color: 'from-purple-500 to-indigo-500' },
-  { icon: Hammer, name: 'Implantologie', count: '298', slug: 'implantologie', color: 'from-amber-500 to-orange-500' },
-  { icon: Baby, name: 'Pédodontiste', count: '186', slug: 'pedodontiste', color: 'from-pink-400 to-rose-400' },
-  { icon: Zap, name: 'Endodontiste', count: '142', slug: 'endodontiste', color: 'from-yellow-500 to-amber-500' },
-  { icon: Scissors, name: 'Chirurgien-dentiste', count: '524', slug: 'chirurgien', color: 'from-red-500 to-rose-500' },
-  { icon: Award, name: 'Parodontiste', count: '98', slug: 'parodontiste', color: 'from-teal-500 to-cyan-500' },
-  { icon: Smile, name: 'Voir toutes', count: '641+', slug: 'all', color: 'from-gray-500 to-slate-500' },
+  { icon: Activity, nameKey: 'dentist.listing.specialties.general', name: 'Dentiste généraliste', count: '2 134', slug: 'general', color: 'from-cyan-500 to-blue-500' },
+  { icon: Sparkles, nameKey: 'dentist.listing.specialties.esthetic', name: 'Esthétique dentaire', count: '684', slug: 'esthetique', color: 'from-pink-500 to-rose-500' },
+  { icon: Wrench, nameKey: 'home.categories.orthodontist', name: 'Orthodontiste', count: '342', slug: 'orthodontiste', color: 'from-purple-500 to-indigo-500' },
+  { icon: Hammer, nameKey: 'dentist.listing.specialties.implantology', name: 'Implantologie', count: '298', slug: 'implantologie', color: 'from-amber-500 to-orange-500' },
+  { icon: Baby, nameKey: 'dentist.listing.specialties.pedodontist', name: 'Pédodontiste', count: '186', slug: 'pedodontiste', color: 'from-pink-400 to-rose-400' },
+  { icon: Zap, nameKey: 'dentist.listing.specialties.endodontist', name: 'Endodontiste', count: '142', slug: 'endodontiste', color: 'from-yellow-500 to-amber-500' },
+  { icon: Scissors, nameKey: 'dentist.listing.specialties.surgeon', name: 'Chirurgien-dentiste', count: '524', slug: 'chirurgien', color: 'from-red-500 to-rose-500' },
+  { icon: Award, nameKey: 'dentist.listing.specialties.periodontist', name: 'Parodontiste', count: '98', slug: 'parodontiste', color: 'from-teal-500 to-cyan-500' },
+  { icon: Smile, nameKey: 'home.categories.all', name: 'Voir toutes', count: '641+', slug: 'all', color: 'from-gray-500 to-slate-500' },
 ];
 
-const TRUST = [
-  { icon: ShieldCheck, title: '100% vérifié DHA', desc: 'Tous les profils sont issus du registre officiel Dubai Health Authority (Sheryan).' },
-  { icon: Clock, title: 'Urgences 24/7', desc: 'Trouvez un dentiste disponible en urgence, jour et nuit.' },
-  { icon: Star, title: 'Avis patients vérifiés', desc: 'Tous les avis sont vérifiés après consultation réelle.' },
+const TRUST_KEYS = [
+  { icon: ShieldCheck, titleKey: 'dentist.listing.trust.verified_title', title: '100% vérifié DHA', descKey: 'dentist.listing.trust.verified_desc', desc: 'Tous les profils sont issus du registre officiel Dubai Health Authority (Sheryan).' },
+  { icon: Clock, titleKey: 'dentist.listing.trust.emergency_title', title: 'Urgences 24/7', descKey: 'dentist.listing.trust.emergency_desc', desc: 'Trouvez un dentiste disponible en urgence, jour et nuit.' },
+  { icon: Star, titleKey: 'dentist.listing.trust.reviews_title', title: 'Avis patients vérifiés', descKey: 'dentist.listing.trust.reviews_desc', desc: 'Tous les avis sont vérifiés après consultation réelle.' },
 ];
 
 export default function DentistHome() {
@@ -80,7 +80,7 @@ export default function DentistHome() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <Badge variant="success" className="text-sm px-3 py-1">
-                🇦🇪 Made in UAE · 100% vérifié DHA
+                🇦🇪 {t('home.verified_dha', 'Made in UAE · 100% vérifié DHA')}
               </Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-balance">
                 {t('hero.title')}
@@ -102,7 +102,7 @@ export default function DentistHome() {
                 </Button>
               </div>
               <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                <span>Populaire :</span>
+                <span>{t('dentist.listing.popular_label', 'Populaire :')}</span>
                 {['Esthétique', 'Implants', 'Orthodontie', 'Urgence'].map(s => (
                   <Link key={s} href={`${localePrefix}/dentist?q=${encodeURIComponent(s)}`} className="hover:text-cyan-600 underline-offset-4 hover:underline">
                     {s}
@@ -119,16 +119,16 @@ export default function DentistHome() {
                       DR
                     </div>
                     <h3 className="text-2xl font-bold mb-1">Dr. Fatima Al-Mansouri</h3>
-                    <p className="text-muted-foreground mb-4">Orthodontiste · DHA Vérifié</p>
+                    <p className="text-muted-foreground mb-4">{t('home.categories.orthodontist', 'Orthodontiste')} · {t('dentist.listing.hero_card.verified_suffix', 'DHA Vérifié')}</p>
                     <div className="flex items-center gap-2 mb-6">
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map(i => (
                           <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                         ))}
                       </div>
-                      <span className="text-sm font-medium">4.8 (98 avis)</span>
+                      <span className="text-sm font-medium">4.8 (98 {t('doctor.reviews', 'avis')})</span>
                     </div>
-                    <Button className="w-full bg-cyan-600 hover:bg-cyan-700">Prendre rendez-vous</Button>
+                    <Button className="w-full bg-cyan-600 hover:bg-cyan-700">{t('dentist.book', 'Prendre rendez-vous')}</Button>
                   </div>
                 </div>
               </div>
@@ -140,16 +140,16 @@ export default function DentistHome() {
       {/* STATS BAR */}
       <section className="container-wide -mt-8 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 bg-white rounded-2xl shadow-xl p-6 md:p-8">
-          {STATS.map(s => {
+          {STATS_KEYS.map(s => {
             const Icon = s.icon;
             return (
-              <div key={s.label} className="flex items-center gap-3">
+              <div key={s.key} className="flex items-center gap-3">
                 <div className={`h-12 w-12 rounded-xl bg-muted flex items-center justify-center ${s.color}`}>
                   <Icon className="h-6 w-6" />
                 </div>
                 <div>
                   <div className="text-2xl font-extrabold">{s.value}</div>
-                  <div className="text-xs text-muted-foreground">{s.label}</div>
+                  <div className="text-xs text-muted-foreground">{t(`dentist.listing.stats.${s.key}`)}</div>
                 </div>
               </div>
             );
@@ -162,7 +162,7 @@ export default function DentistHome() {
         <div className="text-center mb-12 space-y-3">
           <h2 className="text-3xl md:text-4xl font-extrabold">{t('home.categories_title')}</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Trouvez le bon spécialiste pour chaque besoin dentaire.
+            {t('dentist.listing.categories_subtitle', 'Trouvez le bon spécialiste pour chaque besoin dentaire.')}
           </p>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -177,8 +177,8 @@ export default function DentistHome() {
                 <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white mb-3 group-hover:scale-110 transition-transform`}>
                   <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="font-semibold text-sm leading-tight mb-1 line-clamp-2">{s.name}</h3>
-                <p className="text-xs text-muted-foreground">{s.count} praticiens</p>
+                <h3 className="font-semibold text-sm leading-tight mb-1 line-clamp-2">{t(s.nameKey, s.name)}</h3>
+                <p className="text-xs text-muted-foreground">{s.count} {t('dentist.listing.practitioners_suffix', 'praticiens')}</p>
                 <ChevronRight className="absolute top-5 right-5 h-4 w-4 text-muted-foreground group-hover:text-cyan-600 group-hover:translate-x-1 transition-all" />
               </Link>
             );
@@ -193,17 +193,17 @@ export default function DentistHome() {
             <div>
               <h2 className="text-3xl md:text-4xl font-extrabold mb-2">{t('home.featured.title')}</h2>
               <p className="text-muted-foreground">
-                {loading ? '⏳ Chargement...' : `${dentists.length} résultats affichés`}
+                {loading ? `⏳ ${t('common.loading', 'Chargement…')}` : t('dentist.listing.results_count', { count: dentists.length })}
               </p>
             </div>
             <Link href="/dentist" className="hidden sm:flex items-center gap-1 text-cyan-600 font-semibold hover:underline">
-              Voir tous <ArrowRight className="h-4 w-4" />
+              {t('dentist.listing.view_all', 'Voir tous')} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           {dentists.length === 0 && !loading ? (
             <Card className="p-12 text-center">
               <div className="text-6xl mb-4">🔍</div>
-              <p className="text-muted-foreground">Aucun résultat. Essayez une autre recherche.</p>
+              <p className="text-muted-foreground">{t('dentist.listing.no_results', 'Aucun résultat. Essayez une autre recherche.')}</p>
             </Card>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -234,7 +234,7 @@ export default function DentistHome() {
                         <span className="line-clamp-1">{p.facility_name || '—'}</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-xs text-cyan-600 font-semibold pt-1">
-                        Voir le profil
+                        {t('dentist.listing.view_profile', 'Voir le profil')}
                         <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </div>
@@ -250,18 +250,18 @@ export default function DentistHome() {
       <section className="bg-gradient-to-br from-cyan-600 to-emerald-600 py-20 text-white">
         <div className="container-wide">
           <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12">
-            Pourquoi FindMyDentist.ae ?
+            {t('dentist.listing.why_title', 'Pourquoi FindMyDentist.ae ?')}
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {TRUST.map(t => {
-              const Icon = t.icon;
+            {TRUST_KEYS.map(item => {
+              const Icon = item.icon;
               return (
-                <div key={t.title} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
+                <div key={item.titleKey} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
                   <div className="h-12 w-12 rounded-xl bg-white/20 flex items-center justify-center mb-4">
                     <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{t.title}</h3>
-                  <p className="text-white/80 text-sm leading-relaxed">{t.desc}</p>
+                  <h3 className="text-xl font-bold mb-2">{t(item.titleKey, item.title)}</h3>
+                  <p className="text-white/80 text-sm leading-relaxed">{t(item.descKey, item.desc)}</p>
                 </div>
               );
             })}
@@ -274,27 +274,27 @@ export default function DentistHome() {
         <Card className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-0 text-white overflow-hidden relative">
           <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500 rounded-full blur-3xl opacity-10" />
           <div className="relative p-8 md:p-12 text-center max-w-2xl mx-auto">
-            <Badge variant="premium" className="mb-4">⭐ Pour les dentistes</Badge>
+            <Badge variant="premium" className="mb-4">⭐ {t('dentist.listing.cta.badge', 'Pour les dentistes')}</Badge>
             <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
-              Activez votre profil premium
+              {t('dentist.listing.cta.title', 'Activez votre profil premium')}
             </h2>
             <p className="text-white/80 mb-8">
-              Recevez des patients qui cherchent votre spécialité. Bio trilingue, photos, horaires, prise de RDV intégrée.
+              {t('dentist.listing.cta.desc', 'Recevez des patients qui cherchent votre spécialité. Bio trilingue, photos, horaires, prise de RDV intégrée.')}
             </p>
             <div className="flex items-baseline justify-center gap-2 mb-8">
               <span className="text-5xl font-extrabold text-amber-400">200 AED</span>
-              <span className="text-white/60">/ mois</span>
+              <span className="text-white/60">{t('dentist.listing.cta.price_period', '/ mois')}</span>
             </div>
             <div className="flex flex-wrap gap-3 justify-center">
               <Link href="/dashboard/login">
                 <Button variant="premium" size="lg">
-                  Activer mon profil
+                  {t('home.premium_cta.cta', 'Activer mon profil')}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <a href="mailto:contact@findmydentist.ae">
                 <Button variant="outline" size="lg" className="bg-transparent border-white/30 text-white hover:bg-white/10">
-                  Nous contacter
+                  {t('dentist.listing.cta.contact', 'Nous contacter')}
                 </Button>
               </a>
             </div>
@@ -308,34 +308,34 @@ export default function DentistHome() {
             <div>
               <Logo size="lg" />
               <p className="text-sm text-muted-foreground mt-4 text-pretty">
-                L'annuaire dentaire #1 à Dubai. Données officielles DHA (Sheryan).
+                {t('dentist.listing.footer.tagline', "L'annuaire dentaire #1 à Dubai. Données officielles DHA (Sheryan).")}
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-3">Patients</h4>
+              <h4 className="font-semibold mb-3">{t('footer.col_patients', 'Patients')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="https://findmydr.ae" className="hover:text-cyan-600">Trouver un médecin</a></li>
-                <li><Link href="/dentist" className="hover:text-cyan-600">Trouver un dentiste</Link></li>
-                <li><Link href="/dentist" className="hover:text-cyan-600">Spécialités dentaires</Link></li>
+                <li><a href="https://findmydr.ae" className="hover:text-cyan-600">{t('footer.link_find_doctor', 'Trouver un médecin')}</a></li>
+                <li><Link href="/dentist" className="hover:text-cyan-600">{t('footer.link_find_dentist', 'Trouver un dentiste')}</Link></li>
+                <li><Link href="/dentist" className="hover:text-cyan-600">{t('dentist.listing.footer.specialties_link', 'Spécialités dentaires')}</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-3">Praticiens</h4>
+              <h4 className="font-semibold mb-3">{t('footer.col_pros', 'Praticiens')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/dashboard/login" className="hover:text-cyan-600">Activer mon profil</Link></li>
-                <li><Link href="/dashboard/login" className="hover:text-cyan-600">Connexion dentiste</Link></li>
+                <li><Link href="/dashboard/login" className="hover:text-cyan-600">{t('footer.link_activate_profile', 'Activer mon profil')}</Link></li>
+                <li><Link href="/dashboard/login" className="hover:text-cyan-600">{t('dentist.listing.footer.dentist_login', 'Connexion dentiste')}</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-3">Légal</h4>
+              <h4 className="font-semibold mb-3">{t('footer.col_legal', 'Légal')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-cyan-600">Mentions légales</a></li>
-                <li><a href="#" className="hover:text-cyan-600">Politique de confidentialité</a></li>
+                <li><a href="#" className="hover:text-cyan-600">{t('footer.link_legal_notice', 'Mentions légales')}</a></li>
+                <li><a href="#" className="hover:text-cyan-600">{t('footer.link_privacy', 'Politique de confidentialité')}</a></li>
               </ul>
             </div>
           </div>
           <div className="mt-10 pt-6 border-t border-border text-center">
-            <p className="text-xs text-muted-foreground">© 2026 FindMyDentist.ae · Made with ❤️ in UAE</p>
+            <p className="text-xs text-muted-foreground">{t('dentist.listing.footer.copyright', '© 2026 FindMyDentist.ae · Made with ❤️ in UAE')}</p>
           </div>
         </div>
       </footer>
