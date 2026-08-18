@@ -131,7 +131,56 @@
       "rdv_with": "与",
       "msg_to": "致",
       "view": "查看",
-      "uae_location": "迪拜，阿拉伯联合酋长国"
+      "uae_location": "迪拜，阿拉伯联合酋长国",
+      "stats_views_label": "👁️ 浏览量(30天)",
+      "stats_contacts_label": "💬 WhatsApp 联系次数(30天)",
+      "stats_rating_label": "⭐ 平均评分",
+      "stats_no_data": "暂无足够数据"
+    },
+    "listing": {
+      "popular_label": "热门：",
+      "categories_title": "按专科浏览",
+      "categories_subtitle": "超过15,000名持有迪拜卫生局(DHA)执照的医生，覆盖所有医疗专科。",
+      "practitioners_suffix": "位医生",
+      "no_results": "没有结果，请尝试其他搜索。",
+      "view_profile": "查看资料",
+      "facilities_title": "知名医疗机构",
+      "facilities_subtitle": "迪拜评分最高的医院和诊所。",
+      "pros_suffix": "位专家",
+      "why_title": "为什么选择 FindMyDoctor.ae？",
+      "trust": {
+        "verified_title": "100% DHA 认证",
+        "verified_desc": "所有资料均来自迪拜卫生局(DHA)官方注册系统(Sheryan)。",
+        "response_title": "24小时内回复",
+        "response_desc": "尊享医生会在24小时内回复您的预约请求。",
+        "reviews_title": "经核实的患者评价",
+        "reviews_desc": "所有评价均在真实就诊后核实。"
+      },
+      "cta": {
+        "badge": "面向医生",
+        "title": "开通您的高级资料",
+        "desc": "获得寻找您专科的患者。三语简介、照片、营业时间、集成预约功能。",
+        "benefit_1": "包含照片和视频的高级资料页",
+        "benefit_2": "集成在线预约",
+        "benefit_3": "安全的患者消息系统",
+        "benefit_4": "浏览与点击统计数据",
+        "price_period": "/月",
+        "contact": "联系我们"
+      },
+      "hero_card": {
+        "verified_suffix": "DHA 认证",
+        "tomorrow_slot": "明天 14:30",
+        "available": "可预约"
+      },
+      "stats": {
+        "doctors": "持DHA执照医生",
+        "dentists": "牙医",
+        "facilities": "医疗机构",
+        "booking": "在线预约"
+      },
+      "footer": {
+        "specialties_link": "专科"
+      }
     }
   },
   "search": {
@@ -155,7 +204,8 @@
     "sort_recent": "最新",
     "loading": "搜索中…",
     "results_count_one": "找到 {count} 位医生",
-    "results_count_other": "找到 {count} 位医生"
+    "results_count_other": "找到 {count} 位医生",
+    "results_for": "关于 \"{query}\""
   },
   "pricing": {
     "title": "价格",
@@ -346,7 +396,8 @@
       "your_response": "您的回复",
       "response_placeholder": "感谢患者,回应他们的关注…",
       "send_response": "发送回复",
-      "anonymous": "匿名"
+      "anonymous": "匿名",
+      "reply_unavailable": "回复评价功能暂未开放，请稍后再来查看。"
     }
   },
   "footer": {
@@ -513,7 +564,13 @@
     "submit": "发布",
     "close": "关闭",
     "no_reviews_yet": "暂无评价 - 成为第一个评价的人",
-    "anonymous": "患者"
+    "anonymous": "患者",
+    "error_rating": "请选择评分。",
+    "error_text_short": "评论太短(至少10个字符)。",
+    "error_text_long": "评论太长(最多2000个字符)。",
+    "error_generic": "出现错误,请重试。",
+    "unavailable": "该资料暂不支持评价。",
+    "submitting": "提交中..."
   },
   "dentist": {
     "book": "预约",
@@ -555,7 +612,61 @@
       "copy_button": "复制",
       "view": "查看",
       "uae_location": "迪拜，阿拉伯联合酋长国",
-      "bio_template": "{name} 医生持有迪拜卫生局（DHA）执照，是一名{specialty}，执业于{facility}，迪拜，阿拉伯联合酋长国。资料已通过迪拜卫生局（Sheryan）直接验证。经验丰富的{specialty}，专注于高品质牙科护理。"
+      "bio_template": "{name} 医生持有迪拜卫生局（DHA）执照，是一名{specialty}，执业于{facility}，迪拜，阿拉伯联合酋长国。资料已通过迪拜卫生局（Sheryan）直接验证。经验丰富的{specialty}，专注于高品质牙科护理。",
+      "stats_views_label": "👁️ 浏览量(30天)",
+      "stats_contacts_label": "💬 WhatsApp 联系次数(30天)",
+      "stats_rating_label": "⭐ 平均评分",
+      "stats_no_data": "暂无足够数据"
+    },
+    "listing": {
+      "popular_label": "热门：",
+      "categories_subtitle": "为每一种牙科需求找到合适的专科医生。",
+      "practitioners_suffix": "位医生",
+      "results_count_one": "显示 {count} 条结果",
+      "results_count_other": "显示 {count} 条结果",
+      "view_all": "查看全部",
+      "no_results": "没有结果，请尝试其他搜索。",
+      "view_profile": "查看资料",
+      "why_title": "为什么选择 FindMyDentist.ae？",
+      "trust": {
+        "verified_title": "100% DHA 认证",
+        "verified_desc": "所有资料均来自迪拜卫生局(DHA)官方注册系统(Sheryan)。",
+        "emergency_title": "全天候急诊",
+        "emergency_desc": "全天候找到可应对急诊的牙医。",
+        "reviews_title": "经核实的患者评价",
+        "reviews_desc": "所有评价均在真实就诊后核实。"
+      },
+      "cta": {
+        "badge": "面向牙医",
+        "title": "开通您的高级资料",
+        "desc": "获得寻找您专科的患者。三语简介、照片、营业时间、集成预约功能。",
+        "price_period": "/月",
+        "contact": "联系我们"
+      },
+      "hero_card": {
+        "verified_suffix": "DHA 认证"
+      },
+      "stats": {
+        "dentists": "持DHA执照牙医",
+        "doctors": "医生",
+        "clinics": "牙科诊所",
+        "emergency": "牙科急诊"
+      },
+      "specialties": {
+        "general": "全科牙医",
+        "esthetic": "美容牙科",
+        "implantology": "种植牙科",
+        "pedodontist": "儿童牙医",
+        "endodontist": "牙髓病专科医生",
+        "surgeon": "口腔外科医生",
+        "periodontist": "牙周病专科医生"
+      },
+      "footer": {
+        "tagline": "迪拜排名第一的牙科目录，数据来自DHA官方(Sheryan)。",
+        "specialties_link": "牙科专科",
+        "dentist_login": "牙医登录",
+        "copyright": "© 2026 FindMyDentist.ae · 阿联酋 ❤️ 制造"
+      }
     }
   }
 }

@@ -131,7 +131,56 @@
       "rdv_with": "avec",
       "msg_to": "à",
       "view": "Voir",
-      "uae_location": "Dubai, Émirats Arabes Unis"
+      "uae_location": "Dubai, Émirats Arabes Unis",
+      "stats_views_label": "👁️ Vues (30j)",
+      "stats_contacts_label": "💬 Contacts WhatsApp (30j)",
+      "stats_rating_label": "⭐ Note moyenne",
+      "stats_no_data": "Pas encore de donnees"
+    },
+    "listing": {
+      "popular_label": "Populaire :",
+      "categories_title": "Explorez par spécialité",
+      "categories_subtitle": "Plus de 15 000 praticiens DHA-licensés dans toutes les spécialités médicales.",
+      "practitioners_suffix": "praticiens",
+      "no_results": "Aucun résultat. Essayez une autre recherche.",
+      "view_profile": "Voir le profil",
+      "facilities_title": "Établissements de référence",
+      "facilities_subtitle": "Les hôpitaux et cliniques les mieux notés de Dubai.",
+      "pros_suffix": "pros",
+      "why_title": "Pourquoi FindMyDoctor.ae ?",
+      "trust": {
+        "verified_title": "100% vérifié DHA",
+        "verified_desc": "Tous les profils sont issus du registre officiel Dubai Health Authority (Sheryan).",
+        "response_title": "Réponse en 24h",
+        "response_desc": "Les médecins premium répondent à vos demandes de rendez-vous en moins de 24h.",
+        "reviews_title": "Avis patients vérifiés",
+        "reviews_desc": "Tous les avis sont vérifiés après consultation réelle."
+      },
+      "cta": {
+        "badge": "Pour les praticiens",
+        "title": "Activez votre profil premium",
+        "desc": "Recevez des patients qui cherchent votre spécialité. Bio trilingue, photos, horaires, prise de RDV intégrée.",
+        "benefit_1": "Fiche premium avec photos et vidéos",
+        "benefit_2": "Réservation en ligne intégrée",
+        "benefit_3": "Messagerie patient sécurisée",
+        "benefit_4": "Statistiques de vues et clics",
+        "price_period": "/ mois",
+        "contact": "Nous contacter"
+      },
+      "hero_card": {
+        "verified_suffix": "DHA Vérifié",
+        "tomorrow_slot": "Demain 14h30",
+        "available": "Disponible"
+      },
+      "stats": {
+        "doctors": "Médecins DHA-licensés",
+        "dentists": "Dentistes",
+        "facilities": "Établissements",
+        "booking": "Réservation en ligne"
+      },
+      "footer": {
+        "specialties_link": "Spécialités"
+      }
     }
   },
   "search": {
@@ -155,7 +204,8 @@
     "sort_recent": "Plus récents",
     "loading": "Recherche en cours…",
     "results_count_one": "{count} médecin trouvé",
-    "results_count_other": "{count} médecins trouvés"
+    "results_count_other": "{count} médecins trouvés",
+    "results_for": "pour \"{query}\""
   },
   "pricing": {
     "title": "Tarifs",
@@ -346,7 +396,8 @@
       "your_response": "Votre réponse",
       "response_placeholder": "Remerciez le patient, répondez à sa préoccupation…",
       "send_response": "Envoyer la réponse",
-      "anonymous": "Anonyme"
+      "anonymous": "Anonyme",
+      "reply_unavailable": "La réponse aux avis n'est pas encore disponible — revenez bientôt."
     }
   },
   "footer": {
@@ -513,7 +564,13 @@
     "submit": "Publier",
     "close": "Fermer",
     "no_reviews_yet": "Pas encore d'avis - soyez le premier",
-    "anonymous": "Patient"
+    "anonymous": "Patient",
+    "error_rating": "Merci de choisir une note.",
+    "error_text_short": "Votre avis est trop court (10 caracteres minimum).",
+    "error_text_long": "Votre avis est trop long (2000 caracteres maximum).",
+    "error_generic": "Une erreur est survenue. Veuillez reessayer.",
+    "unavailable": "Les avis ne sont pas encore disponibles pour ce profil.",
+    "submitting": "Envoi..."
   },
   "dentist": {
     "book": "Prendre rendez-vous",
@@ -555,7 +612,61 @@
       "copy_button": "Copier",
       "view": "Voir",
       "uae_location": "Dubai, Émirats Arabes Unis",
-      "bio_template": "Dr. {name} est {specialty} DHA-licensé(e) exerçant à {facility}, Dubai, Émirats Arabes Unis. Profil vérifié directement via le Dubai Health Authority (Sheryan). {specialty} expérimenté(e), spécialisé(e) dans les soins dentaires de qualité."
+      "bio_template": "Dr. {name} est {specialty} DHA-licensé(e) exerçant à {facility}, Dubai, Émirats Arabes Unis. Profil vérifié directement via le Dubai Health Authority (Sheryan). {specialty} expérimenté(e), spécialisé(e) dans les soins dentaires de qualité.",
+      "stats_views_label": "👁️ Vues (30j)",
+      "stats_contacts_label": "💬 Contacts WhatsApp (30j)",
+      "stats_rating_label": "⭐ Note moyenne",
+      "stats_no_data": "Pas encore de donnees"
+    },
+    "listing": {
+      "popular_label": "Populaire :",
+      "categories_subtitle": "Trouvez le bon spécialiste pour chaque besoin dentaire.",
+      "practitioners_suffix": "praticiens",
+      "results_count_one": "{count} résultat affiché",
+      "results_count_other": "{count} résultats affichés",
+      "view_all": "Voir tous",
+      "no_results": "Aucun résultat. Essayez une autre recherche.",
+      "view_profile": "Voir le profil",
+      "why_title": "Pourquoi FindMyDentist.ae ?",
+      "trust": {
+        "verified_title": "100% vérifié DHA",
+        "verified_desc": "Tous les profils sont issus du registre officiel Dubai Health Authority (Sheryan).",
+        "emergency_title": "Urgences 24/7",
+        "emergency_desc": "Trouvez un dentiste disponible en urgence, jour et nuit.",
+        "reviews_title": "Avis patients vérifiés",
+        "reviews_desc": "Tous les avis sont vérifiés après consultation réelle."
+      },
+      "cta": {
+        "badge": "Pour les dentistes",
+        "title": "Activez votre profil premium",
+        "desc": "Recevez des patients qui cherchent votre spécialité. Bio trilingue, photos, horaires, prise de RDV intégrée.",
+        "price_period": "/ mois",
+        "contact": "Nous contacter"
+      },
+      "hero_card": {
+        "verified_suffix": "DHA Vérifié"
+      },
+      "stats": {
+        "dentists": "Dentistes DHA-licensés",
+        "doctors": "Médecins",
+        "clinics": "Cliniques dentaires",
+        "emergency": "Urgences dentaires"
+      },
+      "specialties": {
+        "general": "Dentiste généraliste",
+        "esthetic": "Esthétique dentaire",
+        "implantology": "Implantologie",
+        "pedodontist": "Pédodontiste",
+        "endodontist": "Endodontiste",
+        "surgeon": "Chirurgien-dentiste",
+        "periodontist": "Parodontiste"
+      },
+      "footer": {
+        "tagline": "L'annuaire dentaire #1 à Dubai. Données officielles DHA (Sheryan).",
+        "specialties_link": "Spécialités dentaires",
+        "dentist_login": "Connexion dentiste",
+        "copyright": "© 2026 FindMyDentist.ae · Made with ❤️ in UAE"
+      }
     }
   }
 }

@@ -28,7 +28,6 @@ export default function ReviewsPage() {
   const [reviews, setReviews] = React.useState([]);
   const [filter, setFilter] = React.useState('all');
   const [respondingTo, setRespondingTo] = React.useState(null);
-  const [responseText, setResponseText] = React.useState('');
   const [apiAvailable, setApiAvailable] = React.useState(true);
 
   React.useEffect(() => {
@@ -65,24 +64,6 @@ export default function ReviewsPage() {
       });
     return () => { cancelled = true; };
   }, [user]);
-
-  const handleRespond = async (reviewId) => {
-    if (!responseText.trim()) return;
-    try {
-      const r = await fetch('/api/reviews/respond', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ review_id: reviewId, response_text: responseText }),
-      });
-      if (r.ok) {
-        setReviews((prev) => prev.map((rv) => (rv.id === reviewId ? { ...rv, response_text, response_at: new Date().toISOString() } : rv)));
-        setRespondingTo(null);
-        setResponseText('');
-      }
-    } catch (e) {
-      // API not available: silent fail (UI already warns)
-    }
-  };
 
   const filtered = reviews.filter((r) => {
     if (filter === 'verified') return r.verified;
@@ -195,25 +176,21 @@ export default function ReviewsPage() {
                     )}
                   </div>
                   {!review.response_text && (
-                    <Button size="sm" variant="outline" onClick={() => setRespondingTo(review.id)}>
+                    <Button size="sm" variant="outline" onClick={() => setRespondingTo(respondingTo === review.id ? null : review.id)}>
                       {t('dashboard.reviews.respond')}
                     </Button>
                   )}
                 </div>
                 {respondingTo === review.id && (
                   <div className="mt-4 pt-4 border-t">
-                    <textarea
-                      value={responseText}
-                      onChange={(e) => setResponseText(e.target.value)}
-                      placeholder={t('dashboard.reviews.response_placeholder')}
-                      className="w-full p-3 rounded-lg border resize-none"
-                      rows={3}
-                    />
+                    {/* Replying isn't wired up yet: dmd.reviews has no column to store a
+                        professional's response. Rather than show a form that silently
+                        does nothing on submit, tell the user honestly. */}
+                    <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-900">
+                      {t('dashboard.reviews.reply_unavailable')}
+                    </div>
                     <div className="flex gap-2 mt-2">
-                      <Button size="sm" onClick={() => handleRespond(review.id)} disabled={!responseText.trim()}>
-                        {t('dashboard.reviews.send_response')}
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => { setRespondingTo(null); setResponseText(''); }}>
+                      <Button size="sm" variant="ghost" onClick={() => setRespondingTo(null)}>
                         {t('common.cancel')}
                       </Button>
                     </div>

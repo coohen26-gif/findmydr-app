@@ -131,7 +131,56 @@
       "rdv_with": "مع",
       "msg_to": "إلى",
       "view": "عرض",
-      "uae_location": "دبي، الإمارات العربية المتحدة"
+      "uae_location": "دبي، الإمارات العربية المتحدة",
+      "stats_views_label": "👁️ المشاهدات (30 يومًا)",
+      "stats_contacts_label": "💬 تواصل عبر واتساب (30 يومًا)",
+      "stats_rating_label": "⭐ متوسط التقييم",
+      "stats_no_data": "لا توجد بيانات كافية بعد"
+    },
+    "listing": {
+      "popular_label": "شائع:",
+      "categories_title": "تصفح حسب التخصص",
+      "categories_subtitle": "أكثر من 15,000 ممارس مرخص من هيئة الصحة بدبي في جميع التخصصات الطبية.",
+      "practitioners_suffix": "ممارس",
+      "no_results": "لا توجد نتائج. جرّب بحثًا آخر.",
+      "view_profile": "عرض الملف الشخصي",
+      "facilities_title": "أبرز المنشآت الطبية",
+      "facilities_subtitle": "أفضل المستشفيات والعيادات تقييمًا في دبي.",
+      "pros_suffix": "متخصص",
+      "why_title": "لماذا FindMyDoctor.ae؟",
+      "trust": {
+        "verified_title": "موثّق 100% من هيئة الصحة بدبي",
+        "verified_desc": "جميع الملفات الشخصية مستمدة من السجل الرسمي لهيئة الصحة بدبي (شريان).",
+        "response_title": "الرد خلال 24 ساعة",
+        "response_desc": "يرد الأطباء المميزون على طلبات المواعيد في أقل من 24 ساعة.",
+        "reviews_title": "تقييمات مرضى موثّقة",
+        "reviews_desc": "يتم التحقق من جميع التقييمات بعد استشارة فعلية."
+      },
+      "cta": {
+        "badge": "للممارسين",
+        "title": "فعّل ملفك الشخصي المميز",
+        "desc": "استقبل مرضى يبحثون عن تخصصك. سيرة ذاتية ثلاثية اللغة، صور، مواعيد العمل، وحجز مواعيد متكامل.",
+        "benefit_1": "ملف مميز يتضمن صورًا ومقاطع فيديو",
+        "benefit_2": "حجز مواعيد إلكتروني متكامل",
+        "benefit_3": "مراسلة آمنة مع المرضى",
+        "benefit_4": "إحصاءات المشاهدات والنقرات",
+        "price_period": "/ شهريًا",
+        "contact": "تواصل معنا"
+      },
+      "hero_card": {
+        "verified_suffix": "موثّق من DHA",
+        "tomorrow_slot": "غدًا الساعة 2:30 مساءً",
+        "available": "متاح"
+      },
+      "stats": {
+        "doctors": "أطباء مرخصون من DHA",
+        "dentists": "أطباء أسنان",
+        "facilities": "منشآت طبية",
+        "booking": "حجز إلكتروني"
+      },
+      "footer": {
+        "specialties_link": "التخصصات"
+      }
     }
   },
   "search": {
@@ -155,7 +204,8 @@
     "sort_recent": "الأحدث",
     "loading": "جارٍ البحث…",
     "results_count_one": "تم العثور على طبيب واحد",
-    "results_count_other": "تم العثور على {count} طبيب"
+    "results_count_other": "تم العثور على {count} طبيب",
+    "results_for": "عن \"{query}\""
   },
   "pricing": {
     "title": "الأسعار",
@@ -346,7 +396,8 @@
       "your_response": "ردك",
       "response_placeholder": "اشكر المريض، اعرض مخاوفه…",
       "send_response": "إرسال الرد",
-      "anonymous": "مجهول"
+      "anonymous": "مجهول",
+      "reply_unavailable": "الرد على الآراء غير متاح حالياً — يرجى المحاولة لاحقاً."
     }
   },
   "footer": {
@@ -513,7 +564,13 @@
     "submit": "نشر",
     "close": "إغلاق",
     "no_reviews_yet": "لا توجد تقييمات بعد - كن أول من يقيّم",
-    "anonymous": "مريض"
+    "anonymous": "مريض",
+    "error_rating": "الرجاء اختيار تقييم.",
+    "error_text_short": "تعليقك قصير جدًا (10 أحرف على الأقل).",
+    "error_text_long": "تعليقك طويل جدًا (2000 حرف كحد أقصى).",
+    "error_generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "unavailable": "التقييمات غير متاحة بعد لهذا الملف الشخصي.",
+    "submitting": "جارٍ الإرسال..."
   },
   "dentist": {
     "book": "حجز موعد",
@@ -555,7 +612,61 @@
       "copy_button": "نسخ",
       "view": "عرض",
       "uae_location": "دبي، الإمارات العربية المتحدة",
-      "bio_template": "د. {name} هو/هي {specialty} مرخّص من هيئة الصحة بدبي ويمارس في {facility}، دبي، الإمارات العربية المتحدة. تم التحقق من الملف مباشرة عبر هيئة الصحة بدبي (Sheryan). خبرة في {specialty} مع تركيز على جودة رعاية الأسنان."
+      "bio_template": "د. {name} هو/هي {specialty} مرخّص من هيئة الصحة بدبي ويمارس في {facility}، دبي، الإمارات العربية المتحدة. تم التحقق من الملف مباشرة عبر هيئة الصحة بدبي (Sheryan). خبرة في {specialty} مع تركيز على جودة رعاية الأسنان.",
+      "stats_views_label": "👁️ المشاهدات (30 يومًا)",
+      "stats_contacts_label": "💬 تواصل عبر واتساب (30 يومًا)",
+      "stats_rating_label": "⭐ متوسط التقييم",
+      "stats_no_data": "لا توجد بيانات كافية بعد"
+    },
+    "listing": {
+      "popular_label": "شائع:",
+      "categories_subtitle": "اعثر على الأخصائي المناسب لكل احتياج سني.",
+      "practitioners_suffix": "ممارس",
+      "results_count_one": "نتيجة واحدة معروضة",
+      "results_count_other": "{count} نتيجة معروضة",
+      "view_all": "عرض الكل",
+      "no_results": "لا توجد نتائج. جرّب بحثًا آخر.",
+      "view_profile": "عرض الملف الشخصي",
+      "why_title": "لماذا FindMyDentist.ae؟",
+      "trust": {
+        "verified_title": "موثّق 100% من هيئة الصحة بدبي",
+        "verified_desc": "جميع الملفات الشخصية مستمدة من السجل الرسمي لهيئة الصحة بدبي (شريان).",
+        "emergency_title": "طوارئ على مدار الساعة",
+        "emergency_desc": "اعثر على طبيب أسنان متاح للطوارئ ليلاً ونهارًا.",
+        "reviews_title": "تقييمات مرضى موثّقة",
+        "reviews_desc": "يتم التحقق من جميع التقييمات بعد استشارة فعلية."
+      },
+      "cta": {
+        "badge": "لأطباء الأسنان",
+        "title": "فعّل ملفك الشخصي المميز",
+        "desc": "استقبل مرضى يبحثون عن تخصصك. سيرة ذاتية ثلاثية اللغة، صور، مواعيد العمل، وحجز مواعيد متكامل.",
+        "price_period": "/ شهريًا",
+        "contact": "تواصل معنا"
+      },
+      "hero_card": {
+        "verified_suffix": "موثّق من DHA"
+      },
+      "stats": {
+        "dentists": "أطباء أسنان مرخصون من DHA",
+        "doctors": "أطباء",
+        "clinics": "عيادات أسنان",
+        "emergency": "طوارئ الأسنان"
+      },
+      "specialties": {
+        "general": "طبيب أسنان عام",
+        "esthetic": "طب الأسنان التجميلي",
+        "implantology": "زراعة الأسنان",
+        "pedodontist": "طبيب أسنان أطفال",
+        "endodontist": "أخصائي علاج عصب الأسنان",
+        "surgeon": "جراح أسنان",
+        "periodontist": "أخصائي أمراض اللثة"
+      },
+      "footer": {
+        "tagline": "الدليل السني رقم 1 في دبي. بيانات رسمية من هيئة الصحة بدبي (شريان).",
+        "specialties_link": "تخصصات طب الأسنان",
+        "dentist_login": "تسجيل دخول طبيب الأسنان",
+        "copyright": "© 2026 FindMyDentist.ae · صُنع بحب ❤️ في الإمارات"
+      }
     }
   }
 }

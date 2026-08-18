@@ -131,7 +131,56 @@
       "rdv_with": "با",
       "msg_to": "به",
       "view": "مشاهده",
-      "uae_location": "دبی، امارات متحده عربی"
+      "uae_location": "دبی، امارات متحده عربی",
+      "stats_views_label": "👁️ بازدیدها (۳۰ روز)",
+      "stats_contacts_label": "💬 تماس‌های واتساپ (۳۰ روز)",
+      "stats_rating_label": "⭐ میانگین امتیاز",
+      "stats_no_data": "هنوز داده کافی وجود ندارد"
+    },
+    "listing": {
+      "popular_label": "محبوب:",
+      "categories_title": "جستجو بر اساس تخصص",
+      "categories_subtitle": "بیش از ۱۵٬۰۰۰ پزشک دارای مجوز DHA در تمام تخصص‌های پزشکی.",
+      "practitioners_suffix": "پزشک",
+      "no_results": "نتیجه‌ای یافت نشد. جستجوی دیگری را امتحان کنید.",
+      "view_profile": "مشاهده پروفایل",
+      "facilities_title": "مراکز درمانی برتر",
+      "facilities_subtitle": "بیمارستان‌ها و کلینیک‌های برتر دبی.",
+      "pros_suffix": "متخصص",
+      "why_title": "چرا FindMyDoctor.ae؟",
+      "trust": {
+        "verified_title": "۱۰۰٪ تأیید شده توسط DHA",
+        "verified_desc": "همه پروفایل‌ها از ثبت رسمی اداره سلامت دبی (شریان) استخراج شده‌اند.",
+        "response_title": "پاسخ در عرض ۲۴ ساعت",
+        "response_desc": "پزشکان ویژه در کمتر از ۲۴ ساعت به درخواست‌های نوبت شما پاسخ می‌دهند.",
+        "reviews_title": "نظرات تأیید شده بیماران",
+        "reviews_desc": "همه نظرات پس از یک ویزیت واقعی تأیید می‌شوند."
+      },
+      "cta": {
+        "badge": "برای پزشکان",
+        "title": "پروفایل ویژه خود را فعال کنید",
+        "desc": "بیمارانی که به دنبال تخصص شما هستند را دریافت کنید. بیوگرافی سه‌زبانه، عکس‌ها، ساعات کاری، رزرو نوبت یکپارچه.",
+        "benefit_1": "پروفایل ویژه با عکس و ویدیو",
+        "benefit_2": "رزرو آنلاین یکپارچه",
+        "benefit_3": "پیام‌رسانی امن با بیماران",
+        "benefit_4": "آمار بازدید و کلیک",
+        "price_period": "/ ماه",
+        "contact": "تماس با ما"
+      },
+      "hero_card": {
+        "verified_suffix": "تأیید شده DHA",
+        "tomorrow_slot": "فردا ساعت ۱۴:۳۰",
+        "available": "در دسترس"
+      },
+      "stats": {
+        "doctors": "پزشکان دارای مجوز DHA",
+        "dentists": "دندان‌پزشکان",
+        "facilities": "مراکز درمانی",
+        "booking": "رزرو آنلاین"
+      },
+      "footer": {
+        "specialties_link": "تخصص‌ها"
+      }
     }
   },
   "search": {
@@ -155,7 +204,8 @@
     "sort_recent": "جدیدترین",
     "loading": "در حال جستجو…",
     "results_count_one": "{count} پزشک پیدا شد",
-    "results_count_other": "{count} پزشک پیدا شد"
+    "results_count_other": "{count} پزشک پیدا شد",
+    "results_for": "برای \"{query}\""
   },
   "pricing": {
     "title": "قیمت‌ها",
@@ -346,7 +396,8 @@
       "your_response": "پاسخ شما",
       "response_placeholder": "از بیمار تشکر کنید، به نگرانی او رسیدگی کنید…",
       "send_response": "ارسال پاسخ",
-      "anonymous": "ناشناس"
+      "anonymous": "ناشناس",
+      "reply_unavailable": "پاسخ به نظرات هنوز در دسترس نیست — بعداً دوباره بررسی کنید."
     }
   },
   "footer": {
@@ -513,7 +564,13 @@
     "submit": "انتشار",
     "close": "بستن",
     "no_reviews_yet": "هنوز نظری ثبت نشده - اولین نفر باشید",
-    "anonymous": "بیمار"
+    "anonymous": "بیمار",
+    "error_rating": "لطفاً یک امتیاز انتخاب کنید.",
+    "error_text_short": "نظر شما خیلی کوتاه است (حداقل ۱۰ کاراکتر).",
+    "error_text_long": "نظر شما خیلی طولانی است (حداکثر ۲۰۰۰ کاراکتر).",
+    "error_generic": "خطایی رخ داد. لطفاً دوباره تلاش کنید.",
+    "unavailable": "نظرات هنوز برای این پروفایل در دسترس نیست.",
+    "submitting": "در حال ارسال..."
   },
   "dentist": {
     "book": "رزرو نوبت",
@@ -555,7 +612,61 @@
       "copy_button": "کپی",
       "view": "مشاهده",
       "uae_location": "دبی، امارات متحده عربی",
-      "bio_template": "دکتر {name} یک {specialty} دارای مجوز DHA است که در {facility}، دبی، امارات متحده عربی فعالیت می‌کند. پروفایل مستقیماً از طریق اداره بهداشت دبی (Sheryan) تأیید شده است. {specialty} با تجربه و متخصص در مراقبت با کیفیت دندان‌پزشکی."
+      "bio_template": "دکتر {name} یک {specialty} دارای مجوز DHA است که در {facility}، دبی، امارات متحده عربی فعالیت می‌کند. پروفایل مستقیماً از طریق اداره بهداشت دبی (Sheryan) تأیید شده است. {specialty} با تجربه و متخصص در مراقبت با کیفیت دندان‌پزشکی.",
+      "stats_views_label": "👁️ بازدیدها (۳۰ روز)",
+      "stats_contacts_label": "💬 تماس‌های واتساپ (۳۰ روز)",
+      "stats_rating_label": "⭐ میانگین امتیاز",
+      "stats_no_data": "هنوز داده کافی وجود ندارد"
+    },
+    "listing": {
+      "popular_label": "محبوب:",
+      "categories_subtitle": "برای هر نیاز دندانپزشکی، متخصص مناسب را پیدا کنید.",
+      "practitioners_suffix": "پزشک",
+      "results_count_one": "{count} نتیجه نمایش داده شد",
+      "results_count_other": "{count} نتیجه نمایش داده شد",
+      "view_all": "مشاهده همه",
+      "no_results": "نتیجه‌ای یافت نشد. جستجوی دیگری را امتحان کنید.",
+      "view_profile": "مشاهده پروفایل",
+      "why_title": "چرا FindMyDentist.ae؟",
+      "trust": {
+        "verified_title": "۱۰۰٪ تأیید شده توسط DHA",
+        "verified_desc": "همه پروفایل‌ها از ثبت رسمی اداره سلامت دبی (شریان) استخراج شده‌اند.",
+        "emergency_title": "اورژانس ۲۴ ساعته",
+        "emergency_desc": "دندان‌پزشکی که شبانه‌روز برای موارد اورژانسی در دسترس است پیدا کنید.",
+        "reviews_title": "نظرات تأیید شده بیماران",
+        "reviews_desc": "همه نظرات پس از یک ویزیت واقعی تأیید می‌شوند."
+      },
+      "cta": {
+        "badge": "برای دندان‌پزشکان",
+        "title": "پروفایل ویژه خود را فعال کنید",
+        "desc": "بیمارانی که به دنبال تخصص شما هستند را دریافت کنید. بیوگرافی سه‌زبانه، عکس‌ها، ساعات کاری، رزرو نوبت یکپارچه.",
+        "price_period": "/ ماه",
+        "contact": "تماس با ما"
+      },
+      "hero_card": {
+        "verified_suffix": "تأیید شده DHA"
+      },
+      "stats": {
+        "dentists": "دندان‌پزشکان دارای مجوز DHA",
+        "doctors": "پزشکان",
+        "clinics": "کلینیک‌های دندانپزشکی",
+        "emergency": "اورژانس دندانپزشکی"
+      },
+      "specialties": {
+        "general": "دندان‌پزشک عمومی",
+        "esthetic": "دندان‌پزشکی زیبایی",
+        "implantology": "ایمپلنتولوژی",
+        "pedodontist": "دندان‌پزشک کودکان",
+        "endodontist": "متخصص اندودانتیکس",
+        "surgeon": "جراح دندان",
+        "periodontist": "متخصص پریودانتیکس"
+      },
+      "footer": {
+        "tagline": "دایرکتوری شماره ۱ دندانپزشکی در دبی. داده‌های رسمی DHA (شریان).",
+        "specialties_link": "تخصص‌های دندانپزشکی",
+        "dentist_login": "ورود دندان‌پزشک",
+        "copyright": "© 2026 FindMyDentist.ae · ساخته شده با ❤️ در امارات"
+      }
     }
   }
 }

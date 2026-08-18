@@ -1,8 +1,9 @@
 /**
  * pages/dashboard/calendar.js
  * Doctor's appointment calendar. Lists upcoming + past appointments grouped by day.
- * Reads from dmd.appointments. If the table is empty (typical for new users),
- * shows a friendly empty state and a "blocked time" demo so the UI is verifiable.
+ * Reads from dmd.appointments via /api/dashboard/appointments, scoped to the
+ * logged-in professional and the visible month range. "Nouveau RDV" writes a
+ * real row via the same endpoint (previously this just faked a save).
  */
 import * as React from 'react';
 import Head from 'next/head';
@@ -64,6 +65,7 @@ export default function CalendarPage() {
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [appointments, setAppointments] = React.useState([]);
+  const [apptsLoading, setApptsLoading] = React.useState(false);
   const [cursor, setCursor] = React.useState(() => startOfDay(new Date()));
   const [showNew, setShowNew] = React.useState(false);
   const [filter, setFilter] = React.useState('all');
@@ -89,6 +91,22 @@ export default function CalendarPage() {
     x.setMonth(x.getMonth() + 1);
     return x;
   }, [monthStart]);
+
+  const fetchAppointments = React.useCallback(() => {
+    if (!user) return;
+    setApptsLoading(true);
+    const from = addDays(monthStart, -7).toISOString();
+    const to = addDays(monthEnd, 7).toISOString();
+    fetch(`/api/dashboard/appointments?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`)
+      .then((r) => (r.ok ? r.json() : { appointments: [] }))
+      .then((d) => setAppointments(Array.isArray(d.appointments) ? d.appointments : []))
+      .catch(() => setAppointments([]))
+      .finally(() => setApptsLoading(false));
+  }, [user, monthStart, monthEnd]);
+
+  React.useEffect(() => {
+    fetchAppointments();
+  }, [fetchAppointments]);
 
   const days = React.useMemo(() => {
     const startWeekday = (monthStart.getDay() + 6) % 7;
@@ -208,13 +226,19 @@ export default function CalendarPage() {
             <CardHeader>
               <CardTitle className="capitalize">{fmtDay(cursor)}</CardTitle>
               <CardDescription>
-                {dayAppointments.length === 0
+                {apptsLoading
+                  ? 'Chargement…'
+                  : dayAppointments.length === 0
                   ? 'Aucun rendez-vous ce jour.'
                   : `${dayAppointments.length} rendez-vous prévu${dayAppointments.length > 1 ? 's' : ''}.`}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {dayAppointments.length === 0 ? (
+              {apptsLoading ? (
+                <div className="text-center py-16 text-muted-foreground">
+                  <Loader2 className="h-8 w-8 mx-auto mb-4 animate-spin opacity-40" />
+                </div>
+              ) : dayAppointments.length === 0 ? (
                 <div className="text-center py-16 text-muted-foreground">
                   <CalendarDays className="h-16 w-16 mx-auto mb-4 opacity-30" />
                   <p className="text-sm">Aucun rendez-vous prévu ce jour.</p>
@@ -263,23 +287,52 @@ export default function CalendarPage() {
         </div>
       </div>
 
-      {showNew && <NewAppointmentModal onClose={() => setShowNew(false)} />}
+      {showNew && (
+        <NewAppointmentModal
+          onClose={() => setShowNew(false)}
+          onCreated={() => fetchAppointments()}
+        />
+      )}
     </div>
   );
 }
 
-function NewAppointmentModal({ onClose }) {
+function NewAppointmentModal({ onClose, onCreated }) {
   const [form, setForm] = React.useState({ name: '', phone: '', date: '', time: '', reason: '', language: 'Français', duration: 30 });
   const [saving, setSaving] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
+  const [error, setError] = React.useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     setSaving(true);
-    setTimeout(() => {
+    try {
+      const appointment_at = new Date(`${form.date}T${form.time}:00`).toISOString();
+      const r = await fetch('/api/dashboard/appointments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          patient_name: form.name,
+          patient_phone: form.phone || null,
+          appointment_at,
+          duration_min: form.duration,
+          reason: form.reason || null,
+          language: form.language,
+        }),
+      });
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}));
+        throw new Error(d.error || 'save_failed');
+      }
       setSaved(true);
+      onCreated();
       setTimeout(onClose, 1200);
-    }, 700);
+    } catch (err) {
+      setError("Impossible d'enregistrer le rendez-vous. Réessayez.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -297,10 +350,10 @@ function NewAppointmentModal({ onClose }) {
               <Check className="h-8 w-8 text-emerald-600" />
             </div>
             <p className="font-semibold">Rendez-vous créé !</p>
-            <p className="text-sm text-muted-foreground mt-1">Un email de confirmation sera envoyé.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-3">
+            {error && <p className="text-sm text-red-600">{error}</p>}
             <Input placeholder="Nom du patient" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
             <Input placeholder="Téléphone (+971 50 ...)" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             <div className="grid grid-cols-2 gap-2">
