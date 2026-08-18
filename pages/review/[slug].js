@@ -34,14 +34,15 @@ export async function getServerSideProps({ query, req, locale }) {
     const r = await pool.query(
       `SELECT p.id, p.name, p.specialty, p.facility_name,
               COALESCE(pr.is_dha_verified, false) as is_dha_verified,
-              pr.profile_picture_url,
-              pr.plan,
-              pr.bio_fr,
-              pr.phone,
+              COALESCE(u.photo_url, pr.profile_picture_url) AS profile_picture_url,
+              COALESCE(u.plan, pr.plan, 'free') AS plan,
+              COALESCE(u.bio_fr, pr.bio_fr) AS bio_fr,
+              COALESCE(u.phone, pr.phone) AS phone,
               pr.phone_source,
               pr.dha_unique_id
          FROM public.physicians p
          LEFT JOIN dmd.professional pr ON p.name = pr.full_name
+         LEFT JOIN dmd.users u ON u.dha_license = pr.dha_unique_id
         WHERE p.id = $1 LIMIT 1`,
       [parseInt(id, 10)]
     );
