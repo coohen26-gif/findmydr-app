@@ -22,8 +22,13 @@ async function getUserIdByProfessional(type, professionalId) {
   try {
     // public.physicians/dentists expose (id, name) but no DHA id.
     // DHA id lives in dmd.professional (PK = dha_unique_id).
+    // Attribution is DHA-license match ONLY. full_name_en/full_name_fr on
+    // dmd.users are freely user-editable and match the public listing name,
+    // so a name-based fallback would let any user impersonate a competitor's
+    // identity and silently harvest their view/click analytics (BUG-2).
+    // Do NOT reintroduce a name-match fallback here.
     const meta = await pool.query(
-      `SELECT p.name AS name, pr.dha_unique_id AS dha_unique_id
+      `SELECT pr.dha_unique_id AS dha_unique_id
          FROM ${table} p
          LEFT JOIN dmd.professional pr ON pr.full_name = p.name
         WHERE p.id = $1
@@ -31,16 +36,9 @@ async function getUserIdByProfessional(type, professionalId) {
       [professionalId]
     );
     if (!meta.rows[0]) return null;
-    const { name, dha_unique_id: dha } = meta.rows[0];
+    const { dha_unique_id: dha } = meta.rows[0];
     if (dha) {
       const u = await pool.query(`SELECT id FROM dmd.users WHERE dha_license = $1 LIMIT 1`, [String(dha).trim()]);
-      if (u.rows[0]) return u.rows[0].id;
-    }
-    if (name) {
-      const u = await pool.query(
-        `SELECT id FROM dmd.users WHERE full_name_en = $1 OR full_name_fr = $1 LIMIT 1`,
-        [name]
-      );
       if (u.rows[0]) return u.rows[0].id;
     }
     return null;
