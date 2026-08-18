@@ -203,8 +203,8 @@
     "sort_experience": "Most experienced",
     "sort_recent": "Most recent",
     "loading": "Searching…",
-    "results_count_one": "{count} doctor found",
-    "results_count_other": "{count} doctors found",
+    "results_count_one": "{{count}} doctor found",
+    "results_count_other": "{{count}} doctors found",
     "results_for": "for \"{query}\""
   },
   "pricing": {
@@ -625,8 +625,8 @@
       "popular_label": "Popular:",
       "categories_subtitle": "Find the right specialist for every dental need.",
       "practitioners_suffix": "practitioners",
-      "results_count_one": "{count} result shown",
-      "results_count_other": "{count} results shown",
+      "results_count_one": "{{count}} result shown",
+      "results_count_other": "{{count}} results shown",
       "view_all": "View all",
       "no_results": "No results. Try a different search.",
       "view_profile": "View profile",
@@ -669,7 +669,8 @@
         "specialties_link": "Dental specialties",
         "dentist_login": "Dentist login",
         "copyright": "© 2026 FindMyDentist.ae · Made with ❤️ in UAE"
-      }
+      },
+      "featured_title": "Featured dentists"
     }
   }
 }

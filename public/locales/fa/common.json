@@ -203,8 +203,8 @@
     "sort_experience": "باتجربه‌ترین",
     "sort_recent": "جدیدترین",
     "loading": "در حال جستجو…",
-    "results_count_one": "{count} پزشک پیدا شد",
-    "results_count_other": "{count} پزشک پیدا شد",
+    "results_count_one": "{{count}} پزشک پیدا شد",
+    "results_count_other": "{{count}} پزشک پیدا شد",
     "results_for": "برای \"{query}\""
   },
   "pricing": {
@@ -625,8 +625,8 @@
       "popular_label": "محبوب:",
       "categories_subtitle": "برای هر نیاز دندانپزشکی، متخصص مناسب را پیدا کنید.",
       "practitioners_suffix": "پزشک",
-      "results_count_one": "{count} نتیجه نمایش داده شد",
-      "results_count_other": "{count} نتیجه نمایش داده شد",
+      "results_count_one": "{{count}} نتیجه نمایش داده شد",
+      "results_count_other": "{{count}} نتیجه نمایش داده شد",
       "view_all": "مشاهده همه",
       "no_results": "نتیجه‌ای یافت نشد. جستجوی دیگری را امتحان کنید.",
       "view_profile": "مشاهده پروفایل",
@@ -669,7 +669,8 @@
         "specialties_link": "تخصص‌های دندانپزشکی",
         "dentist_login": "ورود دندان‌پزشک",
         "copyright": "© 2026 FindMyDentist.ae · ساخته شده با ❤️ در امارات"
-      }
+      },
+      "featured_title": "دندانپزشکان برگزیده"
     }
   }
 }

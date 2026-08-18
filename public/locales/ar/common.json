@@ -204,7 +204,7 @@
     "sort_recent": "الأحدث",
     "loading": "جارٍ البحث…",
     "results_count_one": "تم العثور على طبيب واحد",
-    "results_count_other": "تم العثور على {count} طبيب",
+    "results_count_other": "تم العثور على {{count}} طبيب",
     "results_for": "عن \"{query}\""
   },
   "pricing": {
@@ -626,7 +626,7 @@
       "categories_subtitle": "اعثر على الأخصائي المناسب لكل احتياج سني.",
       "practitioners_suffix": "ممارس",
       "results_count_one": "نتيجة واحدة معروضة",
-      "results_count_other": "{count} نتيجة معروضة",
+      "results_count_other": "{{count}} نتيجة معروضة",
       "view_all": "عرض الكل",
       "no_results": "لا توجد نتائج. جرّب بحثًا آخر.",
       "view_profile": "عرض الملف الشخصي",
@@ -669,7 +669,8 @@
         "specialties_link": "تخصصات طب الأسنان",
         "dentist_login": "تسجيل دخول طبيب الأسنان",
         "copyright": "© 2026 FindMyDentist.ae · صُنع بحب ❤️ في الإمارات"
-      }
+      },
+      "featured_title": "أطباء أسنان مميزون"
     }
   }
 }

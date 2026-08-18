@@ -203,8 +203,8 @@
     "sort_experience": "Plus d'expérience",
     "sort_recent": "Plus récents",
     "loading": "Recherche en cours…",
-    "results_count_one": "{count} médecin trouvé",
-    "results_count_other": "{count} médecins trouvés",
+    "results_count_one": "{{count}} médecin trouvé",
+    "results_count_other": "{{count}} médecins trouvés",
     "results_for": "pour \"{query}\""
   },
   "pricing": {
@@ -625,8 +625,8 @@
       "popular_label": "Populaire :",
       "categories_subtitle": "Trouvez le bon spécialiste pour chaque besoin dentaire.",
       "practitioners_suffix": "praticiens",
-      "results_count_one": "{count} résultat affiché",
-      "results_count_other": "{count} résultats affichés",
+      "results_count_one": "{{count}} résultat affiché",
+      "results_count_other": "{{count}} résultats affichés",
       "view_all": "Voir tous",
       "no_results": "Aucun résultat. Essayez une autre recherche.",
       "view_profile": "Voir le profil",
@@ -669,7 +669,8 @@
         "specialties_link": "Spécialités dentaires",
         "dentist_login": "Connexion dentiste",
         "copyright": "© 2026 FindMyDentist.ae · Made with ❤️ in UAE"
-      }
+      },
+      "featured_title": "Dentistes vedettes"
     }
   }
 }

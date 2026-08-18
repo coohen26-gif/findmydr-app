@@ -203,8 +203,8 @@
     "sort_experience": "По опыту",
     "sort_recent": "Сначала новые",
     "loading": "Поиск…",
-    "results_count_one": "Найден {count} врач",
-    "results_count_other": "Найдено {count} врачей",
+    "results_count_one": "Найден {{count}} врач",
+    "results_count_other": "Найдено {{count}} врачей",
     "results_for": "по запросу \"{query}\""
   },
   "pricing": {
@@ -625,8 +625,8 @@
       "popular_label": "Популярное:",
       "categories_subtitle": "Найдите нужного специалиста для любой стоматологической проблемы.",
       "practitioners_suffix": "специалистов",
-      "results_count_one": "Показан {count} результат",
-      "results_count_other": "Показано {count} результатов",
+      "results_count_one": "Показан {{count}} результат",
+      "results_count_other": "Показано {{count}} результатов",
       "view_all": "Смотреть все",
       "no_results": "Результатов нет. Попробуйте другой запрос.",
       "view_profile": "Смотреть профиль",
@@ -669,7 +669,8 @@
         "specialties_link": "Стоматологические специальности",
         "dentist_login": "Вход для стоматологов",
         "copyright": "© 2026 FindMyDentist.ae · Сделано с ❤️ в ОАЭ"
-      }
+      },
+      "featured_title": "Рекомендуемые стоматологи"
     }
   }
 }

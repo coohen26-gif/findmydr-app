@@ -203,8 +203,8 @@
     "sort_experience": "经验丰富",
     "sort_recent": "最新",
     "loading": "搜索中…",
-    "results_count_one": "找到 {count} 位医生",
-    "results_count_other": "找到 {count} 位医生",
+    "results_count_one": "找到 {{count}} 位医生",
+    "results_count_other": "找到 {{count}} 位医生",
     "results_for": "关于 \"{query}\""
   },
   "pricing": {
@@ -625,8 +625,8 @@
       "popular_label": "热门：",
       "categories_subtitle": "为每一种牙科需求找到合适的专科医生。",
       "practitioners_suffix": "位医生",
-      "results_count_one": "显示 {count} 条结果",
-      "results_count_other": "显示 {count} 条结果",
+      "results_count_one": "显示 {{count}} 条结果",
+      "results_count_other": "显示 {{count}} 条结果",
       "view_all": "查看全部",
       "no_results": "没有结果，请尝试其他搜索。",
       "view_profile": "查看资料",
@@ -669,7 +669,8 @@
         "specialties_link": "牙科专科",
         "dentist_login": "牙医登录",
         "copyright": "© 2026 FindMyDentist.ae · 阿联酋 ❤️ 制造"
-      }
+      },
+      "featured_title": "精选牙医"
     }
   }
 }

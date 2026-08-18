@@ -92,7 +92,7 @@ export default function Home() {
         <link rel="alternate" hrefLang="x-default" href={`https://findmydr.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
       </Head>
 
-      <SiteHeader />
+      <SiteHeader isDentist={false} />
 
       <section className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-cyan-50">
         <div className="absolute inset-0 opacity-30 pointer-events-none">

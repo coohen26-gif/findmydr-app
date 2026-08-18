@@ -20,10 +20,12 @@ import { breadcrumbJsonLd, pageUrl } from '../../lib/seo';
 export async function getServerSideProps({ query, req, locale }) {
   const { slug } = query;
   const id = slug ? String(slug).split('-').pop() : null;
+  const isDentist = (req.headers.host || '').includes('findmydentist');
   if (!id || !/^\d+$/.test(id)) {
     return {
       props: {
         pro: null,
+        isDentist,
         baseUrl: pageUrl(req.headers.host, '/'),
         ...(await serverSideTranslations(locale, ['common'])),
       },
@@ -92,6 +94,7 @@ export async function getServerSideProps({ query, req, locale }) {
         avgRating,
         totalReviews,
         ratingDistribution,
+        isDentist,
         baseUrl: pageUrl(req.headers.host, '/'),
         ...(await serverSideTranslations(locale, ['common'])),
       },
@@ -105,6 +108,7 @@ export async function getServerSideProps({ query, req, locale }) {
         avgRating: 0,
         totalReviews: 0,
         ratingDistribution: [5, 4, 3, 2, 1].map((stars) => ({ stars, count: 0, pct: 0 })),
+        isDentist,
         baseUrl: pageUrl(req.headers.host, '/'),
         ...(await serverSideTranslations(locale, ['common'])),
       },
@@ -112,7 +116,7 @@ export async function getServerSideProps({ query, req, locale }) {
   }
 }
 
-export default function ReviewPage({ pro, reviews, avgRating, totalReviews, ratingDistribution, baseUrl }) {
+export default function ReviewPage({ pro, reviews, avgRating, totalReviews, ratingDistribution, baseUrl, isDentist }) {
   const { t, i18n } = useTranslation('common');
   const localePrefix = `/${i18n.language || 'en'}`;
   const [showForm, setShowForm] = useState(false);
@@ -127,7 +131,7 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
   if (!pro) {
     return (
       <div className="min-h-screen bg-white">
-        <SiteHeader />
+        <SiteHeader isDentist={isDentist} />
         <div className="container-wide py-32 text-center">
           <div className="text-6xl mb-4">:(</div>
           <h1 className="text-3xl font-extrabold mb-4">{t('doctor.not_found')}</h1>
@@ -241,7 +245,7 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
         />
       </Head>
 
-      <SiteHeader />
+      <SiteHeader isDentist={isDentist} />
 
       <div className="bg-gradient-to-br from-amber-50 via-white to-cyan-50 border-b border-border">
         <div className="container-wide py-8">

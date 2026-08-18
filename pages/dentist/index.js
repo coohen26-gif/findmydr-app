@@ -68,7 +68,7 @@ export default function DentistHome() {
         <link rel="alternate" hrefLang="x-default" href={`https://findmydentist.ae/en${router.asPath.replace(/^\/(fr|en|ar)/, '')}`} />
       </Head>
 
-      <SiteHeader />
+      <SiteHeader isDentist={true} />
 
       {/* HERO */}
       <section className="relative overflow-hidden bg-gradient-to-br from-cyan-50 via-white to-emerald-50">
@@ -191,7 +191,7 @@ export default function DentistHome() {
         <div className="container-wide">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <h2 className="text-3xl md:text-4xl font-extrabold mb-2">{t('home.featured.title')}</h2>
+              <h2 className="text-3xl md:text-4xl font-extrabold mb-2">{t('dentist.listing.featured_title')}</h2>
               <p className="text-muted-foreground">
                 {loading ? `⏳ ${t('common.loading', 'Chargement…')}` : t('dentist.listing.results_count', { count: dentists.length })}
               </p>

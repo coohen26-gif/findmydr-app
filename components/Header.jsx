@@ -174,7 +174,6 @@ function LangSelector() {
         aria-label={t("nav.change_language")}
       >
         <Globe className="h-4 w-4" />
-        <span className="text-base leading-none">{current.flag}</span>
         <span className="text-xs font-semibold">{current.short}</span>
       </button>
       {open && (
@@ -218,12 +217,25 @@ export function SiteHeader({ user = null, currentPath = '/', isDentist }) {
       <div className="container-wide flex h-16 items-center justify-between">
         <Logo isDentist={isDentist} />
         <nav className="hidden md:flex items-center gap-1">
-          <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', currentPath === '/' ? 'text-primary' : 'text-muted-foreground')}>
-            {t('nav.doctors')}
-          </Link>
-          <a href="https://findmydentist.ae/" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-            {t('nav.dentists')}
-          </a>
+          {isDentist ? (
+            <>
+              <a href="https://findmydr.ae/" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                {t('nav.doctors')}
+              </a>
+              <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', currentPath === '/' ? 'text-primary' : 'text-muted-foreground')}>
+                {t('nav.dentists')}
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', currentPath === '/' ? 'text-primary' : 'text-muted-foreground')}>
+                {t('nav.doctors')}
+              </Link>
+              <a href="https://findmydentist.ae/" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                {t('nav.dentists')}
+              </a>
+            </>
+          )}
           <Link href="/pricing" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', currentPath === '/pricing' ? 'text-primary' : 'text-muted-foreground')}>
             {t('nav.pricing')}
           </Link>
@@ -278,8 +290,17 @@ export function SiteHeader({ user = null, currentPath = '/', isDentist }) {
               </button>
             </div>
             <nav className="flex-1 p-4 space-y-1">
-              <Link href="/" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-md text-sm font-medium hover:bg-muted">{t('nav.doctors')}</Link>
-              <a href="https://findmydentist.ae/" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-md text-sm font-medium hover:bg-muted">{t('nav.dentists')}</a>
+              {isDentist ? (
+                <>
+                  <a href="https://findmydr.ae/" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-md text-sm font-medium hover:bg-muted">{t('nav.doctors')}</a>
+                  <Link href="/" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-md text-sm font-medium hover:bg-muted">{t('nav.dentists')}</Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-md text-sm font-medium hover:bg-muted">{t('nav.doctors')}</Link>
+                  <a href="https://findmydentist.ae/" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-md text-sm font-medium hover:bg-muted">{t('nav.dentists')}</a>
+                </>
+              )}
               <Link href="/pricing" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-md text-sm font-medium hover:bg-muted">{t('nav.pricing')}</Link>
               <Link href="/about" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-md text-sm font-medium hover:bg-muted">{t('nav.about')}</Link>
               <Link href="/contact" onClick={() => setOpen(false)} className="block px-3 py-2.5 rounded-md text-sm font-medium hover:bg-muted">{t('nav.contact')}</Link>

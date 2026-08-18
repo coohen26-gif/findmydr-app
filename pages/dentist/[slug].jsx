@@ -96,7 +96,7 @@ export default function DentistProfile({ pro, related, stats, baseUrl }) {
   if (!pro) {
     return (
       <div className="min-h-screen bg-white">
-        <SiteHeader />
+        <SiteHeader isDentist={true} />
         <div className="container-wide py-32 text-center">
           <div className="text-6xl mb-4">😕</div>
           <h1 className="text-3xl font-extrabold mb-4">{t('dentist.not_found', 'Dentiste introuvable')}</h1>
@@ -116,7 +116,7 @@ export default function DentistProfile({ pro, related, stats, baseUrl }) {
   const phone = pro.phone || null;
   const waPhone = phone ? String(phone).replace(/[^0-9]/g, '') : null;
 
-  const title = pageTitle(`${fullName} - Dentiste ${specialty} Dubai`);
+  const title = pageTitle(`${fullName} - Dentiste ${specialty} Dubai`, true);
   const description = pageDescription(
     `${fullName}, ${specialty} DHA-licensé${pro.name?.endsWith('a') ? 'e' : ''} à ${facility}, Dubai. `
     + `Profil vérifié, prise de RDV, blanchiment, esthétique dentaire. Annuaire FindMyDentist.ae.`
@@ -196,7 +196,7 @@ export default function DentistProfile({ pro, related, stats, baseUrl }) {
         )}
       </Head>
 
-      <SiteHeader />
+      <SiteHeader isDentist={true} />
 
       <div className="container-wide pt-6">
         <nav className="flex items-center gap-2 text-sm text-muted-foreground">

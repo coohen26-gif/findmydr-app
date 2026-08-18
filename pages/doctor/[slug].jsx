@@ -113,7 +113,7 @@ export default function DoctorProfile({ pro, related, reviews, stats, baseUrl })
   if (!pro) {
     return (
       <div className="min-h-screen bg-white">
-        <SiteHeader />
+        <SiteHeader isDentist={false} />
         <div className="container-wide py-32 text-center">
           <div className="text-6xl mb-4">😕</div>
           <h1 className="text-3xl font-extrabold mb-4">{t('doctor.not_found')}</h1>
@@ -213,7 +213,7 @@ export default function DoctorProfile({ pro, related, reviews, stats, baseUrl })
         )}
       </Head>
 
-      <SiteHeader />
+      <SiteHeader isDentist={false} />
 
       <div className="container-wide pt-6">
         <nav className="flex items-center gap-2 text-sm text-muted-foreground">
