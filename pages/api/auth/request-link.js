@@ -52,6 +52,8 @@ export default async function handler(req, res) {
   if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
     return res.status(400).json({ error: 'Invalid email' });
   }
+  const dhaLicense = dha_license ? String(dha_license).trim() : null;
+
   if (!(await checkRateLimit(email))) {
     return res.status(429).json({ error: 'Too many requests. Try again in 1 hour.' });
   }
@@ -63,11 +65,45 @@ export default async function handler(req, res) {
     let userId;
     const userCheck = await pool.query('SELECT id FROM dmd.users WHERE email = $1', [email.toLowerCase()]);
     if (userCheck.rows.length === 0) {
-      const newUser = await pool.query(
-        `INSERT INTO dmd.users(email, dha_license, created_at, last_login_at)
-         VALUES($1, $2, NOW(), NOW()) RETURNING id`,
-        [email.toLowerCase(), dha_license || null]
-      );
+      // New account. If a DHA license is being claimed, make sure it isn't
+      // already linked to a different existing account before creating the
+      // row. Without this, anyone can type in any doctor's public DHA
+      // license number and "become" that professional in the system.
+      // NOTE: this is a claim-uniqueness check, not identity verification —
+      // there is no DHA API / SMS-OTP integration in this codebase to prove
+      // the signer-upper actually holds the license. `is_verified_pro`
+      // stays false for every claim made through this flow.
+      if (dhaLicense) {
+        const claimCheck = await pool.query(
+          'SELECT id FROM dmd.users WHERE dha_license = $1 LIMIT 1',
+          [dhaLicense]
+        );
+        if (claimCheck.rows.length > 0) {
+          return res.status(409).json({
+            error: 'This DHA license is already linked to another account. If this is your license, contact support.',
+          });
+        }
+      }
+
+      let newUser;
+      try {
+        newUser = await pool.query(
+          `INSERT INTO dmd.users(email, dha_license, is_verified_pro, created_at, last_login_at)
+           VALUES($1, $2, false, NOW(), NOW()) RETURNING id`,
+          [email.toLowerCase(), dhaLicense]
+        );
+      } catch (insertErr) {
+        // Backstop for the race where two concurrent signups both pass the
+        // claimCheck SELECT above before either INSERT commits. The partial
+        // unique index dmd.users_dha_license_unique catches it at the DB
+        // level; surface that as the same clean 409 instead of a raw 500.
+        if (insertErr.code === '23505' && insertErr.constraint === 'users_dha_license_unique') {
+          return res.status(409).json({
+            error: 'This DHA license is already linked to another account. If this is your license, contact support.',
+          });
+        }
+        throw insertErr;
+      }
       userId = newUser.rows[0].id;
     } else {
       userId = userCheck.rows[0].id;
