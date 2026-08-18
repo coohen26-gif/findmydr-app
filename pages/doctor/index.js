@@ -111,7 +111,7 @@ export default function Home() {
               <p className="text-lg md:text-xl text-muted-foreground text-pretty max-w-xl">
                 {t('hero.subtitle')}
               </p>
-              <SearchBar placeholder={t('nav.search_placeholder')} size="lg" onSearch={handleSearch} />
+              <SearchBar placeholder={t('nav.search_placeholder')} size="lg" value={search} onSearch={handleSearch} />
               <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                 <span>{t('doctor.listing.popular_label', 'Populaire :')}</span>
                 {['Cardiology', 'Pediatrics', 'Obstetrics', 'Dermatology'].map(s => (

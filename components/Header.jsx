@@ -76,9 +76,15 @@ export function Logo({ size = 'md', isDentist }) {
   );
 }
 
-export function SearchBar({ placeholder = 'Médecin, spécialité, clinique…', className, size = 'md', onSearch }) {
+export function SearchBar({ placeholder = 'Médecin, spécialité, clinique…', className, size = 'md', onSearch, value }) {
   const { t } = useTranslation('common');
-  const [q, setQ] = useState('');
+  const [q, setQ] = useState(value ?? '');
+  // Stay in sync with an externally-controlled value (e.g. a page deriving
+  // the current query from the URL) without breaking callers that never
+  // pass `value` at all - those keep the original fully-uncontrolled behavior.
+  useEffect(() => {
+    if (value !== undefined) setQ(value);
+  }, [value]);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (onSearch) onSearch(q);
@@ -200,8 +206,40 @@ function LangSelector() {
   );
 }
 
+// Desktop "logged in" affordance: turns the previously-dead "My account"
+// button into a small dropdown with a working logout action, reusing the
+// same open/click-outside pattern as LangSelector above.
+function UserMenu({ t, onLogout }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      <Button variant="outline" size="sm" onClick={() => setOpen(!open)}>
+        {t('nav.my_account')}
+      </Button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 top-full mt-1.5 w-44 rounded-lg border border-border bg-white shadow-xl z-20 py-1.5">
+            <button
+              onClick={() => {
+                setOpen(false);
+                onLogout();
+              }}
+              className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
+            >
+              {t('nav.logout')}
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export function SiteHeader({ user = null, currentPath = '/', isDentist }) {
   const { t } = useTranslation('common');
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (open) {
@@ -211,6 +249,16 @@ export function SiteHeader({ user = null, currentPath = '/', isDentist }) {
     }
     return () => { document.body.style.overflow = ''; };
   }, [open]);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (e) {
+      // Ignore network errors - still redirect to login below so the user
+      // isn't stuck on a page that thinks they're logged in.
+    }
+    router.push('/dashboard/login');
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-white/80 backdrop-blur-xl">
@@ -252,7 +300,7 @@ export function SiteHeader({ user = null, currentPath = '/', isDentist }) {
         <div className="hidden md:flex items-center gap-1">
           <LangSelector />
           {user ? (
-            <Button variant="outline" size="sm">{t('nav.my_account')}</Button>
+            <UserMenu t={t} onLogout={handleLogout} />
           ) : (
             <>
               <Link href="/dashboard/login">
@@ -312,14 +360,30 @@ export function SiteHeader({ user = null, currentPath = '/', isDentist }) {
                 <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('nav.change_language')}</span>
                 <LangSelector />
               </div>
-              <div className="space-y-2">
-                <Link href="/dashboard/login" onClick={() => setOpen(false)}>
-                  <Button variant="outline" className="w-full min-h-[44px]">{t('nav.login')}</Button>
-                </Link>
-                <Link href="/dashboard/login" onClick={() => setOpen(false)}>
-                  <Button className="w-full min-h-[44px]">{t('nav.signup')}</Button>
-                </Link>
-              </div>
+              {user ? (
+                <div className="space-y-2">
+                  <div className="px-1 text-sm font-medium text-foreground truncate">{user.email || t('nav.my_account')}</div>
+                  <Button
+                    variant="outline"
+                    className="w-full min-h-[44px]"
+                    onClick={() => {
+                      setOpen(false);
+                      handleLogout();
+                    }}
+                  >
+                    {t('nav.logout')}
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <Link href="/dashboard/login" onClick={() => setOpen(false)}>
+                    <Button variant="outline" className="w-full min-h-[44px]">{t('nav.login')}</Button>
+                  </Link>
+                  <Link href="/dashboard/login" onClick={() => setOpen(false)}>
+                    <Button className="w-full min-h-[44px]">{t('nav.signup')}</Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </>
