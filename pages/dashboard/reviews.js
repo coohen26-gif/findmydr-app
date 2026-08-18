@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { ChevronLeft, Star, MessageSquare, X, Loader2, Clock } from 'lucide-react';
+import { ChevronLeft, Star, MessageSquare, X, Loader2, Clock, AlertCircle } from 'lucide-react';
 import { SiteHeader } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 import { Button } from '../../components/Button';
@@ -41,8 +41,12 @@ export default function ReviewsPage() {
 
   React.useEffect(() => {
     if (!user) return;
-    const id = user.dha_license || user.id;
-    if (!id) return;
+    // /api/reviews/[id]'s ?all=true branch requires user.dha_license to be
+    // truthy AND equal to the requested id — falling back to user.id here
+    // can never succeed and just produces a silent 403. Don't even attempt
+    // the fetch without a linked DHA license; show an onboarding state instead.
+    if (!user.dha_license) return;
+    const id = user.dha_license;
     let cancelled = false;
     fetch(`/api/reviews/${id}?all=true`)
       .then((r) => {
@@ -135,112 +139,127 @@ export default function ReviewsPage() {
         </Link>
         <h1 className="text-3xl md:text-4xl font-extrabold mb-8">{t('dashboard.reviews.title')}</h1>
 
-        <div className="grid sm:grid-cols-3 gap-4 mb-8">
-          <Card className="p-6">
-            <div className="text-sm text-muted-foreground">{t('dashboard.reviews.total')}</div>
-            <div className="text-3xl font-extrabold mt-2">{stats.total}</div>
-          </Card>
-          <Card className="p-6">
-            <div className="text-sm text-muted-foreground">{t('dashboard.reviews.avg_rating')}</div>
-            <div className="text-3xl font-extrabold mt-2 flex items-center gap-2">
-              {stats.avgRating} <Star className="h-5 w-5 text-amber-500 fill-current" />
-            </div>
-          </Card>
-          <Card className="p-6">
-            <div className="text-sm text-muted-foreground">{t('dashboard.reviews.pending_response')}</div>
-            <div className="text-3xl font-extrabold mt-2 flex items-center gap-2">
-              {stats.pending} <Clock className="h-5 w-5 text-amber-600" />
-            </div>
-          </Card>
-        </div>
-
-        <div className="flex gap-2 mb-6 flex-wrap">
-          {[
-            { key: 'all', label: t('dashboard.reviews.filter_all') },
-            { key: 'pending', label: t('dashboard.reviews.filter_pending') },
-            { key: 'responded', label: t('dashboard.reviews.filter_responded') },
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setFilter(tab.key)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === tab.key ? 'bg-primary text-white' : 'bg-white border text-foreground hover:bg-muted'}`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {!apiAvailable && (
-          <div className="mb-6 p-4 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-900">
-            <strong>API indisponible.</strong> Le endpoint <code>/api/reviews/*</code> n'est pas encore déployé. Cette page est un placeholder structurellement complet.
-          </div>
-        )}
-
-        {filtered.length === 0 ? (
+        {!user?.dha_license ? (
           <Card className="p-12 text-center">
-            <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">{t('dashboard.reviews.no_reviews')}</p>
+            <AlertCircle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
+            <h2 className="text-xl font-bold mb-2">Numéro DHA non renseigné</h2>
+            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+              Aucun numéro de licence DHA n'est encore associé à votre compte. Complétez votre profil pour accéder à la gestion de vos avis patients.
+            </p>
+            <Link href="/dashboard/profile">
+              <Button>Compléter mon profil</Button>
+            </Link>
           </Card>
         ) : (
-          <div className="space-y-4">
-            {filtered.map((review) => (
-              <Card key={review.id} className="p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map((s) => (
-                          <Star key={s} className={`h-4 w-4 ${s <= (review.rating || 0) ? 'text-amber-500 fill-current' : 'text-gray-300'}`} />
-                        ))}
-                      </div>
-                      <span className="text-sm text-muted-foreground">{review.created_at ? new Date(review.created_at).toLocaleDateString() : ''}</span>
-                    </div>
-                    <div className="font-semibold mb-1">{review.author_name || t('dashboard.reviews.anonymous')}</div>
-                    <p className="text-foreground/80 mb-3">{review.text}</p>
-                    {review.response_text && (
-                      <div className="mt-3 p-3 bg-primary/5 rounded-lg border-l-2 border-primary">
-                        <div className="text-xs font-semibold text-primary mb-1">{t('dashboard.reviews.your_response')}</div>
-                        <p className="text-sm">{review.response_text}</p>
-                      </div>
-                    )}
-                  </div>
-                  {!review.response_text && (
-                    <Button size="sm" variant="outline" onClick={() => openReply(review.id)}>
-                      {t('dashboard.reviews.respond')}
-                    </Button>
-                  )}
-                </div>
-                {respondingTo === review.id && (
-                  <div className="mt-4 pt-4 border-t">
-                    <textarea
-                      value={replyText}
-                      onChange={(e) => setReplyText(e.target.value)}
-                      maxLength={2000}
-                      rows={3}
-                      placeholder={t('dashboard.reviews.response_placeholder')}
-                      className="flex w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      disabled={replySubmitting}
-                    />
-                    {replyError && (
-                      <p className="text-sm text-red-600 mt-2">{replyError}</p>
-                    )}
-                    <div className="flex gap-2 mt-2">
-                      <Button
-                        size="sm"
-                        onClick={() => submitReply(review.id)}
-                        disabled={replySubmitting || !replyText.trim()}
-                      >
-                        {replySubmitting ? t('dashboard.reviews.sending') : t('dashboard.reviews.send_response')}
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => setRespondingTo(null)} disabled={replySubmitting}>
-                        {t('common.cancel')}
-                      </Button>
-                    </div>
-                  </div>
-                )}
+          <>
+            <div className="grid sm:grid-cols-3 gap-4 mb-8">
+              <Card className="p-6">
+                <div className="text-sm text-muted-foreground">{t('dashboard.reviews.total')}</div>
+                <div className="text-3xl font-extrabold mt-2">{stats.total}</div>
               </Card>
-            ))}
-          </div>
+              <Card className="p-6">
+                <div className="text-sm text-muted-foreground">{t('dashboard.reviews.avg_rating')}</div>
+                <div className="text-3xl font-extrabold mt-2 flex items-center gap-2">
+                  {stats.avgRating} <Star className="h-5 w-5 text-amber-500 fill-current" />
+                </div>
+              </Card>
+              <Card className="p-6">
+                <div className="text-sm text-muted-foreground">{t('dashboard.reviews.pending_response')}</div>
+                <div className="text-3xl font-extrabold mt-2 flex items-center gap-2">
+                  {stats.pending} <Clock className="h-5 w-5 text-amber-600" />
+                </div>
+              </Card>
+            </div>
+
+            <div className="flex gap-2 mb-6 flex-wrap">
+              {[
+                { key: 'all', label: t('dashboard.reviews.filter_all') },
+                { key: 'pending', label: t('dashboard.reviews.filter_pending') },
+                { key: 'responded', label: t('dashboard.reviews.filter_responded') },
+              ].map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setFilter(tab.key)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === tab.key ? 'bg-primary text-white' : 'bg-white border text-foreground hover:bg-muted'}`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {!apiAvailable && (
+              <div className="mb-6 p-4 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-900">
+                <strong>API indisponible.</strong> Le endpoint <code>/api/reviews/*</code> n'est pas encore déployé. Cette page est un placeholder structurellement complet.
+              </div>
+            )}
+
+            {filtered.length === 0 ? (
+              <Card className="p-12 text-center">
+                <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">{t('dashboard.reviews.no_reviews')}</p>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {filtered.map((review) => (
+                  <Card key={review.id} className="p-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="flex">
+                            {[1, 2, 3, 4, 5].map((s) => (
+                              <Star key={s} className={`h-4 w-4 ${s <= (review.rating || 0) ? 'text-amber-500 fill-current' : 'text-gray-300'}`} />
+                            ))}
+                          </div>
+                          <span className="text-sm text-muted-foreground">{review.created_at ? new Date(review.created_at).toLocaleDateString() : ''}</span>
+                        </div>
+                        <div className="font-semibold mb-1">{review.author_name || t('dashboard.reviews.anonymous')}</div>
+                        <p className="text-foreground/80 mb-3">{review.text}</p>
+                        {review.response_text && (
+                          <div className="mt-3 p-3 bg-primary/5 rounded-lg border-l-2 border-primary">
+                            <div className="text-xs font-semibold text-primary mb-1">{t('dashboard.reviews.your_response')}</div>
+                            <p className="text-sm">{review.response_text}</p>
+                          </div>
+                        )}
+                      </div>
+                      {!review.response_text && (
+                        <Button size="sm" variant="outline" onClick={() => openReply(review.id)}>
+                          {t('dashboard.reviews.respond')}
+                        </Button>
+                      )}
+                    </div>
+                    {respondingTo === review.id && (
+                      <div className="mt-4 pt-4 border-t">
+                        <textarea
+                          value={replyText}
+                          onChange={(e) => setReplyText(e.target.value)}
+                          maxLength={2000}
+                          rows={3}
+                          placeholder={t('dashboard.reviews.response_placeholder')}
+                          className="flex w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          disabled={replySubmitting}
+                        />
+                        {replyError && (
+                          <p className="text-sm text-red-600 mt-2">{replyError}</p>
+                        )}
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            size="sm"
+                            onClick={() => submitReply(review.id)}
+                            disabled={replySubmitting || !replyText.trim()}
+                          >
+                            {replySubmitting ? t('dashboard.reviews.sending') : t('dashboard.reviews.send_response')}
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => setRespondingTo(null)} disabled={replySubmitting}>
+                            {t('common.cancel')}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
       <Footer />

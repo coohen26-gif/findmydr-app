@@ -6,12 +6,26 @@
  */
 const { Pool } = require('pg');
 
+// lib/db.js already fixed this exact 'changeme' hardcode in 8 other files
+// (see its header comment) — this script was missed. No insecure fallback:
+// refuse to run rather than silently connecting with a default password.
+const PGUSER = process.env.PGUSER || 'findmydr';
+const PGPASSWORD = process.env.PGPASSWORD;
+const PGHOST = process.env.PGHOST || '127.0.0.1';
+const PGPORT = parseInt(process.env.PGPORT || '5432', 10);
+const PGDATABASE = process.env.PGDATABASE || 'findmydr';
+
+if (!PGPASSWORD) {
+  console.error('[seed_fees] PGPASSWORD env var is required — refusing to run with an insecure default.');
+  process.exit(1);
+}
+
 const pool = new Pool({
-  host: process.env.PGHOST || '127.0.0.1',
-  port: 5432,
-  user: 'findmydr',
-  password: process.env.PGPASSWORD || 'changeme',
-  database: 'findmydr',
+  host: PGHOST,
+  port: PGPORT,
+  user: PGUSER,
+  password: PGPASSWORD,
+  database: PGDATABASE,
 });
 
 async function main() {

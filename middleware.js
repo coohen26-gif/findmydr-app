@@ -101,6 +101,12 @@ export function middleware(request) {
   //    rewrite does not apply, these files provide a safe landing page instead of
   //    a 404 or a raw Next.js page not found.
   let rewritePath = null;
+  // Tracks whether the rewrite below actually consumed a legacy `?id=123`
+  // query string (converting it into a `/doctor/123` or `/dentist/123`
+  // path segment). Only in that specific case should `search` be dropped —
+  // every other slug-passthrough case must preserve the original query
+  // string (utm_*, ref, etc.) instead of stripping it unconditionally.
+  let legacyIdConsumed = false;
   if (pathWithoutLocale === '/' || pathWithoutLocale === '') {
     // Root: always rewritten to the domain's canonical home (/doctor for
     // findmydr.ae, /dentist for findmydentist.ae) for every host, including
@@ -121,6 +127,7 @@ export function middleware(request) {
         const id = new URLSearchParams(search).get('id');
         if (id && /^\d+$/.test(id)) {
           rewritePath = `/dentist/${id}`;
+          legacyIdConsumed = true;
         } else {
           rewritePath = pathWithoutLocale;
         }
@@ -136,6 +143,7 @@ export function middleware(request) {
         const id = new URLSearchParams(search).get('id');
         if (id && /^\d+$/.test(id)) {
           rewritePath = `/doctor/${id}`;
+          legacyIdConsumed = true;
         } else {
           rewritePath = pathWithoutLocale;
         }
@@ -151,7 +159,7 @@ export function middleware(request) {
 
   // 5) Pages Router rewrite to canonical path (locale resolved from URL prefix or NEXT_LOCALE)
   url.pathname = rewritePath;
-  if (rewritePath.startsWith('/dentist/') || rewritePath.startsWith('/doctor/')) {
+  if (legacyIdConsumed) {
     url.search = '';
   } else {
     url.search = search;

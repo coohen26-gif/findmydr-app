@@ -16,6 +16,12 @@ const KEYS = {
   'findmydentist.ae': 'b9c2d4e5f6a7b8c9d0e1f2a3b4c5d6e7',
 };
 const DEFAULT_HOST = 'findmydr.ae';
+const ALLOWED_URL_PREFIXES = ['https://findmydr.ae/', 'https://findmydentist.ae/'];
+// Shared secret gating the mutating POST (submits to IndexNow using this
+// site's key on behalf of whatever URLs are supplied). No codebase-wide
+// admin/cron-token convention exists yet (checked dashboard JWT middleware,
+// Stripe routes) so this introduces one; unset means POST is refused.
+const ADMIN_TOKEN = process.env.INDEXNOW_ADMIN_TOKEN;
 
 export default async function handler(req, res) {
   // Resolve host and key per request
@@ -35,12 +41,33 @@ export default async function handler(req, res) {
   ];
 
   if (req.method === 'POST') {
+    if (!ADMIN_TOKEN) {
+      return res.status(401).json({ error: 'Not authorized' });
+    }
+    const authHeader = req.headers.authorization || '';
+    const providedToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+    if (providedToken !== ADMIN_TOKEN) {
+      return res.status(401).json({ error: 'Not authorized' });
+    }
+
     const { urls = sampleUrls } = req.body || {};
+    if (!Array.isArray(urls)) {
+      return res.status(400).json({ error: 'urls must be an array' });
+    }
+    const validUrls = urls.filter(
+      (u) => typeof u === 'string' && ALLOWED_URL_PREFIXES.some((prefix) => u.startsWith(prefix))
+    );
+    if (validUrls.length === 0) {
+      return res.status(400).json({
+        error: 'No valid URLs supplied — each must start with https://findmydr.ae/ or https://findmydentist.ae/',
+      });
+    }
+
     const payload = {
       host: HOST,
       key: KEY,
       keyLocation: `https://${HOST}/${KEY}.txt`,
-      urlList: urls,
+      urlList: validUrls,
     };
 
     try {
@@ -52,7 +79,8 @@ export default async function handler(req, res) {
       const status = r.status;
       const text = await r.text();
       return res.status(200).json({
-        submitted: urls.length,
+        submitted: validUrls.length,
+        rejected: urls.length - validUrls.length,
         host: HOST,
         indexnow_status: status,
         indexnow_response: text,
