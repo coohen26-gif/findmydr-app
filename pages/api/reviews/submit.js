@@ -4,12 +4,55 @@
  * Body: { pro_dha_id, rating (1-5 int), text (10-2000 chars), author_name (optional), visit_date (optional) }
  * No auth required. Basic validation only (trim strings, bounds-check rating/text length,
  * confirm pro_dha_id exists in dmd.professional before insert).
+ *
+ * Rate limited by requester IP (DB-backed, dmd.rate_limits — same table/pattern as
+ * pages/api/auth/request-link.js). Reviews are lower-frequency than login attempts, so the
+ * limit is looser than the 5/hour used for magic links, but still tight enough to stop a
+ * script from spamming fake reviews for a professional: 5 submissions per IP per hour.
+ * Fails OPEN on DB errors so a rate-limit infra issue never blocks all submissions.
  */
 import pool from '../../../lib/db';
 
 const TEXT_MIN = 10;
 const TEXT_MAX = 2000;
 const NAME_MAX = 100;
+
+const RATE_LIMIT_WINDOW_SQL = '1 hour';
+const RATE_LIMIT_MAX = 5;
+
+function getClientIp(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  const ip = (typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : '') || req.socket.remoteAddress;
+  return ip || 'unknown';
+}
+
+async function checkRateLimit(ip) {
+  const key = `review:${ip}`;
+  try {
+    const { rows } = await pool.query(
+      `INSERT INTO dmd.rate_limits (key, attempts, window_start)
+       VALUES ($1, 1, now())
+       ON CONFLICT (key) DO UPDATE
+       SET
+         attempts = CASE
+           WHEN dmd.rate_limits.window_start <= now() - $2::interval THEN 1
+           ELSE dmd.rate_limits.attempts + 1
+         END,
+         window_start = CASE
+           WHEN dmd.rate_limits.window_start <= now() - $2::interval THEN now()
+           ELSE dmd.rate_limits.window_start
+         END
+       RETURNING attempts`,
+      [key, RATE_LIMIT_WINDOW_SQL]
+    );
+    const attempts = rows[0]?.attempts ?? 1;
+    return attempts <= RATE_LIMIT_MAX;
+  } catch (err) {
+    // Never let a rate-limit infra issue block all review submissions: fail open.
+    console.error('checkRateLimit error (failing open):', err);
+    return true;
+  }
+}
 
 function readJsonBody(req) {
   return new Promise((resolve) => {
@@ -25,6 +68,11 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const ip = getClientIp(req);
+  if (!(await checkRateLimit(ip))) {
+    return res.status(429).json({ error: 'Too many reviews submitted from this network. Please try again in an hour.' });
   }
 
   let body;

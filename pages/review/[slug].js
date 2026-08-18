@@ -5,12 +5,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { ChevronLeft, Star, ShieldCheck, Check, X } from 'lucide-react';
+import { ChevronLeft, Star, Check, X } from 'lucide-react';
 import { SiteHeader } from '../../components/Header';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Avatar } from '../../components/Avatar';
-import { Badge } from '../../components/Badge';
 import { DhaBadge } from '../../components/DhaBadge';
 import { ReviewCard } from '../../components/ReviewCard';
 import { WhatsAppButton } from '../../components/WhatsAppButton';
@@ -274,7 +273,6 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
                   </div>
                   <span className="text-muted-foreground">-</span>
                   <span className="text-sm font-semibold">{totalReviews} {t('review.count_label', 'avis')}</span>
-                  <Badge variant="success" className="ml-2"><ShieldCheck className="h-3 w-3 mr-1" />{t('review.verified_label', 'Avis verifies')}</Badge>
                 </div>
               ) : (
                 <div className="flex items-center gap-3 flex-wrap">
@@ -329,10 +327,6 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
               </li>
               <li className="flex items-start gap-2">
                 <Check className="h-4 w-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                <span>{t('review.trust_2', 'Verification email + consultation confirmee = badge verifie.')}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="h-4 w-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                 <span>{t('review.trust_3', 'Les medecins peuvent repondre publiquement a chaque avis.')}</span>
               </li>
             </ul>
@@ -353,21 +347,15 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
             <>
               <div className="space-y-4">
                 {reviews.map((r) => (
-                  <div key={r.id} className="relative">
-                    <ReviewCard
-                      name={r.author_name || t('review.anonymous', 'Patient')}
-                      rating={r.rating}
-                      text={r.text}
-                      date={(r.visit_date || r.created_at || '').toString().slice(0, 10)}
-                      responseText={r.response_text}
-                      responseAt={(r.response_at || '').toString().slice(0, 10)}
-                    />
-                    {r.verified && (
-                      <Badge variant="success" className="absolute top-3 right-3 text-[10px]">
-                        <Check className="h-2.5 w-2.5 mr-0.5" />{t('review.verified_short', 'Verifie')}
-                      </Badge>
-                    )}
-                  </div>
+                  <ReviewCard
+                    key={r.id}
+                    name={r.author_name || t('review.anonymous', 'Patient')}
+                    rating={r.rating}
+                    text={r.text}
+                    date={(r.visit_date || r.created_at || '').toString().slice(0, 10)}
+                    responseText={r.response_text}
+                    responseAt={(r.response_at || '').toString().slice(0, 10)}
+                  />
                 ))}
               </div>
               {reviews.length >= 20 && (
@@ -400,7 +388,7 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
                   <Check className="h-8 w-8 text-emerald-600" />
                 </div>
                 <h3 className="text-lg font-bold mb-1">{t('review.thanks_title', 'Merci pour votre avis !')}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{t('review.thanks_body', 'Votre avis sera publie apres verification (sous 24h).')}</p>
+                <p className="text-sm text-muted-foreground mb-4">{t('review.thanks_body', 'Votre avis est maintenant publie sur le profil.')}</p>
                 <Button variant="outline" onClick={() => { setShowForm(false); setSubmitted(false); setFormError(''); setFormText(''); setFormName(''); setFormRating(5); }}>{t('review.close', 'Fermer')}</Button>
               </div>
             ) : (

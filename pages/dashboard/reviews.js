@@ -4,21 +4,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { ChevronLeft, Star, MessageSquare, Check, X, Loader2, Clock, ShieldCheck } from 'lucide-react';
+import { ChevronLeft, Star, MessageSquare, X, Loader2, Clock } from 'lucide-react';
 import { SiteHeader } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 import { Button } from '../../components/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/Card';
 import { Badge } from '../../components/Badge';
-
-function VerifiedReviewBadge() {
-  return (
-    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5">
-      <ShieldCheck className="h-3 w-3" />
-      Verified
-    </span>
-  );
-}
 
 export default function ReviewsPage() {
   const { t } = useTranslation('common');
@@ -109,10 +100,13 @@ export default function ReviewsPage() {
     }
   };
 
+  // NOTE: there is currently no mechanism anywhere in this codebase that ever marks a review
+  // as "verified" (the DB column is always inserted as false and nothing ever updates it), so
+  // filtering/displaying by that flag would silently show nothing. "Pending" here means
+  // "awaiting a professional's response", independent of that dead flag.
   const filtered = reviews.filter((r) => {
-    if (filter === 'verified') return r.verified;
     if (filter === 'responded') return r.response_text;
-    if (filter === 'pending') return r.verified && !r.response_text;
+    if (filter === 'pending') return !r.response_text;
     return true;
   });
 
@@ -126,9 +120,8 @@ export default function ReviewsPage() {
 
   const stats = {
     total: reviews.length,
-    verified: reviews.filter((r) => r.verified).length,
     avgRating: reviews.length ? (reviews.reduce((s, r) => s + (r.rating || 0), 0) / reviews.length).toFixed(1) : '0.0',
-    pending: reviews.filter((r) => r.verified && !r.response_text).length,
+    pending: reviews.filter((r) => !r.response_text).length,
   };
 
   return (
@@ -142,16 +135,10 @@ export default function ReviewsPage() {
         </Link>
         <h1 className="text-3xl md:text-4xl font-extrabold mb-8">{t('dashboard.reviews.title')}</h1>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid sm:grid-cols-3 gap-4 mb-8">
           <Card className="p-6">
             <div className="text-sm text-muted-foreground">{t('dashboard.reviews.total')}</div>
             <div className="text-3xl font-extrabold mt-2">{stats.total}</div>
-          </Card>
-          <Card className="p-6">
-            <div className="text-sm text-muted-foreground">{t('dashboard.reviews.verified')}</div>
-            <div className="text-3xl font-extrabold mt-2 flex items-center gap-2">
-              {stats.verified} <Check className="h-5 w-5 text-emerald-600" />
-            </div>
           </Card>
           <Card className="p-6">
             <div className="text-sm text-muted-foreground">{t('dashboard.reviews.avg_rating')}</div>
@@ -170,7 +157,6 @@ export default function ReviewsPage() {
         <div className="flex gap-2 mb-6 flex-wrap">
           {[
             { key: 'all', label: t('dashboard.reviews.filter_all') },
-            { key: 'verified', label: t('dashboard.reviews.filter_verified') },
             { key: 'pending', label: t('dashboard.reviews.filter_pending') },
             { key: 'responded', label: t('dashboard.reviews.filter_responded') },
           ].map((tab) => (
@@ -207,7 +193,6 @@ export default function ReviewsPage() {
                           <Star key={s} className={`h-4 w-4 ${s <= (review.rating || 0) ? 'text-amber-500 fill-current' : 'text-gray-300'}`} />
                         ))}
                       </div>
-                      {review.verified && <VerifiedReviewBadge />}
                       <span className="text-sm text-muted-foreground">{review.created_at ? new Date(review.created_at).toLocaleDateString() : ''}</span>
                     </div>
                     <div className="font-semibold mb-1">{review.author_name || t('dashboard.reviews.anonymous')}</div>
