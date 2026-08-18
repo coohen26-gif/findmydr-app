@@ -4,7 +4,8 @@ import { Star } from 'lucide-react';
 import { Avatar } from './Avatar';
 import { Card } from './Card';
 
-export function ReviewCard({ name, rating, text, date }) {
+export function ReviewCard({ name, rating, text, date, responseText, responseAt }) {
+  const { t } = useTranslation('common');
   return (
     <div className="border border-border rounded-xl p-5 bg-white">
       <div className="flex items-center gap-3 mb-3">
@@ -20,6 +21,15 @@ export function ReviewCard({ name, rating, text, date }) {
         <span className="text-xs text-muted-foreground">{date}</span>
       </div>
       <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
+      {responseText && (
+        <div className="mt-3 pl-3 py-2 border-l-2 border-primary/40 bg-primary/5 rounded-r-lg">
+          <div className="text-xs font-bold text-primary mb-1">
+            {t('review.practitioner_reply', 'Réponse du praticien')}
+            {responseAt && <span className="font-normal text-muted-foreground"> · {responseAt}</span>}
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed">{responseText}</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -43,6 +53,8 @@ export function ReviewsSection({ className, reviews = [], reviewUrl }) {
               rating={r.rating}
               text={r.text}
               date={(r.visit_date || r.created_at || '').toString().slice(0, 10)}
+              responseText={r.response_text}
+              responseAt={(r.response_at || '').toString().slice(0, 10)}
             />
           ))}
         </div>

@@ -10,9 +10,8 @@
  * being requested — used by /dashboard/reviews to list a professional's own
  * reviews for management.
  *
- * Note: dmd.reviews has no response_text/response_at column yet, so replies
- * are not persisted or returned here. See /dashboard/reviews for the
- * user-facing "coming soon" state on the reply feature.
+ * Includes response_text/response_at so callers (dashboard + public pages)
+ * can render a professional's reply to a review, when present.
  */
 import pool from '../../../lib/db';
 import { getUserFromCookie } from '../dashboard/middleware';
@@ -38,7 +37,8 @@ export default async function handler(req, res) {
 
   try {
     const r = await pool.query(
-      `SELECT id, rating, text, author_name, verified, visit_date, created_at
+      `SELECT id, rating, text, author_name, verified, visit_date, created_at,
+              response_text, response_at
          FROM dmd.reviews WHERE pro_dha_id = $1
         ORDER BY created_at DESC LIMIT 200`,
       [String(id).trim()]

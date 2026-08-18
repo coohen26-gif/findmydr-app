@@ -397,7 +397,9 @@
       "response_placeholder": "Thank the patient, address their concern…",
       "send_response": "Send Response",
       "anonymous": "Anonymous",
-      "reply_unavailable": "Replying to reviews isn't available yet — check back soon."
+      "reply_unavailable": "Replying to reviews isn't available yet — check back soon.",
+      "reply_error": "Could not send the reply. Please try again.",
+      "sending": "Sending..."
     }
   },
   "footer": {
@@ -570,7 +572,8 @@
     "error_text_long": "Your review is too long (maximum 2000 characters).",
     "error_generic": "Something went wrong. Please try again.",
     "unavailable": "Reviews are not yet available for this profile.",
-    "submitting": "Submitting..."
+    "submitting": "Submitting...",
+    "practitioner_reply": "Practitioner's reply"
   },
   "dentist": {
     "book": "Book appointment",

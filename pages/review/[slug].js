@@ -53,7 +53,8 @@ export async function getServerSideProps({ query, req, locale }) {
 
     if (pro && pro.dha_unique_id) {
       const rv = await pool.query(
-        `SELECT id, rating, text, author_name, verified, visit_date, created_at
+        `SELECT id, rating, text, author_name, verified, visit_date, created_at,
+                response_text, response_at
            FROM dmd.reviews
           WHERE pro_dha_id = $1
           ORDER BY created_at DESC
@@ -354,6 +355,8 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
                       rating={r.rating}
                       text={r.text}
                       date={(r.visit_date || r.created_at || '').toString().slice(0, 10)}
+                      responseText={r.response_text}
+                      responseAt={(r.response_at || '').toString().slice(0, 10)}
                     />
                     {r.verified && (
                       <Badge variant="success" className="absolute top-3 right-3 text-[10px]">

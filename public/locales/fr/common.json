@@ -397,7 +397,9 @@
       "response_placeholder": "Remerciez le patient, répondez à sa préoccupation…",
       "send_response": "Envoyer la réponse",
       "anonymous": "Anonyme",
-      "reply_unavailable": "La réponse aux avis n'est pas encore disponible — revenez bientôt."
+      "reply_unavailable": "La réponse aux avis n'est pas encore disponible — revenez bientôt.",
+      "reply_error": "Impossible d'envoyer la réponse. Veuillez réessayer.",
+      "sending": "Envoi..."
     }
   },
   "footer": {
@@ -570,7 +572,8 @@
     "error_text_long": "Votre avis est trop long (2000 caracteres maximum).",
     "error_generic": "Une erreur est survenue. Veuillez reessayer.",
     "unavailable": "Les avis ne sont pas encore disponibles pour ce profil.",
-    "submitting": "Envoi..."
+    "submitting": "Envoi...",
+    "practitioner_reply": "Réponse du praticien"
   },
   "dentist": {
     "book": "Prendre rendez-vous",

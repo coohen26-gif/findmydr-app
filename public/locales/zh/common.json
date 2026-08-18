@@ -397,7 +397,9 @@
       "response_placeholder": "感谢患者,回应他们的关注…",
       "send_response": "发送回复",
       "anonymous": "匿名",
-      "reply_unavailable": "回复评价功能暂未开放，请稍后再来查看。"
+      "reply_unavailable": "回复评价功能暂未开放，请稍后再来查看。",
+      "reply_error": "无法发送回复，请重试。",
+      "sending": "发送中..."
     }
   },
   "footer": {
@@ -570,7 +572,8 @@
     "error_text_long": "评论太长(最多2000个字符)。",
     "error_generic": "出现错误,请重试。",
     "unavailable": "该资料暂不支持评价。",
-    "submitting": "提交中..."
+    "submitting": "提交中...",
+    "practitioner_reply": "医生回复"
   },
   "dentist": {
     "book": "预约",

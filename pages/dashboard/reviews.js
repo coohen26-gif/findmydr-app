@@ -29,6 +29,9 @@ export default function ReviewsPage() {
   const [filter, setFilter] = React.useState('all');
   const [respondingTo, setRespondingTo] = React.useState(null);
   const [apiAvailable, setApiAvailable] = React.useState(true);
+  const [replyText, setReplyText] = React.useState('');
+  const [replySubmitting, setReplySubmitting] = React.useState(false);
+  const [replyError, setReplyError] = React.useState('');
 
   React.useEffect(() => {
     let cancelled = false;
@@ -64,6 +67,47 @@ export default function ReviewsPage() {
       });
     return () => { cancelled = true; };
   }, [user]);
+
+  const openReply = (reviewId) => {
+    if (respondingTo === reviewId) {
+      setRespondingTo(null);
+      return;
+    }
+    setRespondingTo(reviewId);
+    setReplyText('');
+    setReplyError('');
+  };
+
+  const submitReply = async (reviewId) => {
+    const text = replyText.trim();
+    if (!text || replySubmitting) return;
+    setReplySubmitting(true);
+    setReplyError('');
+    try {
+      const res = await fetch('/api/reviews/respond', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ review_id: reviewId, response_text: text }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        setReplyError(data.error || t('dashboard.reviews.reply_error'));
+        setReplySubmitting(false);
+        return;
+      }
+      setReviews((prev) => prev.map((r) => (
+        r.id === reviewId
+          ? { ...r, response_text: data.review.response_text, response_at: data.review.response_at }
+          : r
+      )));
+      setRespondingTo(null);
+      setReplyText('');
+      setReplySubmitting(false);
+    } catch {
+      setReplyError(t('dashboard.reviews.reply_error'));
+      setReplySubmitting(false);
+    }
+  };
 
   const filtered = reviews.filter((r) => {
     if (filter === 'verified') return r.verified;
@@ -176,21 +220,34 @@ export default function ReviewsPage() {
                     )}
                   </div>
                   {!review.response_text && (
-                    <Button size="sm" variant="outline" onClick={() => setRespondingTo(respondingTo === review.id ? null : review.id)}>
+                    <Button size="sm" variant="outline" onClick={() => openReply(review.id)}>
                       {t('dashboard.reviews.respond')}
                     </Button>
                   )}
                 </div>
                 {respondingTo === review.id && (
                   <div className="mt-4 pt-4 border-t">
-                    {/* Replying isn't wired up yet: dmd.reviews has no column to store a
-                        professional's response. Rather than show a form that silently
-                        does nothing on submit, tell the user honestly. */}
-                    <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-900">
-                      {t('dashboard.reviews.reply_unavailable')}
-                    </div>
+                    <textarea
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      maxLength={2000}
+                      rows={3}
+                      placeholder={t('dashboard.reviews.response_placeholder')}
+                      className="flex w-full rounded-md border border-input bg-white px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      disabled={replySubmitting}
+                    />
+                    {replyError && (
+                      <p className="text-sm text-red-600 mt-2">{replyError}</p>
+                    )}
                     <div className="flex gap-2 mt-2">
-                      <Button size="sm" variant="ghost" onClick={() => setRespondingTo(null)}>
+                      <Button
+                        size="sm"
+                        onClick={() => submitReply(review.id)}
+                        disabled={replySubmitting || !replyText.trim()}
+                      >
+                        {replySubmitting ? t('dashboard.reviews.sending') : t('dashboard.reviews.send_response')}
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => setRespondingTo(null)} disabled={replySubmitting}>
                         {t('common.cancel')}
                       </Button>
                     </div>

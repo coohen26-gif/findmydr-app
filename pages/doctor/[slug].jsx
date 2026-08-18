@@ -58,7 +58,8 @@ export async function getServerSideProps({ query, req, locale }) {
       related = rel.rows;
       if (pro.dha_unique_id) {
         const rv = await pool.query(
-          `SELECT id, rating, text, author_name, verified, visit_date, created_at
+          `SELECT id, rating, text, author_name, verified, visit_date, created_at,
+                  response_text, response_at
              FROM dmd.reviews WHERE pro_dha_id = $1
             ORDER BY created_at DESC LIMIT 20`,
           [pro.dha_unique_id]
