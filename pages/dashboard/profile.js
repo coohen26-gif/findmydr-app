@@ -22,6 +22,36 @@ const SECTIONS = [
 
 const LANGUAGES = ['Français', 'English', 'العربية', 'हिन्दी', 'Español', 'Português', 'Русский', '中文'];
 
+// Normalizes a phone/WhatsApp number to E.164 UAE format (+971XXXXXXXXX).
+// Accepts numbers already in +971 format, or local UAE mobile format (0XXXXXXXXX).
+// Returns { value, error } — value is the normalized string (or the original
+// input untouched when invalid), error is a user-facing message or null.
+function normalizeUAEPhone(raw) {
+  const trimmed = String(raw || '').trim();
+  if (!trimmed) return { value: '', error: null };
+
+  const digits = trimmed.replace(/[^\d]/g, '');
+  const invalidMessage = 'Numéro invalide. Format attendu : +971 5X XXX XXXX ou 0X XXX XXXX';
+
+  if (digits.startsWith('971')) {
+    const local = digits.slice(3);
+    if (/^\d{8,9}$/.test(local)) {
+      return { value: '+971' + local, error: null };
+    }
+    return { value: trimmed, error: invalidMessage };
+  }
+
+  if (digits.startsWith('0')) {
+    const local = digits.slice(1);
+    if (/^\d{8,9}$/.test(local)) {
+      return { value: '+971' + local, error: null };
+    }
+    return { value: trimmed, error: invalidMessage };
+  }
+
+  return { value: trimmed, error: invalidMessage };
+}
+
 export async function getServerSideProps({ locale, req }) {
   if (!locale) {
     try { locale = req?.cookies?.NEXT_LOCALE; } catch (e) {}
@@ -40,6 +70,8 @@ export default function Profile() {
   const [saved, setSaved] = React.useState(false);
   const [completeness, setCompleteness] = React.useState(0);
   const [activeSection, setActiveSection] = React.useState('photo');
+  const [phoneError, setPhoneError] = React.useState('');
+  const [whatsappError, setWhatsappError] = React.useState('');
 
   React.useEffect(() => {
     fetch('/api/dashboard/profile')
@@ -73,16 +105,27 @@ export default function Profile() {
   }, []);
 
   const handleSave = async () => {
+    const phoneResult = normalizeUAEPhone(form.phone);
+    const whatsappResult = normalizeUAEPhone(form.whatsapp);
+    setPhoneError(phoneResult.error || '');
+    setWhatsappError(whatsappResult.error || '');
+    if (phoneResult.error || whatsappResult.error) {
+      return;
+    }
+
+    const normalizedForm = { ...form, phone: phoneResult.value, whatsapp: whatsappResult.value };
+
     setSaving(true);
     setSaved(false);
     try {
       const r = await fetch('/api/dashboard/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(normalizedForm),
       });
       const d = await r.json();
       if (d.profile_completeness !== undefined) {
+        setForm(normalizedForm);
         setCompleteness(d.profile_completeness);
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);
@@ -350,16 +393,28 @@ export default function Profile() {
                     <Input
                       placeholder="+971 50 123 4567"
                       value={form.phone}
-                      onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                      onChange={e => {
+                        setForm(f => ({ ...f, phone: e.target.value }));
+                        if (phoneError) setPhoneError('');
+                      }}
                     />
+                    {phoneError && (
+                      <p className="text-xs text-destructive mt-1">{phoneError}</p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-semibold mb-2">💬 WhatsApp</label>
                     <Input
                       placeholder="+971 50 123 4567"
                       value={form.whatsapp}
-                      onChange={e => setForm(f => ({ ...f, whatsapp: e.target.value }))}
+                      onChange={e => {
+                        setForm(f => ({ ...f, whatsapp: e.target.value }));
+                        if (whatsappError) setWhatsappError('');
+                      }}
                     />
+                    {whatsappError && (
+                      <p className="text-xs text-destructive mt-1">{whatsappError}</p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-semibold mb-2">💰 Tarif consultation (AED)</label>

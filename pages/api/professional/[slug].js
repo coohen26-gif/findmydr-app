@@ -17,8 +17,9 @@ function slugify(name) {
 }
 
 function tryParseSlug(slug) {
-  const m = String(slug).match(/(\d{4,8})/);
-  return m ? m[1] : null;
+  const id = String(slug).split('-').pop();
+  if (!id || !/^\d+$/.test(id)) return null;
+  return id;
 }
 
 export default async function handler(req, res) {
