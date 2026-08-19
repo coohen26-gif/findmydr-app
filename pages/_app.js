@@ -20,6 +20,20 @@ function DetectLangWrapper({ children }) {
   const router = useRouter();
 
   React.useEffect(() => {
+    // router.locale is the locale Next's own i18n routing actually resolved
+    // for THIS render - the same value serverSideTranslations/t() used to
+    // produce the page's translated content. Trusting it first guarantees
+    // document.dir/lang can never disagree with what's actually on screen.
+    // Without this, a prefix-less defaultLocale route (e.g. bare /doctor,
+    // which never matches the path regex below) fell through straight to
+    // a possibly-stale NEXT_LOCALE cookie from an earlier visit/locale,
+    // flipping dir=rtl onto English/French content and visually scrambling
+    // digit groups and punctuation via the browser's bidi algorithm.
+    if (router.locale && LOCALE_MAP[router.locale]) {
+      setLang(router.locale);
+      document.cookie = `NEXT_LOCALE=${router.locale};path=/;max-age=31536000;SameSite=Lax`;
+      return;
+    }
     // Use the real browser path, not router.asPath: on routes rewritten by
     // middleware.js (e.g. /ar/doctor/100 -> /doctor/100 internally),
     // router.asPath can desync from the actual URL and this regex would
@@ -39,7 +53,7 @@ function DetectLangWrapper({ children }) {
         setLang(cookieLang);
       }
     }
-  }, [router.query.lang, router.asPath]);
+  }, [router.locale, router.query.lang, router.asPath]);
 
   React.useEffect(() => {
     const cur = LOCALE_MAP[lang];

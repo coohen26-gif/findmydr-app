@@ -14,7 +14,7 @@ import { DhaBadge } from '../../components/DhaBadge';
 import { ReviewCard } from '../../components/ReviewCard';
 import { WhatsAppButton } from '../../components/WhatsAppButton';
 import pool from '../../lib/db';
-import { breadcrumbJsonLd, pageUrl } from '../../lib/seo';
+import { breadcrumbJsonLd, pageUrl, SITE_NAME, DENTIST_SITE_NAME } from '../../lib/seo';
 
 export async function getServerSideProps({ query, req, locale }) {
   const { slug } = query;
@@ -160,7 +160,7 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
 
   const fullName = (pro.name || '').replace(/^Dr\.?\s*/i, '').trim();
 
-  const pageTitleStr = `${t('review.title', 'Avis patients')} - Dr. ${fullName} | FindMyDoctor.ae`;
+  const pageTitleStr = `${t('review.title', 'Avis patients')} - Dr. ${fullName} | ${isDentist ? DENTIST_SITE_NAME : SITE_NAME}`;
   const descStr = totalReviews > 0
     ? `${t('review.subtitle', 'Consultez les avis verifies des patients sur')} ${fullName} (${pro.specialty || 'Medecin'}). Note moyenne ${avgRating}/5 sur ${totalReviews} ${t('review.count_label', 'avis')}.`
     : `${t('review.subtitle', 'Consultez les avis verifies des patients sur')} ${fullName} (${pro.specialty || 'Medecin'}).`;
@@ -250,7 +250,7 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(
               breadcrumbJsonLd([
-                { name: 'FindMyDoctor.ae', url: baseUrl },
+                { name: isDentist ? DENTIST_SITE_NAME : SITE_NAME, url: baseUrl },
                 { name: fullName, url: `${baseUrl}/${isDentist ? 'dentist' : 'doctor'}/${pro.id}` },
                 { name: t('review.title', 'Avis'), url: `${baseUrl}/review/${pro.id}` },
               ])
