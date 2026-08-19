@@ -32,6 +32,7 @@ export async function getServerSideProps({ query, req, locale }) {
     const r = await pool.query(
       `SELECT d.id, d.name, d.specialty, d.facility_name,
               COALESCE(pr.is_dha_verified, false) as is_dha_verified,
+              COALESCE(u.photo_url, pr.profile_picture_url) AS profile_picture_url,
               COALESCE(u.bio_fr, pr.bio_fr) AS bio_fr,
               COALESCE(u.phone, pr.phone) AS phone,
               pr.phone_source,
@@ -135,13 +136,14 @@ export default function DentistProfile({ pro, related, stats, baseUrl }) {
   const specialty = pro.specialty || 'Dentiste généraliste';
   const fullName = pro.name || 'Dentiste';
   const dhaVerified = pro.is_dha_verified === true;
+  const photoUrl = pro.profile_picture_url || null;
   const proUrl = `${baseUrl}/dentist/${pro.id}`;
   const phone = pro.phone || null;
   const waPhone = phone ? String(phone).replace(/[^0-9]/g, '') : null;
 
   const title = pageTitle(`${fullName} - Dentiste ${specialty} Dubai`, true);
   const description = pageDescription(
-    `${fullName}, ${specialty} DHA-licensé${pro.name?.endsWith('a') ? 'e' : ''} à ${facility}, Dubai. `
+    `${fullName}, ${specialty} DHA-licencié(e) à ${facility}, Dubai. `
     + `Profil vérifié, prise de RDV, blanchiment, esthétique dentaire. Annuaire FindMyDentist.ae.`
   );
   const ogImage = `${baseUrl}/api/og/dentist/${pro.id}`;
@@ -237,7 +239,7 @@ export default function DentistProfile({ pro, related, stats, baseUrl }) {
         <Card className="overflow-hidden">
           <div className="bg-gradient-to-br from-cyan-500 to-emerald-500 p-6 md:p-8 text-white">
             <div className="flex flex-col md:flex-row md:items-start gap-6">
-              <Avatar name={fullName} size="2xl" verified={dhaVerified} className="ring-4 ring-white/30" />
+              <Avatar name={fullName} size="2xl" verified={dhaVerified} src={photoUrl} className="ring-4 ring-white/30" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div>

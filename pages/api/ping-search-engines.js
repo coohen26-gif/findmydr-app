@@ -12,7 +12,7 @@ import pool from '../../lib/db';
 
 const SITEMAPS = [
   'https://findmydr.ae/sitemap.xml',
-  'https://findmydr.ae/sitemap-doctors.xml',
+  'https://findmydr.ae/sitemap-main.xml',
   'https://findmydentist.ae/sitemap.xml',
   'https://findmydentist.ae/sitemap-dentists.xml',
 ];

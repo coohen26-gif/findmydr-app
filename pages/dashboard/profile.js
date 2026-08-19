@@ -64,6 +64,7 @@ export default function Profile() {
   const { t } = useTranslation('common');
   const router = useRouter();
   const [user, setUser] = React.useState(null);
+  const [dhaVerified, setDhaVerified] = React.useState(false);
   const [form, setForm] = React.useState({});
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
@@ -79,6 +80,7 @@ export default function Profile() {
       .then(d => {
         if (d.user) {
           setUser(d.user);
+          setDhaVerified(d.professional?.is_dha_verified === true);
           setForm({
             full_name_fr: d.user.full_name_fr || '',
             full_name_en: d.user.full_name_en || '',
@@ -190,7 +192,7 @@ export default function Profile() {
           {/* SIDEBAR */}
           <div className="space-y-4">
             <Card className="p-6 text-center">
-              <Avatar name={userName} size="2xl" verified className="mx-auto mb-4" />
+              <Avatar name={userName} size="2xl" verified={dhaVerified} src={form.photo_url} className="mx-auto mb-4" />
               <h3 className="font-bold">Dr. {userName}</h3>
               <p className="text-sm text-muted-foreground mb-4">{user.email}</p>
               <Badge variant={user.plan === 'premium' ? 'premium' : 'secondary'} className="mb-4">
@@ -242,7 +244,7 @@ export default function Profile() {
                   Les profils avec photo reçoivent <strong className="text-foreground">5x plus de vues</strong>.
                 </p>
                 <div className="flex items-center gap-6">
-                  <Avatar name={userName} size="2xl" className="ring-4 ring-white shadow-lg" />
+                  <Avatar name={userName} size="2xl" verified={dhaVerified} src={form.photo_url} className="ring-4 ring-white shadow-lg" />
                   <div className="flex-1">
                     <Input
                       placeholder="URL de votre photo (https://...)"

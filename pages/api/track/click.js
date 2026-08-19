@@ -18,10 +18,20 @@ async function getUserIdByProfessional(type, professionalId) {
     // so a name-based fallback would let any user impersonate a competitor's
     // identity and silently harvest their view/click analytics (BUG-2).
     // Do NOT reintroduce a name-match fallback here.
+    // The full_name join can still match multiple dmd.professional rows
+    // sharing a name, so it needs the same deterministic tiebreak used in
+    // the profile pages (specialty match, then dha_unique_id) rather than
+    // a bare LIMIT 1, which would non-deterministically misattribute clicks.
     const meta = await pool.query(
       `SELECT pr.dha_unique_id AS dha_unique_id
          FROM ${table} p
-         LEFT JOIN dmd.professional pr ON pr.full_name = p.name
+         LEFT JOIN LATERAL (
+           SELECT pr2.dha_unique_id
+             FROM dmd.professional pr2
+            WHERE pr2.full_name = p.name
+            ORDER BY (pr2.specialty = p.specialty) DESC NULLS LAST, pr2.dha_unique_id ASC
+            LIMIT 1
+         ) pr ON true
         WHERE p.id = $1
         LIMIT 1`,
       [professionalId]

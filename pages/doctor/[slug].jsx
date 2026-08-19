@@ -158,7 +158,7 @@ export default function DoctorProfile({ pro, related, reviews, stats, baseUrl })
   const title = pageTitle(`${fullName} - ${specialty} Dubai`);
   const bio = pro.bio_fr && pro.bio_fr.length > 0 ? pro.bio_fr.slice(0, 120) + "... " : "";
   const description = pageDescription(
-    bio + `${fullName}, ${specialty} DHA-licensé${pro.name?.endsWith("a") ? "e" : ""} à ${facility}, Dubai. Profil vérifié, prise de RDV, avis patients. Annuaire trilingue FR/EN/AR FindMyDoctor.ae.`
+    bio + `${fullName}, ${specialty} DHA-licencié(e) à ${facility}, Dubai. Profil vérifié, prise de RDV, avis patients. Annuaire trilingue FR/EN/AR FindMyDoctor.ae.`
   );
   const ogImage = `${baseUrl}/api/og/doctor/${pro.id}`;
 

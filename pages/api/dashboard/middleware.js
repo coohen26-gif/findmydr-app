@@ -26,7 +26,7 @@ export async function getUserFromCookie(cookieHeader) {
     const r = await pool.query(
       `SELECT id, email, dha_license, plan, plan_expires_at, profile_completeness,
               full_name_fr, full_name_en, full_name_ar, bio_fr, bio_en, bio_ar,
-              photo_url, specialties, languages_spoken, phone, whatsapp
+              photo_url, specialties, languages_spoken, phone, whatsapp, stripe_customer_id
          FROM dmd.users WHERE id = $1`,
       [payload.uid]
     );

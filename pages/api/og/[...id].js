@@ -25,15 +25,19 @@ const BRAND = {
 async function fetchPro(id, type) {
   if (!id || !/^\d+$/.test(id)) return null;
   try {
-    if (type === 'dentist') {
-      const r = await pool.query(
-        `SELECT name, specialty, facility_name FROM public.dentists WHERE id = $1 LIMIT 1`,
-        [parseInt(id, 10)]
-      );
-      return r.rows[0] || null;
-    }
+    const table = type === 'dentist' ? 'public.dentists' : 'public.physicians';
     const r = await pool.query(
-      `SELECT name, specialty, facility_name FROM public.physicians WHERE id = $1 LIMIT 1`,
+      `SELECT p.name, p.specialty, p.facility_name,
+              COALESCE(pr.is_dha_verified, false) as is_dha_verified
+         FROM ${table} p
+         LEFT JOIN LATERAL (
+           SELECT pr2.is_dha_verified
+             FROM dmd.professional pr2
+            WHERE pr2.full_name = p.name
+            ORDER BY (pr2.specialty = p.specialty) DESC NULLS LAST, pr2.is_dha_verified DESC NULLS LAST
+            LIMIT 1
+         ) pr ON true
+        WHERE p.id = $1 LIMIT 1`,
       [parseInt(id, 10)]
     );
     return r.rows[0] || null;
@@ -69,6 +73,7 @@ export default async function handler(req, res) {
   const name = pro?.name || (type === 'dentist' ? 'Dentiste à Dubai' : 'Médecin à Dubai');
   const specialty = pro?.specialty || (type === 'dentist' ? 'Dentiste' : 'Médecin');
   const facility = pro?.facility_name || 'Dubai, UAE';
+  const dhaVerified = pro?.is_dha_verified === true;
 
   try {
     const png = new ImageResponse(
@@ -93,7 +98,7 @@ export default async function handler(req, res) {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.18)', border: '2px solid rgba(255,255,255,0.5)', padding: '14px 28px', borderRadius: '100px', fontSize: '28px', fontWeight: 700, width: 'fit-content' }}>
-            ✓ DHA Licensed
+            {dhaVerified ? '✓ DHA Verified' : 'DHA Registered'}
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: 'auto' }}>

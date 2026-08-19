@@ -221,7 +221,7 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',
-              '@type': 'Physician',
+              '@type': isDentist ? 'Dentist' : 'Physician',
               name: `Dr. ${fullName}`,
               medicalSpecialty: pro.specialty || 'General',
               // Only emit aggregateRating/review when real reviews exist —
@@ -251,7 +251,7 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
             __html: JSON.stringify(
               breadcrumbJsonLd([
                 { name: 'FindMyDoctor.ae', url: baseUrl },
-                { name: fullName, url: `${baseUrl}/doctor/${pro.id}` },
+                { name: fullName, url: `${baseUrl}/${isDentist ? 'dentist' : 'doctor'}/${pro.id}` },
                 { name: t('review.title', 'Avis'), url: `${baseUrl}/review/${pro.id}` },
               ])
             ),
@@ -264,7 +264,7 @@ export default function ReviewPage({ pro, reviews, avgRating, totalReviews, rati
       <div className="bg-gradient-to-br from-amber-50 via-white to-cyan-50 border-b border-border">
         <div className="container-wide py-8">
           <Link
-            href={`${localePrefix}/doctor/${pro.id}`}
+            href={`${localePrefix}/${isDentist ? 'dentist' : 'doctor'}/${pro.id}`}
             className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
           >
             <ChevronLeft className="h-4 w-4" />

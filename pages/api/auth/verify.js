@@ -37,14 +37,21 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Invalid or expired link' });
     }
     const row = result.rows[0];
-    if (row.used_at) {
-      return res.status(401).json({ error: 'Link already used' });
-    }
     if (new Date(row.expires_at) < new Date()) {
       return res.status(401).json({ error: 'Link expired' });
     }
 
-    await pool.query('UPDATE dmd.auth_tokens SET used_at = NOW() WHERE id = $1', [row.id]);
+    // Atomic claim: the SELECT above only reads state, so two concurrent
+    // requests for the same token could both pass it before either UPDATE
+    // commits. Guarding the UPDATE itself on used_at IS NULL and checking
+    // the affected row count makes single-use enforcement race-proof.
+    const claim = await pool.query(
+      `UPDATE dmd.auth_tokens SET used_at = NOW() WHERE id = $1 AND used_at IS NULL RETURNING id`,
+      [row.id]
+    );
+    if (claim.rows.length === 0) {
+      return res.status(401).json({ error: 'Link already used' });
+    }
 
     const userRes = await pool.query(
       `SELECT id, email, dha_license, plan, plan_expires_at, profile_completeness
