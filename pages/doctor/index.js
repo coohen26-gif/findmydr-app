@@ -241,16 +241,21 @@ export default function Home() {
             </Card>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {physicians.slice(0, 12).map(p => (
+              {physicians.slice(0, 12).map(p => {
+                const slug = slugify(p.name) + '-' + p.id;
+                return (
                 <Link
                   key={p.id}
-                  href={`/doctor?id=${p.id}`}
+                  href={`/doctor/${slug}`}
                   className="group bg-white rounded-xl border border-border p-5 hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
                 >
                   <div className="flex items-start gap-3 mb-4">
                     <Avatar name={p.name} size="lg" verified={p.is_dha_verified === true} />
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-sm leading-tight line-clamp-1">{p.name}</h3>
+                      <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                        <h3 className="font-bold text-sm leading-tight line-clamp-1">{p.name}</h3>
+                        {p.search_rank > 0 && <FeaturedBadge size="sm" />}
+                      </div>
                       <p className="text-xs text-muted-foreground line-clamp-1">{p.specialty || '—'}</p>
                       {p.is_dha_verified === true && (
                         <Badge variant="verified" className="mt-2 text-[10px] py-0">
@@ -270,7 +275,8 @@ export default function Home() {
                     </div>
                   </div>
                 </Link>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

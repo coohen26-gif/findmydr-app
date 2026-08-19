@@ -46,7 +46,10 @@ export default async function handler(req, res) {
     }
     const authHeader = req.headers.authorization || '';
     const providedToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
-    if (providedToken !== ADMIN_TOKEN) {
+    const provided = Buffer.from(providedToken);
+    const expected = Buffer.from(ADMIN_TOKEN);
+    const tokenValid = provided.length === expected.length && crypto.timingSafeEqual(provided, expected);
+    if (!tokenValid) {
       return res.status(401).json({ error: 'Not authorized' });
     }
 

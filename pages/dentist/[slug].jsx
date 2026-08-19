@@ -15,6 +15,7 @@ import { WhatsAppButton } from '../../components/WhatsAppButton';
 import pool from '../../lib/db';
 import { pageTitle, pageDescription, physicianJsonLd, breadcrumbJsonLd, pageUrl, SITE_DESCRIPTION } from '../../lib/seo';
 import { getProStats } from '../../lib/proStats';
+import { slugify } from '../../lib/utils';
 
 const OG_LOCALE_MAP = { fr: 'fr_AE', en: 'en_AE', ar: 'ar_AE', zh: 'zh_CN', ru: 'ru_RU', fa: 'fa_IR' };
 
@@ -374,7 +375,7 @@ export default function DentistProfile({ pro, related, stats, baseUrl }) {
         <h2 className="text-2xl md:text-3xl font-extrabold mb-6">{t('dentist.detail.similar_dubai', 'Dentistes similaires à Dubai')}</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {related.map(p => (
-            <Link key={p.id} href={`/dentist?id=${p.id}`} className="group bg-white border border-border rounded-xl p-4 hover:shadow-lg transition-all">
+            <Link key={p.id} href={`/dentist/${slugify(p.name) + '-' + p.id}`} className="group bg-white border border-border rounded-xl p-4 hover:shadow-lg transition-all">
               <Avatar name={p.name} size="lg" className="mb-3" verified={p.is_dha_verified === true} />
               <h3 className="font-bold text-sm line-clamp-1">{p.name}</h3>
               <p className="text-xs text-muted-foreground line-clamp-1">{p.specialty}</p>

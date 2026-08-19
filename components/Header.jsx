@@ -277,13 +277,13 @@ export function SiteHeader({ user = null, currentPath, isDentist }) {
               <a href="https://findmydr.ae/" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
                 {t('nav.doctors')}
               </a>
-              <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', activePath === '/' ? 'text-primary' : 'text-muted-foreground')}>
+              <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', activePath === '/dentist' ? 'text-primary' : 'text-muted-foreground')}>
                 {t('nav.dentists')}
               </Link>
             </>
           ) : (
             <>
-              <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', activePath === '/' ? 'text-primary' : 'text-muted-foreground')}>
+              <Link href="/" className={cn('px-3 py-2 text-sm font-medium hover:text-primary transition-colors', activePath === '/doctor' ? 'text-primary' : 'text-muted-foreground')}>
                 {t('nav.doctors')}
               </Link>
               <a href="https://findmydentist.ae/" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
